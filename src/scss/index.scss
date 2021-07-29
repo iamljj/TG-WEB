@@ -1,0 +1,42 @@
+// 垂直居中
+.vertical {
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+}
+// 高度 宽度 w-1 h-1
+$size: (
+  0: 0,
+  1: 10%,
+  2: 20%,
+  3: 30%,
+  4: 40%,
+  5: 50%,
+  6: 60%,
+  7: 70%,
+  8: 80%,
+  9: 90%,
+  100: 100%
+);
+@each $name, $size in $size {
+  .w-#{$name} {
+    width: $size;
+  }
+  .h-#{$name} {
+    height: $size;
+  }
+}
+@each $name, $size in $size {
+  .mt-#{$name} {
+    margin-top: $size;
+  }
+  .ml-#{$name} {
+    margin-left: $size;
+  }
+  .mr-#{$name} {
+    margin-right: $size;
+  }
+  .mb-#{$name} {
+    margin-bottom: $size;
+  }
+}

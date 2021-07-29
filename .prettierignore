@@ -1,0 +1,10 @@
+/node_modules/**/*
+/dist/**/*
+/scr/static
+/public
+
+.hbuilderx/*
+.vscode/*
+
+**/*.svg
+**/*.sh
