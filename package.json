@@ -7,7 +7,7 @@
     "build": "vue-cli-service build",
     "preview": "serve dist -l 80",
     "prettier": "prettier --write .",
-    "lint": "vue-cli-service lint",
+    "lint": "vue-cli-service",
     "commit": "git add . && cz",
     "prepare": "husky install"
   },
@@ -16,6 +16,7 @@
     "core-js": "^3.6.5",
     "dayjs": "^1.10.6",
     "element-plus": "^1.0.2-beta.62",
+    "mockjs": "^1.1.0",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0",
     "vuex": "^4.0.0-0"

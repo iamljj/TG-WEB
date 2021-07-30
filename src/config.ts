@@ -1,7 +1,7 @@
 const dev = process.env.NODE_ENV === 'development'
 let REQUEST_ADDRESS = 'Online' //线上请求地址 baseurl
 if (dev) {
-  REQUEST_ADDRESS = '' //本地请求地址
+  REQUEST_ADDRESS = 'http://rap2api.taobao.org/app/mock/data/' //本地请求地址
 }
 // 传递给后端的token字段名
 const TOKEN_FIELD = 'token'

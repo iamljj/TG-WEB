@@ -1,7 +1,7 @@
 // login
 export interface User {
   phone: number
-  vercode: number
+  vercode: string
 }
 export interface Rules {
   phone: (

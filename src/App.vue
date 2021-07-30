@@ -2,7 +2,7 @@
   <router-view />
 </template>
 
-<style lang="scss">
+<style>
 body {
   margin: 0px;
   border: 0px;

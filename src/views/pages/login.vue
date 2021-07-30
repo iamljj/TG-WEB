@@ -1,56 +1,194 @@
 <template>
   <el-row class="all">
-    <el-col :span="16" class="left" align="middle">
-      <img src="@/assets/Marketing.png" alt="" class="w-4 vertical" />
+    <el-col :span="3"></el-col>
+    <el-col :span="2">
+      <img src="@/assets/logo.png" alt="" class="vertical1" />
     </el-col>
-    <el-col :span="5" class="right vertical h-6" align="middle">
-      <div align="middle">
-        <div class="right-title">后台管理系统</div>
+    <el-col :span="4">
+      <div class="text vertical1">
+        <span>连客宝管理平台</span>
       </div>
-      <el-card class="mt-1 h-5" style="min-width: 400px">
-        <el-form class="mt-1" :rules="rules" :model="loginUser">
-          <el-form-item label="手机号" prop="phone">
-            <el-input placeholder="请输入" v-model="loginUser.phone"></el-input>
-          </el-form-item>
-          <el-row>
-            <el-form-item label="验证码" prop="vercode">
-              <el-col :span="15">
-                <el-input placeholder="请输入" v-model="loginUser.vercode"></el-input>
-              </el-col>
-              <el-col :span="3">
-                <el-button type="primary">获取验证码</el-button>
-              </el-col>
-            </el-form-item>
-          </el-row>
-          <el-button class="mt-1" type="primary" size="medium">登录</el-button>
+    </el-col>
+    <el-col :span="5"></el-col>
+    <el-col :span="8">
+      <el-card class="card vertical1 box-card">
+        <div class="login">
+          <div class="loginText">登录</div>
+        </div>
+        <el-form :model="loginUser" :rules="rules" ref="formRules">
+          <div class="userNameDiv">
+            <div class="usernameInput">账号</div>
+            <div style="height: 50px">
+              <el-form-item prop="phone">
+                <el-input class="vertical inputDeep" v-model="loginUser.phone"></el-input>
+              </el-form-item>
+            </div>
+          </div>
+
+          <div class="userNameDiv">
+            <div class="usernameInput">手机验证</div>
+            <div style="height: 50px">
+              <el-form-item prop="vercode">
+                <el-input class="vertical inputDeep" v-model="loginUser.vercode">
+                  <template #suffix>
+                    <el-button
+                      type="text"
+                      class="inputDeep-vercode"
+                      v-show="isVercode"
+                      @click="getVercode"
+                      >{{ vercodeText }}</el-button
+                    >
+                    <span v-show="!isVercode" class="inputDeep-vercode">{{ time }}</span>
+                  </template>
+                </el-input>
+              </el-form-item>
+            </div>
+          </div>
         </el-form>
+        <el-button type="primary" class="loginButton" @click="submitForm">登 录</el-button>
       </el-card>
     </el-col>
+    <el-col :span="2"></el-col>
   </el-row>
 </template>
 <script lang="ts">
-import { defineComponent, onMounted, toRefs } from 'vue'
+import { defineComponent } from 'vue'
 // data
-import data from '@/utils/pageData/login'
+import {
+  loginUser,
+  rules,
+  formRules,
+  isVercode,
+  time,
+  vercodeText
+} from '@/utils/pageData/loginData'
+import { ElMessage } from 'element-plus'
+import router from '@/router/index'
+import axios from 'axios'
+import { GlobalDataProps } from '@/store/types'
+import { useStore } from 'vuex'
+
 export default defineComponent({
   name: 'login',
   setup() {
+    // const store = useStore<GlobalDataProps>()
+    // 倒计时方法
+    const countDown = () => {
+      if (time.value == 0) {
+        vercodeText.value = '重新获取验证码'
+        isVercode.value = true
+        time.value = 60
+      } else {
+        time.value--
+        setTimeout(() => {
+          countDown()
+        }, 1000)
+      }
+    }
+    const getVercode = () => {
+      if (loginUser.value.phone && loginUser.value.phone.toString().length == 11) {
+        isVercode.value = false
+        countDown()
+        // axios.post('/').then((res) => {})
+      } else {
+        ElMessage.error('请输入正确的手机号码')
+      }
+    }
+    const submitForm = () => {
+      formRules.value.validate((valid) => {
+        if (valid) {
+          // axios.get('/').then((res) => {
+          //   store.commit('login', res)
+          // })
+          // 获取token并传入vuex中 通过vuex中方法存储在localstorage
+          router.push('/home')
+        } else {
+          ElMessage.error('请输入正确的手机号或验证码')
+        }
+      })
+    }
     return {
-      ...data
+      loginUser,
+      rules,
+      getVercode,
+      submitForm,
+      time,
+      formRules,
+      isVercode,
+      vercodeText
     }
   }
 })
 </script>
 <style lang="scss" scoped>
 .all {
-  background-color: rgb(185, 210, 255);
+  background-image: url('~@/assets/bgImg.png');
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
   height: 100vh;
-  .right {
-    &-title {
-      font-weight: bold;
-      font-family: 'Courier New', Courier, monospace;
-      font-size: 30px;
+  .text {
+    font-weight: 500;
+    color: #ffffff;
+    font-size: 32px;
+    min-width: 100%;
+    font-family: PingFangSC, PingFangSC-Medium;
+  }
+  .card {
+    width: 460px;
+    height: 566px;
+    background: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0px 20px 50px 0px rgba(0, 0, 0, 0.1);
+    .login {
+      width: 90%;
+      padding-bottom: 10%;
+      margin: 7%;
+      margin-bottom: 0%;
+      .loginText {
+        font-weight: 500;
+        color: #333333;
+        font-size: 40px;
+        font-family: PingFangSC, PingFangSC-Medium;
+      }
     }
+  }
+  .userNameDiv {
+    margin: 7%;
+    margin-top: 2%;
+    margin-bottom: 3%;
+    height: 80px;
+    .usernameInput {
+      height: 30px;
+      line-height: 30px;
+      font-size: 16px;
+      font-family: PingFangSC, PingFangSC-Regular;
+      font-weight: 400;
+      text-align: left;
+      color: #999999;
+    }
+  }
+  .loginButton {
+    width: 86%;
+    height: 56px;
+    margin: 7%;
+    position: relative;
+    font-size: 20px;
+    color: #ffffff;
+    font-family: PingFangSC, PingFangSC-Medium;
+    font-weight: 500;
+    background: #1766f5;
+    border-radius: 12px;
+    margin-top: 20%;
+  }
+}
+.inputDeep {
+  ::v-deep .el-input__inner {
+    border-radius: 12px;
+  }
+  &-vercode {
+    margin-right: 10px;
+    font-family: PingFangSC, PingFangSC-Medium;
+    font-weight: 520;
   }
 }
 </style>

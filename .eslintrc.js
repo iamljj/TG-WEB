@@ -26,6 +26,8 @@ module.exports = {
     '@typescript-eslint/no-empty-function': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     // 禁止未使用的变量
     '@typescript-eslint/no-unused-vars': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+    '@typescript-eslint/no-explicit-any': 'off',
+    '@typescript-eslint/no-namespace': 'off',
     // 数组出现奇怪写法 [,1]
     'no-sparse-arrays': 'warn',
     // 非const变量未被重新赋值

@@ -6,6 +6,7 @@ axios.defaults.baseURL = REQUEST_ADDRESS
 axios.defaults.timeout = 3000
 // loading
 let loading: any
+const token = storage.get(TOKEN_FIELD)
 const startLoading = () => {
   interface options {
     lock: boolean
@@ -14,18 +15,16 @@ const startLoading = () => {
   }
   const options = {
     lock: true,
-    text: '加载中',
-    background: 'rgba(0,0,0,0.7)'
+    text: '加载中'
   }
-  loading = ElLoading.service(options)
+  loading = token && ElLoading.service(options)
 }
 const endLoading = () => {
-  loading.close()
+  token && loading.close()
 }
 
 axios.interceptors.request.use((config: AxiosRequestConfig) => {
   startLoading()
-  const token = storage.get(TOKEN_FIELD)
   token && (config.headers[TOKEN_FIELD] = token)
   config.url?.includes('/proxy/') && (config.baseURL = '')
   return config
@@ -57,3 +56,4 @@ axios.interceptors.response.use(
     return Promise.reject(error.message)
   }
 )
+export default axios

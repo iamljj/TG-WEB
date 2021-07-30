@@ -8,12 +8,20 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/login',
     name: 'Login',
-    component: () => import('../views/pages/login.vue')
+    component: () => import(/* webpackChunkName: "login" */ '@/views/pages/login.vue')
   },
   {
     path: '/:catchAll(.*)',
     name: '404',
-    component: () => import('../views/pages/404.vue')
+    component: () => import(/*webpackChunkName: '404' */ '@/views/pages/404.vue')
+  },
+  {
+    path: '/home',
+    name: 'home',
+    component: () => import(/*webpackChunkName: 'home' */ '@/views/pages/home.vue'),
+    children: [
+      // require("./homeChildren").default,
+    ]
   }
 ]
 
