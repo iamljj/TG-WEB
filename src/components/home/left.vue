@@ -3,8 +3,6 @@
     <el-menu
       :uniqueOpened="true"
       class="el-menu-vertical-demo"
-      @open="handleOpen"
-      @close="handleClose"
       background-color="#302d35"
       text-color="#fff"
       active-text-color="#ffd04b"
@@ -14,19 +12,19 @@
         <img src="@/assets/logo.png" alt="" class="left-logo" />
         <div class="left-text">连客宝</div>
       </div>
-      <el-menu-item index="2" style="margin-top: 32px">
+      <el-menu-item index="/home/shopName" style="margin-top: 32px">
         <i class="el-icon-goods"></i>
         <template #title>商品管理</template>
       </el-menu-item>
-      <el-menu-item index="4">
+      <el-menu-item index="/home/activity">
         <i class="el-icon-wind-power"></i>
         <template #title>活动中心</template>
       </el-menu-item>
-      <el-menu-item index="5">
+      <el-menu-item index="/home/statistical">
         <i class="el-icon-pie-chart"></i>
         <template #title>统计报表</template>
       </el-menu-item>
-      <el-menu-item index="6">
+      <el-menu-item index="/home/person">
         <i class="el-icon-user"></i>
         <template #title>人员管理</template>
       </el-menu-item>
@@ -35,7 +33,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { GlobalDataProps } from '@/store/types'
+import { defineComponent, onMounted, ref } from 'vue'
+import { useStore } from 'vuex'
 export default defineComponent({
   setup() {}
 })

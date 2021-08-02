@@ -26,3 +26,14 @@ export interface Rules {
     trigger: string
   }[]
 }
+export interface tableType {
+  name: string
+  prop: string
+  width: number
+}
+
+export interface tableDataType {
+  name: string
+  phone: string
+  time: string
+}

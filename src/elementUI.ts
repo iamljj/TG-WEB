@@ -15,7 +15,13 @@ import {
   ElSubmenu,
   ElMenu,
   ElMenuItem,
-  ElMenuItemGroup
+  ElMenuItemGroup,
+  ElDropdown,
+  ElDropdownItem,
+  ElTable,
+  ElTableColumn,
+  ElDropdownMenu,
+  ElPagination
 } from 'element-plus'
 export const components: any[] = [
   ElButton,
@@ -26,7 +32,13 @@ export const components: any[] = [
   ElInput,
   ElSubmenu,
   ElMenu,
+  ElDropdown,
+  ElDropdownItem,
+  ElPagination,
+  ElDropdownMenu,
   ElMenuItem,
+  ElTable,
+  ElTableColumn,
   ElMenuItemGroup,
   ElFormItem,
   ElContainer,

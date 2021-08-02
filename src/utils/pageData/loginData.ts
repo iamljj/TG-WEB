@@ -7,13 +7,13 @@ export const loginUser = ref<User>({
 })
 
 // input rules
-export const rules = ref<Rules>({
+export const rules: Rules = {
   phone: [
     { required: true, message: '请输入手机号', trigger: 'blur' },
     { min: 11, max: 11, message: '请输入11位电话号码', trigger: 'blur' }
   ],
   vercode: [{ required: true, message: '请输入验证码', trigger: 'blur' }]
-})
+}
 // DOM Ref
 export const formRules = ref<null | HTMLFormElement>(null)
 // vercode show Time

@@ -1,9 +1,10 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
+import { REQUEST_ADDRESS } from '@/config'
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    redirect: '/login'
+    redirect: { name: 'Login' }
   },
   {
     path: '/login',
@@ -13,20 +14,18 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/:catchAll(.*)',
     name: '404',
-    component: () => import(/*webpackChunkName: '404' */ '@/views/pages/404.vue')
+    component: () => import(/*webpackChunkName: '404' */ '@/views/pages/error.vue')
   },
   {
     path: '/home',
     name: 'home',
     component: () => import(/*webpackChunkName: 'home' */ '@/views/pages/home.vue'),
-    children: [
-      // require("./homeChildren").default,
-    ]
+    children: require('./homeChildren').default
   }
 ]
 
 const router = createRouter({
-  history: createWebHashHistory(process.env.BASE_URL),
+  history: createWebHashHistory(REQUEST_ADDRESS),
   routes
 })
 
