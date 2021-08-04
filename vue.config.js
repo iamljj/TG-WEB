@@ -35,15 +35,29 @@ module.exports = {
     })
   },
   devServer: {
-    port: 3000,
-    disableHostCheck: true,
     proxy: {
-      '/proxy/location': {
-        target: 'https://map.baidu.com',
+      '/proxy/7000': {
+        target: 'http://192.168.0.22:7000',
         changeOrigin: true,
         secure: false,
         pathRewrite: {
-          '^/proxy/location': ''
+          '^/proxy/7000': ''
+        }
+      },
+      '/proxy/7001': {
+        target: 'http://192.168.0.22:7001',
+        changeOrigin: true,
+        secure: false,
+        pathRewrite: {
+          '^/proxy/7001': ''
+        }
+      },
+      '/proxy/7002': {
+        target: 'http://192.168.0.22:7002',
+        changeOrigin: true,
+        secure: false,
+        pathRewrite: {
+          '^/proxy/7002': ''
         }
       }
     }

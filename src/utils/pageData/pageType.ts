@@ -1,7 +1,7 @@
 // login
 export interface User {
-  phone: number
-  vercode: string
+  phone: string
+  code: string
 }
 export interface Rules {
   phone: (
@@ -20,7 +20,7 @@ export interface Rules {
         required?: undefined
       }
   )[]
-  vercode: {
+  code: {
     required: boolean
     message: string
     trigger: string
@@ -33,7 +33,56 @@ export interface tableType {
 }
 
 export interface tableDataType {
+  id: number
   name: string
-  phone: string
-  time: string
+  type: string
+  price: string
+  img: string
+  base: string
+}
+export interface formType {
+  id: string
+  name: string
+  type: string
+  price: string
+  img: string
+  base: string
+}
+
+export interface optionData {
+  value: string
+  label: string
+}
+
+export interface rulesChange {
+  id: {
+    require: boolean
+    message: string
+    trigger: string
+  }[]
+  name: {
+    required: boolean
+    message: string
+    trigger: string
+  }[]
+  type: {
+    required: boolean
+    message: string
+    trigger: string
+  }[]
+  price: {
+    required: boolean
+    message: string
+    trigger: string
+  }[]
+  img: {
+    required: boolean
+    message: string
+    trigger: string
+  }[]
+  base: {
+    required: boolean
+    message: string
+    trigger: string
+  }[]
 }

@@ -28,8 +28,8 @@
           <div class="userNameDiv">
             <div class="usernameInput">手机验证</div>
             <div style="height: 50px">
-              <el-form-item prop="vercode">
-                <el-input class="vertical inputDeep" v-model="loginUser.vercode">
+              <el-form-item prop="code">
+                <el-input class="vertical inputDeep" v-model="loginUser.code">
                   <template #suffix>
                     <el-button
                       type="text"
@@ -71,7 +71,7 @@ import { useStore } from 'vuex'
 export default defineComponent({
   name: 'login',
   setup() {
-    // const store = useStore<GlobalDataProps>()
+    const store = useStore<GlobalDataProps>()
     // 倒计时方法
     const countDown = () => {
       if (time.value == 0) {
@@ -87,23 +87,51 @@ export default defineComponent({
     }
     const getVercode = () => {
       if (loginUser.value.phone && loginUser.value.phone.toString().length == 11) {
-        isVercode.value = false
-        countDown()
-        // axios.post('/').then((res) => {})
+        axios
+          .get(`/proxy/7000/service/sms/LoginCode/${loginUser.value.phone}`)
+          .then((res) => {
+            isVercode.value = false
+            countDown()
+          })
+          .catch(() => {
+            ElMessage({
+              type: 'error',
+              iconClass: 'el-icon-circle-close',
+              message: '请输入正确的手机号'
+            })
+          })
       } else {
-        ElMessage.error('请输入正确的手机号码')
+        ElMessage({
+          type: 'error',
+          iconClass: 'el-icon-circle-close',
+          message: '请输入正确的手机号'
+        })
       }
     }
     const submitForm = () => {
       formRules.value.validate((valid) => {
         if (valid) {
-          // axios.get('/').then((res) => {
-          //   store.commit('login', res)
-          // })
+          axios
+            .post(`/proxy/7002/service/auth/login`, loginUser.value)
+            .then((res) => {
+              console.log(res.data.data)
+              store.commit('login', res.data.data)
+              router.push('/home')
+            })
+            .catch(() => {
+              ElMessage({
+                type: 'error',
+                iconClass: 'el-icon-circle-close',
+                message: '请输入正确的手机号/验证码'
+              })
+            })
           // 获取token并传入vuex中 通过vuex中方法存储在localstorage
-          router.push('/home')
         } else {
-          ElMessage.error('请输入正确的手机号或验证码')
+          ElMessage({
+            type: 'error',
+            iconClass: 'el-icon-circle-close',
+            message: '请输入正确的手机号或验证码'
+          })
         }
       })
     }
@@ -190,5 +218,15 @@ export default defineComponent({
     font-family: PingFangSC, PingFangSC-Medium;
     font-weight: 520;
   }
+}
+</style>
+<style>
+.el-message {
+  background-color: #ffffff;
+  border-radius: 4px;
+  box-shadow: 0px 1px 10px 0px rgba(0, 0, 0, 0.15);
+}
+.el-message__icon {
+  font-size: 30px;
 }
 </style>

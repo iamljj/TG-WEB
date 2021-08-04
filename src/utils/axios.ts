@@ -1,12 +1,19 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
-import { REQUEST_ADDRESS, TOKEN_FIELD, LEGAL_CODES, CODE_VERIFICATION } from '@/config'
+import {
+  REQUEST_ADDRESS,
+  TOKEN_FIELD,
+  LOGIN_ADDRESS,
+  LEGAL_CODES,
+  CODE_VERIFICATION
+} from '@/config'
 import { ElLoading } from 'element-plus'
 import { storage } from './storage'
-axios.defaults.baseURL = REQUEST_ADDRESS
+const token = storage.get(TOKEN_FIELD)
+token && (axios.defaults.baseURL = REQUEST_ADDRESS)
+!token && (axios.defaults.baseURL = LOGIN_ADDRESS)
 axios.defaults.timeout = 3000
 // loading
 let loading: any
-const token = storage.get(TOKEN_FIELD)
 const startLoading = () => {
   interface options {
     lock: boolean

@@ -1,5 +1,7 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
 import { REQUEST_ADDRESS } from '@/config'
+import { storage } from '@/utils/storage'
+import { ElMessage } from 'element-plus'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -28,5 +30,20 @@ const router = createRouter({
   history: createWebHashHistory(REQUEST_ADDRESS),
   routes
 })
+
+// router.beforeEach((to, from, next) => {
+//   if (to.path != '/login' && !storage.get('token')) {
+//     ElMessage({
+//       type: 'error',
+//       iconClass: 'el-icon-circle-close',
+//       message: '你还未登录，请登录'
+//     })
+//     next({
+//       path: '/login'
+//     })
+//   } else {
+//     next()
+//   }
+// })
 
 export default router

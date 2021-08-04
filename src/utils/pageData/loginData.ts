@@ -3,7 +3,7 @@ import { User, Rules } from './pageType'
 // password username
 export const loginUser = ref<User>({
   phone: null, // 手机号
-  vercode: null // 验证码
+  code: null // 验证码
 })
 
 // input rules
@@ -12,7 +12,7 @@ export const rules: Rules = {
     { required: true, message: '请输入手机号', trigger: 'blur' },
     { min: 11, max: 11, message: '请输入11位电话号码', trigger: 'blur' }
   ],
-  vercode: [{ required: true, message: '请输入验证码', trigger: 'blur' }]
+  code: [{ required: false, message: '请输入验证码', trigger: 'blur' }]
 }
 // DOM Ref
 export const formRules = ref<null | HTMLFormElement>(null)

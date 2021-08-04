@@ -1,7 +1,9 @@
 const dev = process.env.NODE_ENV === 'development'
 let REQUEST_ADDRESS = 'Online' //线上请求地址 baseurl
+let LOGIN_ADDRESS = 'Online'
 if (dev) {
-  REQUEST_ADDRESS = 'http://rap2api.taobao.org/app/mock/data/' //本地请求地址
+  ;(REQUEST_ADDRESS = 'http://192.168.0.22:7001'), //本地请求地址
+    (LOGIN_ADDRESS = 'http://192.168.0.22:7000') //登录请求地址
 }
 // 传递给后端的token字段名
 const TOKEN_FIELD = 'token'
@@ -13,4 +15,4 @@ const LEGAL_CODES = {
   301: 'redirect',
   304: 'redirect'
 }
-export { REQUEST_ADDRESS, TOKEN_FIELD, LEGAL_CODES, CODE_VERIFICATION, dev }
+export { REQUEST_ADDRESS, TOKEN_FIELD, LEGAL_CODES, CODE_VERIFICATION, dev, LOGIN_ADDRESS }

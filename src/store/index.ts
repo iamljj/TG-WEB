@@ -10,7 +10,7 @@ export default createStore<GlobalDataProps>({
   },
   mutations: {
     login(state, rawData) {
-      const { token } = rawData.data
+      const { token } = rawData
       state.token = token
       storage.set('token', token)
     },

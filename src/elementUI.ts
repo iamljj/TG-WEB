@@ -1,3 +1,4 @@
+import locale from 'element-plus/lib/locale/lang/zh-cn'
 import {
   ElButton,
   ElCard,
@@ -21,7 +22,12 @@ import {
   ElTable,
   ElTableColumn,
   ElDropdownMenu,
-  ElPagination
+  ElPagination,
+  ElDialog,
+  ElSelect,
+  ElDatePicker,
+  ElUpload,
+  ElOption
 } from 'element-plus'
 export const components: any[] = [
   ElButton,
@@ -34,13 +40,19 @@ export const components: any[] = [
   ElMenu,
   ElDropdown,
   ElDropdownItem,
+  ElSelect,
+  ElDatePicker,
+  ElUpload,
   ElPagination,
+  ElLoading,
   ElDropdownMenu,
   ElMenuItem,
+  ElDialog,
   ElTable,
+  ElOption,
+  ElFormItem,
   ElTableColumn,
   ElMenuItemGroup,
-  ElFormItem,
   ElContainer,
   ElAside,
   ElMain,
