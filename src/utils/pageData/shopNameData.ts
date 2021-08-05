@@ -1,6 +1,10 @@
 import { reactive, ref, unref } from 'vue'
 import { tableType, tableDataType, rulesChange, formType, optionData } from './pageType'
+
 export const dialogFormVisible = ref<boolean>(false)
+
+export const searchText = ref<string>('')
+
 export const table: tableType[] = [
   {
     name: '编码',
@@ -68,6 +72,7 @@ export const tableData = ref<tableDataType[]>([
     base: '瓶'
   }
 ])
+
 export const rules: rulesChange = {
   id: [{ require: true, message: '请填写商品编号', trigger: 'blur' }],
   name: [{ required: true, message: '请填写商品名称', trigger: 'blur' }],
@@ -76,8 +81,10 @@ export const rules: rulesChange = {
   img: [{ required: true, message: '请选择图片', trigger: 'blur' }],
   base: [{ required: true, message: '请选择基本单位', trigger: 'blur' }]
 }
+
 export const formRules: any = ref(null)
 // 选中的id
+
 export let form = reactive<formType>({
   id: '',
   name: '',
@@ -86,7 +93,9 @@ export let form = reactive<formType>({
   img: '',
   base: '箱/个'
 })
+
 export const formLabelWidth = ref<string>('100px;')
+
 export const options = ref<optionData[]>([
   {
     value: '选项1',
@@ -122,4 +131,9 @@ export const handleClose = (done: any) => {
     form[key] = ''
   }
   done()
+}
+
+// 添加框弹出，子组件触发
+export const showAdd = () => {
+  dialogFormVisible.value = true
 }

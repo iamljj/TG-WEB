@@ -64,8 +64,8 @@ export default defineComponent({
   &-text {
     margin-left: 10px;
     font-size: 14px;
+    line-height: 57px;
     font-family: PingFangSC, PingFangSC-Regular;
-    font-weight: 400;
     color: #333333;
   }
 }
