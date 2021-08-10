@@ -5,10 +5,11 @@
       :data="tableData"
       tooltip-effect="dark"
       stripe
+      highlight-current-row
       style="width: 100%"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column type="selection" width="55"> </el-table-column>
+      <el-table-column type="index" width="55"> </el-table-column>
       <el-table-column
         v-for="(item, i) in table"
         :key="i"
@@ -19,7 +20,7 @@
       </el-table-column>
       <el-table-column fixed="right" label="操作" width="150" v-if="buttonShow">
         <template #default="scope">
-          <el-button @click="handleClick(scope.row)" type="text">修改</el-button>
+          <el-button @click="handleClick(scope.row, form)" type="text">修改</el-button>
           <el-button type="text" style="color: orange" @click="handleDelete(scope.row)"
             >删除</el-button
           >
@@ -33,14 +34,15 @@
 import { defineComponent } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { handleDel, tableData } from '@/utils/request'
-import { handleClick } from '@/utils/pageData/shopNameData'
+import { handleClick } from '@/utils/pageData/publicData'
 
 export default defineComponent({
   name: 'Table',
   props: {
     table: Array,
     tableData: Array,
-    buttonShow: Boolean
+    buttonShow: Boolean,
+    form: Object
   },
   setup() {
     // 选中

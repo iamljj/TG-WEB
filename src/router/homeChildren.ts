@@ -2,7 +2,7 @@ export default [
   {
     path: 'activity',
     name: 'activity',
-    component: () => import(/* webpackChunkName: "home" */ '@/views/pages/activity.vue')
+    component: () => import(/* webpackChunkName: "home" */ '@/views/pages/activityCom/all.vue')
   },
   {
     path: 'person',
@@ -17,6 +17,6 @@ export default [
   {
     path: 'statistical',
     name: 'statistical',
-    component: () => import(/* webpackChunkName: "home" */ '@/views/pages/statistical.vue')
+    component: () => import(/* webpackChunkName: "home" */ '@/views/pages/statisticalCom/all.vue')
   }
 ]

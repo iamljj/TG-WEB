@@ -5,7 +5,7 @@
         <div class="top-name">商品列表</div>
         <Search></Search>
       </div>
-      <Table :table="table" :tableData="tableData" :buttonShow="true"></Table>
+      <Table :table="table" :tableData="tableData" :form="form" :buttonShow="true"></Table>
       <el-pagination
         layout="prev, pager, next"
         :total="50"
@@ -23,8 +23,8 @@
         style="display: flex; justify-between: center"
       >
         <div style="width: 40%; height: 100%">
-          <el-form-item label="商品编号" :label-width="formLabelWidth" prop="name">
-            <el-input v-model="form.id" autocomplete="off"></el-input>
+          <el-form-item label="规格属性" :label-width="formLabelWidth" prop="number">
+            <el-input v-model="form.number" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="规格属性" :label-width="formLabelWidth" prop="type">
             <el-input v-model="form.type" autocomplete="off"></el-input>
@@ -89,13 +89,13 @@ import {
   table,
   options,
   tableData,
-  dialogFormVisible,
   formLabelWidth,
   form,
   handleClose,
   rules,
   formRules
 } from '@/utils/pageData/shopNameData'
+import { dialogFormVisible } from '@/utils/pageData/publicData'
 import { pageSize, tableChange } from '@/utils/request'
 import { ElMessage } from 'element-plus'
 import Table from '@/components/table/table.vue'

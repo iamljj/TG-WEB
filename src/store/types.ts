@@ -1,5 +1,6 @@
 export interface GlobalDataProps {
-  token: string
+  token: any
   header: string
   nickName: string
+  dialogFormVisible: boolean
 }

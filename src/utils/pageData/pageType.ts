@@ -86,3 +86,17 @@ export interface rulesChange {
     trigger: string
   }[]
 }
+export interface activeNameType {
+  label: string
+}
+export interface allTableDataType {
+  name: string
+  prop: string
+  width: number
+}
+export interface activityForm {
+  number: number
+  name: string
+  type: string
+  explain: string
+}

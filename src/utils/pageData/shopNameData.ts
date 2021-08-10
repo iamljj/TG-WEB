@@ -1,7 +1,6 @@
 import { reactive, ref, unref } from 'vue'
 import { tableType, tableDataType, rulesChange, formType, optionData } from './pageType'
-
-export const dialogFormVisible = ref<boolean>(false)
+import { dialogFormVisible } from '@/utils/pageData/publicData'
 
 export const searchText = ref<string>('')
 
@@ -119,12 +118,7 @@ export const options = ref<optionData[]>([
   }
 ])
 // 修改的数据
-export const handleClick = (scoped: any) => {
-  dialogFormVisible.value = true
-  for (let key in scoped) {
-    form[key] = scoped[key]
-  }
-}
+
 // 关闭dio时
 export const handleClose = (done: any) => {
   for (let key in form) {

@@ -6,7 +6,8 @@ export default createStore<GlobalDataProps>({
   state: {
     token: storage.get('token') || '',
     header: '@/assets/header.png',
-    nickName: '111'
+    nickName: '111',
+    dialogFormVisible: false
   },
   mutations: {
     login(state, rawData) {
@@ -17,6 +18,9 @@ export default createStore<GlobalDataProps>({
     user(state, { header, nickName }) {
       state.header = header
       state.nickName = nickName
+    },
+    changeStorage(state, rawData) {
+      state.dialogFormVisible = rawData
     }
   },
   actions: {},
