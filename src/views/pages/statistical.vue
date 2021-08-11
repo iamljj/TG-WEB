@@ -29,9 +29,14 @@ export default defineComponent({
     const handleClick = (val) => {
       console.log(val)
     }
+    // 翻页
+    const handleCurrentChange = (val) => {
+      console.log(val)
+    }
     return {
       handleClick,
-      selectTab
+      selectTab,
+      handleCurrentChange
     }
   }
 })

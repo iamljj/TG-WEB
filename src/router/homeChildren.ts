@@ -18,5 +18,10 @@ export default [
     path: 'statistical',
     name: 'statistical',
     component: () => import(/* webpackChunkName: "home" */ '@/views/pages/statisticalCom/all.vue')
+  },
+  {
+    path: 'changePerson',
+    name: 'changePerson',
+    component: () => import(/* webpackChunkName: "home" */ '@/views/pages/changePerson.vue')
   }
 ]

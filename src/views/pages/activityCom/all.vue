@@ -107,12 +107,6 @@ export default defineComponent({
       console.log(val, label)
     }
 
-    // 页面翻页时调用参数
-
-    const handleCurrentChange = (val: number) => {
-      pageSize(val).then((res) => {})
-    }
-
     // 表单校验
 
     const submitForm = () => {
@@ -139,7 +133,6 @@ export default defineComponent({
     return {
       allTableData,
       allTable,
-      handleCurrentChange,
       form,
       handleAvatarSuccess,
       dialogFormVisible,

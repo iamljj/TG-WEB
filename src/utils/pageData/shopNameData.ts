@@ -1,6 +1,7 @@
 import { reactive, ref, unref } from 'vue'
 import { tableType, tableDataType, rulesChange, formType, optionData } from './pageType'
 import { dialogFormVisible } from '@/utils/pageData/publicData'
+import { phoneShow } from './personData'
 
 export const searchText = ref<string>('')
 
@@ -117,7 +118,6 @@ export const options = ref<optionData[]>([
     label: '北京烤鸭'
   }
 ])
-// 修改的数据
 
 // 关闭dio时
 export const handleClose = (done: any) => {
@@ -129,5 +129,6 @@ export const handleClose = (done: any) => {
 
 // 添加框弹出，子组件触发
 export const showAdd = () => {
+  phoneShow.value = false
   dialogFormVisible.value = true
 }

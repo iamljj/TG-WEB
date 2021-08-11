@@ -14,7 +14,7 @@
         </span>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item command="b">修改个人信息</el-dropdown-item>
+            <el-dropdown-item command="b" @click="changePerson">修改个人信息</el-dropdown-item>
             <el-dropdown-item command="c" @click="logout">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </template>
@@ -27,6 +27,7 @@
 import { defineComponent, computed } from 'vue'
 import { useStore } from 'vuex'
 import { storage } from '@/utils/storage'
+import router from '@/router/index'
 import { GlobalDataProps } from '@/store/types'
 export default defineComponent({
   name: 'top',
@@ -40,9 +41,13 @@ export default defineComponent({
     const logout = () => {
       storage.clear()
     }
+    const changePerson = () => {
+      router.push({ name: 'changePerson' })
+    }
     return {
       handleCommand,
       header,
+      changePerson,
       logout,
       nickName
     }

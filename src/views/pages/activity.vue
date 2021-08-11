@@ -31,12 +31,17 @@ export default defineComponent({
     Search
   },
   setup() {
+    // 翻页
+    const handleCurrentChange = (val) => {
+      console.log(val)
+    }
     const handleClick = (val) => {
       console.log(val)
     }
     return {
       activeName,
-      handleClick
+      handleClick,
+      handleCurrentChange
     }
   }
 })
