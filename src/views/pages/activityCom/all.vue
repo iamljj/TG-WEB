@@ -5,7 +5,12 @@
         <Table :table="allTable" :form="form" :tableData="allTableData" :buttonShow="true"></Table>
       </el-card>
       <!-- 修改弹出框 -->
-      <el-dialog title="修改" :before-close="handleClose" v-model="dialogFormVisible">
+      <el-dialog
+        title="修改"
+        :before-close="handleClose"
+        v-model="dialogFormVisible"
+        destroy-on-close
+      >
         <el-form
           :model="form"
           :rules="rules"
@@ -16,7 +21,7 @@
             <el-form-item label="活动编号" :label-width="formLabelWidth">
               <el-input
                 v-model="form.number"
-                :disabled="true"
+                :disabled="disable"
                 autocomplete="off"
                 style="margin-left: 10px"
               ></el-input>
@@ -82,10 +87,10 @@ import {
   form,
   allTable,
   allTableData,
-  handleClick,
   formLabelWidth,
   time,
   handleClose,
+  disable,
   rules,
   formRules
 } from '@/utils/pageData/activityData'
@@ -138,9 +143,9 @@ export default defineComponent({
       dialogFormVisible,
       rules,
       change,
-      handleClick,
       formRules,
       formLabelWidth,
+      disable,
       time,
       submitForm,
       handleClose

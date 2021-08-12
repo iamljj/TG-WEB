@@ -3,7 +3,7 @@
     <el-card style="height: 87vh; position: relative">
       <div class="top">
         <div class="top-name">商品列表</div>
-        <Search></Search>
+        <Search @search="search"></Search>
       </div>
       <Table :table="table" :tableData="tableData" :form="form" :buttonShow="true"></Table>
       <el-pagination
@@ -23,8 +23,8 @@
         style="display: flex; justify-between: center"
       >
         <div style="width: 40%; height: 100%">
-          <el-form-item label="规格属性" :label-width="formLabelWidth" prop="number">
-            <el-input v-model="form.number" autocomplete="off"></el-input>
+          <el-form-item label="商品名称" :label-width="formLabelWidth" prop="name">
+            <el-input v-model="form.name" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="规格属性" :label-width="formLabelWidth" prop="type">
             <el-input v-model="form.type" autocomplete="off"></el-input>
@@ -47,7 +47,7 @@
           >
             <el-upload
               class="avatar-uploader"
-              action="https://jsonplaceholder.typicode.com/posts/"
+              action="/a"
               :show-file-list="false"
               style="margin-left: 20px"
               :on-success="handleAvatarSuccess"
@@ -84,7 +84,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, ref } from 'vue'
 import {
   table,
   options,
@@ -96,7 +96,7 @@ import {
   formRules
 } from '@/utils/pageData/shopNameData'
 import { dialogFormVisible } from '@/utils/pageData/publicData'
-import { pageSize, tableChange } from '@/utils/request'
+import { pageSize, tableChange, searchAxios } from '@/utils/request'
 import { ElMessage } from 'element-plus'
 import Table from '@/components/table/table.vue'
 import Search from '@/components/search.vue'
@@ -107,19 +107,30 @@ export default defineComponent({
     Search
   },
   setup() {
+    const url = '/a'
+
     const change = (val, label) => {
       console.log(val, label)
     }
-    // 页面改变时调用参数
-    const handleCurrentChange = (val: number) => {
-      pageSize(val).then((res) => {})
+    // 搜索
+    const search = (searchText: string) => {
+      searchAxios(url, searchText).then((res) => {
+        console.log(res)
+      })
     }
-
+    // 翻页
+    const handleCurrentChange = (val: number) => {
+      pageSize(val).then((res) => {
+        tableData.value = res.data
+      })
+    }
+    // 修改页面点击确认
     const submitForm = () => {
       formRules.value.validate((valid: any) => {
         if (valid) {
-          // tableChange(form, form.id).then(()=>{
-          // })
+          tableChange(form, form.id).then((res) => {
+            console.log(res)
+          })
           dialogFormVisible.value = false
         } else {
           ElMessage({
@@ -144,6 +155,7 @@ export default defineComponent({
       form,
       handleAvatarSuccess,
       dialogFormVisible,
+      search,
       formLabelWidth,
       rules,
       change,

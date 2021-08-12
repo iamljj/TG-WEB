@@ -123,7 +123,7 @@ export const tableData = [
   }
 ]
 // 电话号码修改是否展示
-export const phoneShow = ref(false)
+export const phoneShow = ref<boolean>(false)
 // 规则
 export const rules = {
   name: [{ required: true, message: '请填写姓名', trigger: 'blur' }],

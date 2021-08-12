@@ -24,7 +24,8 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import Search from '@/components/search.vue'
-import { activeName } from '@/utils/pageData/activityData'
+import { activeName, allTableData } from '@/utils/pageData/activityData'
+import { pageSize } from '@/utils/request'
 export default defineComponent({
   name: 'Activity',
   components: {
@@ -33,7 +34,9 @@ export default defineComponent({
   setup() {
     // 翻页
     const handleCurrentChange = (val) => {
-      console.log(val)
+      pageSize(val).then((res) => {
+        allTableData.value = res.data
+      })
     }
     const handleClick = (val) => {
       console.log(val)

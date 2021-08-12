@@ -3,7 +3,7 @@ import { REQUEST_ADDRESS } from '@/config'
 import { storage } from '@/utils/storage'
 import { ElMessage } from 'element-plus'
 
-const routes: Array<RouteRecordRaw> = [
+const routes: any = [
   {
     path: '/',
     redirect: { name: 'Login' }
@@ -11,7 +11,10 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/login',
     name: 'Login',
-    component: () => import(/* webpackChunkName: "login" */ '@/views/pages/login.vue')
+    component: () => import(/* webpackChunkName: "login" */ '@/views/pages/login.vue'),
+    meta: {
+      title: '登录'
+    }
   },
   {
     path: '/:catchAll(.*)',
@@ -31,19 +34,19 @@ const router = createRouter({
   routes
 })
 
-router.beforeEach((to, from, next) => {
-  if (to.path != '/login' && to.name != '404' && !storage.get('token')) {
-    ElMessage({
-      type: 'error',
-      iconClass: 'el-icon-circle-close',
-      message: '你还未登录，请登录'
-    })
-    next({
-      path: '/login'
-    })
-  } else {
-    next()
-  }
-})
+// router.beforeEach((to, from, next) => {
+//   if (to.path != '/login' && to.name != '404' && !storage.get('token')) {
+//     ElMessage({
+//       type: 'error',
+//       iconClass: 'el-icon-circle-close',
+//       message: '你还未登录，请登录'
+//     })
+//     next({
+//       path: '/login'
+//     })
+//   } else {
+//     next()
+//   }
+// })
 
 export default router

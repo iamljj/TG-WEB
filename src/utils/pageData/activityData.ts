@@ -104,13 +104,8 @@ export const form = ref<activityForm>({
 })
 export const time: any = ref(null)
 export const formRules: any = ref(null)
-// 关闭dio时
-export const handleClose = (done: any) => {
-  for (let key in form) {
-    form[key] = ''
-  }
-  done()
-}
+
+export const disable = ref<boolean>(false)
 export const rules = {
   name: [{ required: true, message: '请填写活动名称', trigger: 'blur' }],
   explain: [{ required: true, message: '请填写活动说明', trigger: 'blur' }],
@@ -122,10 +117,17 @@ export const rules = {
 // 添加框弹出，子组件触发
 export const showAdd = () => {
   dialogFormVisible.value = true
+  disable.value = true
 }
 export const handleClick = (scoped: any) => {
   dialogFormVisible.value = true
   for (let key in scoped) {
     form[key] = scoped[key]
   }
+}
+export const handleClose = (done: any) => {
+  for (let key in form) {
+    form[key] = ''
+  }
+  done()
 }

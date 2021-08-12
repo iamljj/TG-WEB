@@ -2,12 +2,13 @@ import { createStore } from 'vuex'
 import { GlobalDataProps } from './types'
 import { storage } from '@/utils/storage'
 
-export default createStore<GlobalDataProps>({
+export default createStore({
   state: {
     token: storage.get('token') || '',
     header: '@/assets/header.png',
     nickName: '111',
-    dialogFormVisible: false
+    dialogFormVisible: false,
+    meta: []
   },
   mutations: {
     login(state, rawData) {
@@ -21,6 +22,11 @@ export default createStore<GlobalDataProps>({
     },
     changeStorage(state, rawData) {
       state.dialogFormVisible = rawData
+    },
+    pathRouter(state, meta) {
+      state.meta = meta.map((item) => {
+        return item.meta
+      })
     }
   },
   actions: {},

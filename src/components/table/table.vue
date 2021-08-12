@@ -20,7 +20,7 @@
       </el-table-column>
       <el-table-column fixed="right" label="操作" width="150" v-if="buttonShow">
         <template #default="scope">
-          <el-button @click="handleClick(scope.row, form)" type="text">修改</el-button>
+          <el-button @click="$emit('handleClick', from)" type="text">修改</el-button>
           <el-button type="text" style="color: orange" @click="handleDelete(scope.row)"
             >删除</el-button
           >
@@ -34,10 +34,10 @@
 import { defineComponent } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { handleDel, tableData } from '@/utils/request'
-import { handleClick } from '@/utils/pageData/publicData'
 
 export default defineComponent({
   name: 'Table',
+  emits: ['handleClick'],
   props: {
     table: Array,
     tableData: Array,
@@ -83,7 +83,6 @@ export default defineComponent({
         })
     }
     return {
-      handleClick,
       handleSelectionChange,
       handleDelete
     }

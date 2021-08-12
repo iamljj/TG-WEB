@@ -7,7 +7,9 @@
         v-model="searchText"
         suffix-icon="el-icon-search"
       ></el-input>
-      <el-button type="primary" class="top-search-button">搜索</el-button>
+      <el-button type="primary" class="top-search-button" @click="$emit('search', searchText)"
+        >搜索</el-button
+      >
       <el-button type="primary" size="medium" class="top-search-button" @click="showAdd"
         >添加</el-button
       >
@@ -16,11 +18,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
-import { showAdd, searchText } from '@/utils/pageData/shopNameData'
+import { defineComponent, ref } from 'vue'
+import { showAdd } from '@/utils/pageData/shopNameData'
 export default defineComponent({
   name: 'Search',
+  emits: ['search'],
   setup() {
+    const searchText = ref('')
+
     return { showAdd, searchText }
   }
 })

@@ -21,6 +21,7 @@ import top from '@/components/home/top.vue'
 import { tableData } from '@/utils/request'
 import { useStore } from 'vuex'
 import { GlobalDataProps } from '@/store/types'
+
 export default defineComponent({
   name: 'home',
   components: {
@@ -29,6 +30,7 @@ export default defineComponent({
   },
   setup() {
     const store = useStore<GlobalDataProps>()
+
     // 请求商品列表数据
     onMounted(() => {
       tableData('/').then((res) => {
@@ -36,6 +38,7 @@ export default defineComponent({
         store.commit('getHeader', res)
       })
     })
+    return {}
   }
 })
 </script>

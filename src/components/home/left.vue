@@ -12,32 +12,27 @@
         <img src="@/assets/logo.png" alt="" class="left-logo" />
         <div class="left-text">连客宝</div>
       </div>
-      <el-menu-item index="/home/shopName" style="margin-top: 32px">
-        <i class="el-icon-goods"></i>
-        <template #title>商品管理</template>
-      </el-menu-item>
-      <el-menu-item index="/home/activity">
-        <i class="el-icon-wind-power"></i>
-        <template #title>活动中心</template>
-      </el-menu-item>
-      <el-menu-item index="/home/statistical">
-        <i class="el-icon-pie-chart"></i>
-        <template #title>统计报表</template>
-      </el-menu-item>
-      <el-menu-item index="/home/person">
-        <i class="el-icon-user"></i>
-        <template #title>人员管理</template>
-      </el-menu-item>
+      <div style="margin-top: 52px">
+        <el-menu-item :index="item.path" v-for="(item, i) in list" :key="i">
+          <i :class="item.icon"></i>
+          <template #title>{{ item.title }}</template>
+        </el-menu-item>
+      </div>
     </el-menu>
   </div>
 </template>
 
 <script lang="ts">
-import { GlobalDataProps } from '@/store/types'
-import { defineComponent, onMounted, ref } from 'vue'
+import { defineComponent } from 'vue'
 import { useStore } from 'vuex'
 export default defineComponent({
-  setup() {}
+  setup() {
+    const store = useStore()
+    const list = store.state.meta
+    return {
+      list
+    }
+  }
 })
 </script>
 <style lang="scss" scoped>

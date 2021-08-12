@@ -13,6 +13,7 @@ const app = createApp(App)
 components.forEach((component) => {
   app.component(component.name, component)
 })
+
 plugins.forEach((plugin) => {
   app.use(plugin)
 })

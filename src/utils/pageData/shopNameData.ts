@@ -1,9 +1,7 @@
-import { reactive, ref, unref } from 'vue'
+import { reactive, ref } from 'vue'
 import { tableType, tableDataType, rulesChange, formType, optionData } from './pageType'
 import { dialogFormVisible } from '@/utils/pageData/publicData'
 import { phoneShow } from './personData'
-
-export const searchText = ref<string>('')
 
 export const table: tableType[] = [
   {
@@ -72,7 +70,6 @@ export const tableData = ref<tableDataType[]>([
     base: '瓶'
   }
 ])
-
 export const rules: rulesChange = {
   id: [{ require: true, message: '请填写商品编号', trigger: 'blur' }],
   name: [{ required: true, message: '请填写商品名称', trigger: 'blur' }],

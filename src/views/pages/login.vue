@@ -66,6 +66,7 @@ import { ElMessage } from 'element-plus'
 import router from '@/router/index'
 import axios from 'axios'
 import { GlobalDataProps } from '@/store/types'
+import { buildRoute } from '@/utils/premission'
 import { useStore } from 'vuex'
 
 export default defineComponent({
@@ -116,6 +117,12 @@ export default defineComponent({
             .then((res) => {
               console.log(res.data.data)
               store.commit('login', res.data.data)
+              const { asyncRoutes } = buildRoute(res.data.data.role)
+              const getMeta = router.options.routes[3].children.filter(
+                (item) => item.meta.path !== undefined
+              )
+              store.commit('pathRouter', getMeta)
+              router.addRoute(asyncRoutes as any)
               router.push('/home')
             })
             .catch(() => {
