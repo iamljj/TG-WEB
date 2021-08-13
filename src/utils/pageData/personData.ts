@@ -77,6 +77,7 @@ export const selectSexData = [
 ]
 export const formLabelWidth = '100px'
 export const form = reactive({
+  id: '',
   name: '',
   phone: '',
   sex: '',
@@ -93,7 +94,7 @@ export const table = [
   { name: '性别', prop: 'sex', width: 200 },
   { name: '创建时间', prop: 'time', width: 200 }
 ]
-export const tableData = [
+export const tableData = ref([
   {
     name: '刘恩纶',
     phone: '17390394258',
@@ -121,7 +122,7 @@ export const tableData = [
     sex: '男',
     time: '2021年8月11日 11:53:27'
   }
-]
+])
 // 电话号码修改是否展示
 export const phoneShow = ref<boolean>(false)
 // 规则
@@ -132,10 +133,5 @@ export const rules = {
   job: [{ required: true, message: '请选择职务', trigger: 'change' }],
   superior: [{ required: true, message: '请选择上级', trigger: 'change' }]
 }
-export const handleClose = (done: any) => {
-  for (let key in form) {
-    form[key] = ''
-  }
-  done()
-}
+
 export const formRules: any = ref(null)

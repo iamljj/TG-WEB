@@ -10,7 +10,7 @@
       <el-button type="primary" class="top-search-button" @click="$emit('search', searchText)"
         >搜索</el-button
       >
-      <el-button type="primary" size="medium" class="top-search-button" @click="showAdd"
+      <el-button type="primary" size="medium" class="top-search-button" @click="showAdd(form)"
         >添加</el-button
       >
     </div>
@@ -19,10 +19,13 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
-import { showAdd } from '@/utils/pageData/shopNameData'
+import { showAdd } from '@/utils/pageData/publicData'
 export default defineComponent({
   name: 'Search',
   emits: ['search'],
+  props: {
+    form: Object
+  },
   setup() {
     const searchText = ref('')
 

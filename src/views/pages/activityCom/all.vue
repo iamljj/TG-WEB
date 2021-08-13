@@ -2,40 +2,37 @@
   <div>
     <Activity>
       <el-card style="height: 87vh; position: relative">
-        <Table :table="allTable" :form="form" :tableData="allTableData" :buttonShow="true"></Table>
+        <Table
+          :table="allTable"
+          :form="form"
+          :tableData="allTableData"
+          :buttonShow="true"
+          url="/activity"
+        ></Table>
       </el-card>
       <!-- 修改弹出框 -->
-      <el-dialog
-        title="修改"
-        :before-close="handleClose"
-        v-model="dialogFormVisible"
-        destroy-on-close
-      >
+      <el-dialog title="修改" destroy-on-close center v-model="dialogFormVisible">
         <el-form
           :model="form"
           :rules="rules"
+          label-position="left"
           ref="formRules"
           style="display: flex; justify-between: center"
         >
           <div style="width: 40%; height: 100%">
-            <el-form-item label="活动编号" :label-width="formLabelWidth">
-              <el-input
-                v-model="form.number"
-                :disabled="disable"
-                autocomplete="off"
-                style="margin-left: 10px"
-              ></el-input>
+            <el-form-item label="活动编号" :label-width="formLabelWidth" prop="number">
+              <el-input v-model="form.number" :disabled="activeShow" autocomplete="off"></el-input>
             </el-form-item>
             <el-form-item label="活动名称" :label-width="formLabelWidth" prop="name">
               <el-input v-model="form.name" autocomplete="off"></el-input>
             </el-form-item>
             <el-form-item label="日期选择" :label-width="formLabelWidth" prop="time">
               <el-date-picker
-                v-model="time"
+                v-model="form.time"
                 type="datetimerange"
-                @change="change"
                 range-separator="至"
                 start-placeholder="开始日期"
+                value-format="x"
                 end-placeholder="结束日期"
               >
               </el-date-picker>
@@ -88,14 +85,15 @@ import {
   allTable,
   allTableData,
   formLabelWidth,
-  time,
+  activeShow,
   handleClose,
-  disable,
+  time,
   rules,
   formRules
 } from '@/utils/pageData/activityData'
 import { dialogFormVisible } from '@/utils/pageData/publicData'
-import { pageSize, tableChange } from '@/utils/request'
+import router from '@/router/index'
+import { pageSize, tableChange, tablePost } from '@/utils/request'
 import { ElMessage } from 'element-plus'
 import Table from '@/components/table/table.vue'
 import Activity from '@/views/pages/activity.vue'
@@ -106,19 +104,58 @@ export default defineComponent({
     Activity
   },
   setup() {
+    const url = '/s'
     // 选择时间
-
-    const change = (val, label) => {
-      console.log(val, label)
-    }
-
+    // const change = (val) => {
+    //   form.startTime = new Date(val[0]).getTime()
+    //   form.endTime = new Date(val[1]).getTime()
+    // }
     // 表单校验
 
     const submitForm = () => {
       formRules.value.validate((valid: any) => {
         if (valid) {
-          // tableChange(form, form.id).then(()=>{
-          // })
+          if (form.id != '') {
+            tableChange(url, form)
+              .then((res) => {
+                console.log(res)
+                ElMessage({
+                  type: 'success',
+                  iconClass: 'el-icon-circle-check',
+                  message: '修改成功'
+                })
+                router.push('/home/activity')
+              })
+              .catch(() => {
+                ElMessage({
+                  type: 'error',
+                  iconClass: 'el-icon-circle-close',
+                  message: '修改失败'
+                })
+              })
+          } else {
+            delete form.id
+            tablePost(url, form)
+              .then((res) => {
+                console.log(res)
+                ElMessage({
+                  type: 'success',
+                  iconClass: 'el-icon-circle-check',
+                  message: '保存成功'
+                })
+                router.push('/home/activity')
+              })
+              .catch(() => {
+                ElMessage({
+                  type: 'error',
+                  iconClass: 'el-icon-circle-close',
+                  message: '保存失败'
+                })
+              })
+          }
+          for (const key in form) {
+            form[key] = ''
+          }
           dialogFormVisible.value = false
         } else {
           ElMessage({
@@ -141,12 +178,12 @@ export default defineComponent({
       form,
       handleAvatarSuccess,
       dialogFormVisible,
+      time,
       rules,
-      change,
+      activeShow,
+      //   change,
       formRules,
       formLabelWidth,
-      disable,
-      time,
       submitForm,
       handleClose
     }

@@ -1,12 +1,11 @@
-import { ref, reactive } from 'vue'
-import { activeNameType, allTableDataType, activityForm, rulesChange, optionData } from './pageType'
-import { dialogFormVisible } from '@/utils/pageData/publicData'
+import { reactive, ref } from 'vue'
+import { activeNameType, allTableDataType, activityForm, optionData } from './pageType'
 export const activeName = ref<activeNameType[]>([
   { label: '全部' },
   { label: '进行中' },
   { label: '已完成' }
 ])
-export const formLabelWidth = ref<string>('100px;')
+export const formLabelWidth = ref<string>('300px;')
 export const allTable: allTableDataType[] = [
   {
     name: '编码',
@@ -95,38 +94,34 @@ export const allTableData = ref([
     explain: '俺是馁爹'
   }
 ])
-
-export const form = ref<activityForm>({
+export const formId = ref<string>('')
+export const form = reactive({
+  id: '',
   number: null,
   name: '',
   type: '',
+  address: '',
+  //   startTime:null,
+  time: [],
+  //   endTime:null,
   explain: ''
 })
 export const time: any = ref(null)
 export const formRules: any = ref(null)
-
-export const disable = ref<boolean>(false)
+export const activeShow = ref<boolean>(false)
 export const rules = {
+  number: [{ required: true, message: '请填写编号' }],
   name: [{ required: true, message: '请填写活动名称', trigger: 'blur' }],
   explain: [{ required: true, message: '请填写活动说明', trigger: 'blur' }],
-  time: [{ required: true, message: '请填写', trigger: 'blur' }],
+  time: [{ type: 'array', required: true, message: '请选择日期', trigger: 'blur' }],
   price: [{ required: true, message: '请填写商品价格', trigger: 'blur' }],
   img: [{ required: true, message: '请选择图片', trigger: 'blur' }],
   address: [{ required: true, message: '请填写活动地点', trigger: 'blur' }]
 }
-// 添加框弹出，子组件触发
-export const showAdd = () => {
-  dialogFormVisible.value = true
-  disable.value = true
-}
-export const handleClick = (scoped: any) => {
-  dialogFormVisible.value = true
-  for (let key in scoped) {
-    form[key] = scoped[key]
-  }
-}
+
+// 关闭dio时
 export const handleClose = (done: any) => {
-  for (let key in form) {
+  for (const key in form) {
     form[key] = ''
   }
   done()

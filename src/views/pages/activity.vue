@@ -3,7 +3,7 @@
     <el-card style="max-height: 87vh; position: relative">
       <div class="top">
         <div class="top-name">活动中心</div>
-        <Search></Search>
+        <Search :form="form" @search="search"></Search>
       </div>
       <el-tabs @tab-click="handleClick">
         <el-tab-pane :label="item.label" :key="i" v-for="(item, i) in activeName">
@@ -14,6 +14,7 @@
         layout="prev, pager, next"
         :total="50"
         @current-change="handleCurrentChange"
+        :current-page="currIndex"
         class="pageSelect"
       >
       </el-pagination>
@@ -22,29 +23,47 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, ref } from 'vue'
 import Search from '@/components/search.vue'
 import { activeName, allTableData } from '@/utils/pageData/activityData'
-import { pageSize } from '@/utils/request'
+import { form } from '@/utils/pageData/activityData'
+import { getCurrentActivity, getTabActivity, pageSize, searchAxios } from '@/utils/request'
+import { tableData } from '@/utils/pageData/personData'
 export default defineComponent({
   name: 'Activity',
   components: {
     Search
   },
   setup() {
+    const url = '/b'
+    const index = ref(0)
+    const currIndex = ref<number>(1)
     // 翻页
     const handleCurrentChange = (val) => {
-      pageSize(val).then((res) => {
+      currIndex.value = val
+      getCurrentActivity(index.value, val).then((res) => {
+        tableData.value = res.data
+      })
+    }
+    const search = (searchText: string) => {
+      searchAxios(url, searchText).then((res) => {
         allTableData.value = res.data
       })
     }
     const handleClick = (val) => {
-      console.log(val)
+      getTabActivity(val.index).then((res) => {
+        tableData.value = res.data
+      })
+      index.value = val.index
+      currIndex.value = 1
     }
     return {
       activeName,
       handleClick,
-      handleCurrentChange
+      form,
+      search,
+      handleCurrentChange,
+      currIndex
     }
   }
 })

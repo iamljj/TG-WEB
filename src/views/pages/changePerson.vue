@@ -30,7 +30,7 @@
           </el-form-item>
         </div>
       </el-form>
-      <el-button type="primary" class="submitButton" @click="submit">确认</el-button>
+      <el-button type="primary" class="submitButton" @click="submitForm">确认</el-button>
     </el-card>
   </div>
 </template>
@@ -42,22 +42,21 @@ import {
   changeName,
   userName,
   rules,
-  repeatPassword,
   showPassword,
   formRules
 } from '@/utils/pageData/changePerson'
 import { ElMessage } from 'element-plus'
+import { putInformation } from '@/utils/request'
 export default defineComponent({
   name: 'ShopName',
   setup() {
-    const submit = () => {
-      console.log('我提交了')
-    }
     const submitForm = () => {
       formRules.value.validate((valid: any) => {
         if (valid) {
-          // tableChange(form, form.id).then(()=>{
-          // })
+          const { name, newPassword } = changePerson.value
+          putInformation(name, newPassword).then((res) => {
+            changePerson.value = res.data
+          })
         } else {
           ElMessage({
             type: 'error',
@@ -69,14 +68,12 @@ export default defineComponent({
     }
     return {
       changePerson,
-      submit,
       changeName,
       formRules,
       showPassword,
       submitForm,
       rules,
-      userName,
-      repeatPassword
+      userName
     }
   }
 })

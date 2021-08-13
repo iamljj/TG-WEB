@@ -1,12 +1,10 @@
 import { reactive, ref } from 'vue'
 import { tableType, tableDataType, rulesChange, formType, optionData } from './pageType'
-import { dialogFormVisible } from '@/utils/pageData/publicData'
-import { phoneShow } from './personData'
 
 export const table: tableType[] = [
   {
     name: '编码',
-    prop: 'id',
+    prop: 'number',
     width: 100
   },
   {
@@ -36,9 +34,9 @@ export const table: tableType[] = [
   }
 ]
 
-export const tableData = ref<tableDataType[]>([
+export const tableData = ref([
   {
-    id: 1,
+    number: 1,
     name: '张三',
     type: '200ml',
     price: '￥120',
@@ -46,7 +44,7 @@ export const tableData = ref<tableDataType[]>([
     base: '瓶'
   },
   {
-    id: 2,
+    number: 2,
     name: '张三',
     type: '200ml',
     price: '￥120',
@@ -54,7 +52,7 @@ export const tableData = ref<tableDataType[]>([
     base: '瓶'
   },
   {
-    id: 4,
+    number: 4,
     name: '张三',
     type: '200ml',
     price: '￥120',
@@ -62,7 +60,7 @@ export const tableData = ref<tableDataType[]>([
     base: '瓶'
   },
   {
-    id: 3,
+    number: 3,
     name: '张三',
     type: '200ml',
     price: '￥120',
@@ -70,20 +68,22 @@ export const tableData = ref<tableDataType[]>([
     base: '瓶'
   }
 ])
-export const rules: rulesChange = {
-  id: [{ require: true, message: '请填写商品编号', trigger: 'blur' }],
+export const rules = {
+  number: [{ required: true, message: '请填写商品编码', trigger: 'blur' }],
   name: [{ required: true, message: '请填写商品名称', trigger: 'blur' }],
   type: [{ required: true, message: '请填写规格属性', trigger: 'blur' }],
   price: [{ required: true, message: '请填写商品价格', trigger: 'blur' }],
   img: [{ required: true, message: '请选择图片', trigger: 'blur' }],
-  base: [{ required: true, message: '请选择基本单位', trigger: 'blur' }]
+  base: [{ required: true, message: '请选择基本单位', trigger: 'change' }]
 }
 
 export const formRules: any = ref(null)
 // 选中的id
+export const formId = ref(null)
 
-export let form = reactive<formType>({
+export const form = reactive({
   id: '',
+  number: null,
   name: '',
   type: '',
   price: '',
@@ -118,14 +118,8 @@ export const options = ref<optionData[]>([
 
 // 关闭dio时
 export const handleClose = (done: any) => {
-  for (let key in form) {
+  for (const key in form) {
     form[key] = ''
   }
   done()
-}
-
-// 添加框弹出，子组件触发
-export const showAdd = () => {
-  phoneShow.value = false
-  dialogFormVisible.value = true
 }

@@ -30,11 +30,9 @@ export default defineComponent({
   },
   setup() {
     const store = useStore<GlobalDataProps>()
-
     // 请求商品列表数据
     onMounted(() => {
       tableData('/').then((res) => {
-        console.log(res)
         store.commit('getHeader', res)
       })
     })

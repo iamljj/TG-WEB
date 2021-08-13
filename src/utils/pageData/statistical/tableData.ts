@@ -78,29 +78,7 @@ export const groupListTable = [
     width: 200
   }
 ]
-export const allGroupListTable = ref([
-  {
-    rank: '1',
-    name: '刘恩纶',
-    index: '20',
-    successIndex: '20',
-    completionRate: '100%'
-  },
-  {
-    rank: '1',
-    name: '刘恩纶',
-    index: '20',
-    successIndex: '20',
-    completionRate: '100%'
-  },
-  {
-    rank: '1',
-    name: '刘恩纶',
-    index: '20',
-    successIndex: '1000',
-    completionRate: '100%'
-  }
-])
+
 // 送酒
 export const wineListTable = [
   {
@@ -129,29 +107,7 @@ export const wineListTable = [
     width: 200
   }
 ]
-export const allWineListTable = ref([
-  {
-    rank: '1',
-    name: '刘恩纶',
-    index: '20',
-    successIndex: '20',
-    completionRate: '100%'
-  },
-  {
-    rank: '1',
-    name: '刘恩纶',
-    index: '20',
-    successIndex: '20',
-    completionRate: '100%'
-  },
-  {
-    rank: '1',
-    name: '刘恩纶',
-    index: '20',
-    successIndex: '1000',
-    completionRate: '100%'
-  }
-])
+
 // 评鉴会场次
 export const tastMeetTable = [
   {
@@ -180,29 +136,7 @@ export const tastMeetTable = [
     width: 200
   }
 ]
-export const allTastMeetTable = ref([
-  {
-    rank: '1',
-    name: '刘恩纶',
-    index: '20',
-    successIndex: '20',
-    completionRate: '100%'
-  },
-  {
-    rank: '1',
-    name: '刘恩纶',
-    index: '20',
-    successIndex: '20',
-    completionRate: '100%'
-  },
-  {
-    rank: '1',
-    name: '刘恩纶',
-    index: '20',
-    successIndex: '1000',
-    completionRate: '100%'
-  }
-])
+
 // 回场游人次
 export const tourPlayTable = [
   {
@@ -231,29 +165,7 @@ export const tourPlayTable = [
     width: 200
   }
 ]
-export const allTourPlayTable = ref([
-  {
-    rank: '1',
-    name: '刘恩纶',
-    index: '20',
-    successIndex: '20',
-    completionRate: '100%'
-  },
-  {
-    rank: '1',
-    name: '刘恩纶',
-    index: '20',
-    successIndex: '20',
-    completionRate: '100%'
-  },
-  {
-    rank: '1',
-    name: '刘恩纶',
-    index: '20',
-    successIndex: '1000',
-    completionRate: '100%'
-  }
-])
+
 // 旅游人次
 export const travelPlayTable = [
   {
@@ -282,26 +194,3 @@ export const travelPlayTable = [
     width: 200
   }
 ]
-export const alltravelPlayTable = ref([
-  {
-    rank: '1',
-    name: '刘恩纶',
-    index: '20',
-    successIndex: '20',
-    completionRate: '100%'
-  },
-  {
-    rank: '1',
-    name: '刘恩纶',
-    index: '20',
-    successIndex: '20',
-    completionRate: '100%'
-  },
-  {
-    rank: '1',
-    name: '刘恩纶',
-    index: '20',
-    successIndex: '1000',
-    completionRate: '100%'
-  }
-])

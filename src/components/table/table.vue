@@ -20,7 +20,7 @@
       </el-table-column>
       <el-table-column fixed="right" label="操作" width="150" v-if="buttonShow">
         <template #default="scope">
-          <el-button @click="$emit('handleClick', from)" type="text">修改</el-button>
+          <el-button @click="handleClick(scope.row, form)" type="text">修改</el-button>
           <el-button type="text" style="color: orange" @click="handleDelete(scope.row)"
             >删除</el-button
           >
@@ -33,18 +33,19 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { handleDel, tableData } from '@/utils/request'
+import { handleDel } from '@/utils/request'
+import { handleClick } from '@/utils/pageData/publicData'
 
 export default defineComponent({
   name: 'Table',
-  emits: ['handleClick'],
   props: {
     table: Array,
     tableData: Array,
     buttonShow: Boolean,
-    form: Object
+    form: Object,
+    url: String
   },
-  setup() {
+  setup(props) {
     // 选中
     const handleSelectionChange = (val) => {
       console.log(val)
@@ -57,7 +58,7 @@ export default defineComponent({
         type: 'warning'
       })
         .then(() => {
-          handleDel('/', scoped.id)
+          handleDel(props.url, scoped.id)
             .then((res) => {
               ElMessage({
                 iconClass: 'el-icon-circle-check',
@@ -84,7 +85,8 @@ export default defineComponent({
     }
     return {
       handleSelectionChange,
-      handleDelete
+      handleDelete,
+      handleClick
     }
   }
 })

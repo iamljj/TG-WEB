@@ -13,6 +13,7 @@
         layout="prev, pager, next"
         :total="50"
         @current-change="handleCurrentChange"
+        :current-page="currIndex"
         class="pageSelect"
       >
       </el-pagination>
@@ -21,21 +22,34 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, ref } from 'vue'
 import { selectTab } from '@/utils/pageData/statisticalData'
+import { getTab, getTabCurrent } from '@/utils/request'
+import { allUnitListTable } from '@/utils/pageData/statistical/tableData'
+import { tableData } from '@/utils/pageData/personData'
 export default defineComponent({
   name: 'ShopName',
   setup() {
+    const index = ref<number>(0)
+    const currIndex = ref<number>(1)
     const handleClick = (val) => {
-      console.log(val)
+      getTab(val.index).then((res) => {
+        allUnitListTable.value = ref(res.data)
+      })
+      index.value = val.index
+      currIndex.value = 1
     }
     // 翻页
-    const handleCurrentChange = (val) => {
-      console.log(val)
+    const handleCurrentChange = (val: number) => {
+      currIndex.value = val
+      getTabCurrent(index.value, val).then((res) => {
+        tableData.value = res.data
+      })
     }
     return {
       handleClick,
       selectTab,
+      currIndex,
       handleCurrentChange
     }
   }

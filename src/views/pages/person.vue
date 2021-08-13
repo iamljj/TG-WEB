@@ -19,10 +19,16 @@
             >
             </el-option>
           </el-select>
-          <Search></Search>
+          <Search :form="form" @search="search"></Search>
         </div>
       </div>
-      <Table :table="table" :tableData="tableData" :form="form" :buttonShow="true"></Table>
+      <Table
+        :table="table"
+        :tableData="tableData"
+        url="/person"
+        :form="form"
+        :buttonShow="true"
+      ></Table>
       <el-pagination
         layout="prev, pager, next"
         :total="50"
@@ -32,12 +38,7 @@
       </el-pagination>
     </el-card>
     <!-- 修改弹出框 -->
-    <el-dialog
-      title="修改"
-      destroy-on-close
-      :before-close="handleClose"
-      v-model="dialogFormVisible"
-    >
+    <el-dialog title="修改" destroy-on-close v-model="dialogFormVisible">
       <el-form
         :model="form"
         :rules="rules"
@@ -116,11 +117,10 @@ import {
   selectSuperiorData,
   formRules,
   form,
-  formLabelWidth,
-  handleClose
+  formLabelWidth
 } from '@/utils/pageData/personData'
 import { dialogFormVisible } from '@/utils/pageData/publicData'
-import { pageSize, tableChange } from '@/utils/request'
+import { pageSize, searchAxios, selectJobs, tableChange, tablePost } from '@/utils/request'
 import { ElMessage } from 'element-plus'
 import Table from '@/components/table/table.vue'
 import Search from '@/components/search.vue'
@@ -131,17 +131,28 @@ export default defineComponent({
     Search
   },
   setup() {
+    const url = '/person'
     // 选择上级
     const selectSuperior = (val) => {
       console.log(val)
     }
     // list选择职位
     const selectJob = (val) => {
-      console.log(val)
+      selectJobs(val).then((res) => {
+        tableData.value = res.data
+      })
     }
     // 页面改变时调用参数
     const handleCurrentChange = (val: number) => {
-      pageSize(val).then((res) => {})
+      pageSize(url, val).then((res) => {
+        tableData.value = res.data
+      })
+    }
+    // 搜索
+    const search = (searchText: string) => {
+      searchAxios(url, searchText).then((res) => {
+        tableData.value = res.data
+      })
     }
     // 修改model选择职位
     const selectDioJob = (val) => {
@@ -150,8 +161,19 @@ export default defineComponent({
     const submitForm = () => {
       formRules.value.validate((valid: any) => {
         if (valid) {
-          // tableChange(form, form.id).then(()=>{
-          // })
+          if (form.id != '') {
+            tableChange(url, form).then((res) => {
+              tableData.value = res.data
+            })
+          } else {
+            delete form.id
+            tablePost(url, form).then((res) => {
+              tableData.value = res.data
+            })
+          }
+          for (const key in form) {
+            form[key] = ''
+          }
           dialogFormVisible.value = false
         } else {
           ElMessage({
@@ -177,6 +199,7 @@ export default defineComponent({
       selectSex,
       optionsJob,
       phoneShow,
+      search,
       form,
       job,
       handleAvatarSuccess,
@@ -190,7 +213,6 @@ export default defineComponent({
       selectSuperiorData,
       selectDioJob,
       submitForm,
-      handleClose,
       dioJobData
     }
   }

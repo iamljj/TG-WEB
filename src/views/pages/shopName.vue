@@ -5,7 +5,13 @@
         <div class="top-name">商品列表</div>
         <Search @search="search"></Search>
       </div>
-      <Table :table="table" :tableData="tableData" :form="form" :buttonShow="true"></Table>
+      <Table
+        :table="table"
+        :tableData="tableData"
+        url="/shopName"
+        :form="form"
+        :buttonShow="true"
+      ></Table>
       <el-pagination
         layout="prev, pager, next"
         :total="50"
@@ -15,7 +21,12 @@
       </el-pagination>
     </el-card>
     <!-- 修改弹出框 -->
-    <el-dialog title="修改" :before-close="handleClose" v-model="dialogFormVisible">
+    <el-dialog
+      title="修改"
+      :before-close="handleClose"
+      destroy-on-close
+      v-model="dialogFormVisible"
+    >
       <el-form
         :model="form"
         :rules="rules"
@@ -23,8 +34,8 @@
         style="display: flex; justify-between: center"
       >
         <div style="width: 40%; height: 100%">
-          <el-form-item label="商品名称" :label-width="formLabelWidth" prop="name">
-            <el-input v-model="form.name" autocomplete="off"></el-input>
+          <el-form-item label="商品编码" :label-width="formLabelWidth" prop="number">
+            <el-input v-model="form.number" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="规格属性" :label-width="formLabelWidth" prop="type">
             <el-input v-model="form.type" autocomplete="off"></el-input>
@@ -90,13 +101,14 @@ import {
   options,
   tableData,
   formLabelWidth,
+  formId,
   form,
   handleClose,
   rules,
   formRules
 } from '@/utils/pageData/shopNameData'
 import { dialogFormVisible } from '@/utils/pageData/publicData'
-import { pageSize, tableChange, searchAxios } from '@/utils/request'
+import { pageSize, tableChange, searchAxios, tablePost } from '@/utils/request'
 import { ElMessage } from 'element-plus'
 import Table from '@/components/table/table.vue'
 import Search from '@/components/search.vue'
@@ -115,12 +127,12 @@ export default defineComponent({
     // 搜索
     const search = (searchText: string) => {
       searchAxios(url, searchText).then((res) => {
-        console.log(res)
+        tableData.value = res.data
       })
     }
     // 翻页
     const handleCurrentChange = (val: number) => {
-      pageSize(val).then((res) => {
+      pageSize(url, val).then((res) => {
         tableData.value = res.data
       })
     }
@@ -128,9 +140,19 @@ export default defineComponent({
     const submitForm = () => {
       formRules.value.validate((valid: any) => {
         if (valid) {
-          tableChange(form, form.id).then((res) => {
-            console.log(res)
-          })
+          if (form.id != '') {
+            tableChange(url, form).then((res) => {
+              tableData.value = res.data
+            })
+          } else {
+            delete form.id
+            tablePost(url, form).then((res) => {
+              tableData.value = res.data
+            })
+          }
+          for (const key in form) {
+            form[key] = ''
+          }
           dialogFormVisible.value = false
         } else {
           ElMessage({
@@ -153,6 +175,7 @@ export default defineComponent({
       handleCurrentChange,
       options,
       form,
+      formId,
       handleAvatarSuccess,
       dialogFormVisible,
       search,

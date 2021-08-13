@@ -115,7 +115,6 @@ export default defineComponent({
           axios
             .post(`/proxy/7002/service/auth/login`, loginUser.value)
             .then((res) => {
-              console.log(res.data.data)
               store.commit('login', res.data.data)
               const { asyncRoutes } = buildRoute(res.data.data.role)
               const getMeta = router.options.routes[3].children.filter(

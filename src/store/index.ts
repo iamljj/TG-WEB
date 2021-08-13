@@ -8,7 +8,8 @@ export default createStore({
     header: '@/assets/header.png',
     nickName: '111',
     dialogFormVisible: false,
-    meta: []
+    meta: [],
+    scopedId: ''
   },
   mutations: {
     login(state, rawData) {
@@ -27,6 +28,9 @@ export default createStore({
       state.meta = meta.map((item) => {
         return item.meta
       })
+    },
+    changeScopedId(state, scopedId) {
+      state.scopedId = scopedId
     }
   },
   actions: {},
