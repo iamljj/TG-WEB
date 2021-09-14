@@ -119,7 +119,7 @@ export default defineComponent({
     Search
   },
   setup() {
-    const url = '/a'
+    const url = '/service/commodityManagement/commodity'
 
     const change = (val, label) => {
       console.log(val, label)

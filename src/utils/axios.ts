@@ -8,7 +8,8 @@ import {
 } from '@/config'
 import { ElLoading } from 'element-plus'
 import { storage } from './storage'
-const token = storage.get(TOKEN_FIELD)
+const token =
+  'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxODQwODI1MTU0MyIsInJvbGVzIjoiW3tcImF1dGhvcml0eVwiOlwibWFuYWdlclwifV0iLCJpZCI6MTQyLCJ1c2VybmFtZSI6IjE4NDA4MjUxNTQzIiwiaWF0IjoxNjMxNTgyMjk3LCJleHAiOjE2MzIxODcwOTd9.CQMN6veGWQ58RYvM2b4kKsdf9gPcTrS1lc6PvTwAzaY'
 token && (axios.defaults.baseURL = REQUEST_ADDRESS)
 !token && (axios.defaults.baseURL = LOGIN_ADDRESS)
 axios.defaults.timeout = 3000
@@ -34,6 +35,7 @@ axios.interceptors.request.use((config: AxiosRequestConfig) => {
   startLoading()
   token && (config.headers[TOKEN_FIELD] = token)
   config.url?.includes('/proxy/') && (config.baseURL = '')
+
   return config
 })
 
@@ -53,7 +55,7 @@ axios.interceptors.response.use(
       return Promise.reject({ response })
     } catch (e) {
       endLoading()
-      return Promise.reject(e.message)
+      return Promise.reject(e)
     }
   },
   (error) => {

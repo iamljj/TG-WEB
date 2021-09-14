@@ -35,29 +35,26 @@ module.exports = {
     })
   },
   devServer: {
+    host: '192.168.0.70',
+    overlay: {
+      warning: false,
+      errors: true
+    },
     proxy: {
-      '/proxy/7000': {
-        target: 'http://192.168.0.22:7000',
+      '/proxy/7003': {
+        target: 'http://192.168.0.18:7003',
         changeOrigin: true,
         secure: false,
         pathRewrite: {
-          '^/proxy/7000': ''
+          '^/proxy/7003': ''
         }
       },
       '/proxy/7001': {
-        target: 'http://192.168.0.22:7001',
+        target: 'http://192.168.0.18:7001',
         changeOrigin: true,
         secure: false,
         pathRewrite: {
           '^/proxy/7001': ''
-        }
-      },
-      '/proxy/7002': {
-        target: 'http://192.168.0.22:7002',
-        changeOrigin: true,
-        secure: false,
-        pathRewrite: {
-          '^/proxy/7002': ''
         }
       }
     }

@@ -1,26 +1,9 @@
 import { ref, reactive } from 'vue'
-export const optionsJob = [
-  {
-    value: '选项1',
-    label: '黄金糕'
-  },
-  {
-    value: '选项2',
-    label: '双皮奶'
-  },
-  {
-    value: '选项3',
-    label: '蚵仔煎'
-  },
-  {
-    value: '选项4',
-    label: '龙须面'
-  },
-  {
-    value: '选项5',
-    label: '北京烤鸭'
-  }
-]
+import { seletlocals, selectJob } from '@/utils/request'
+export const optionsJob = selectJob().then((res) => {
+  const list = res.data
+  return list
+})
 export const dioJobData = [
   {
     value: '选项1',
@@ -77,6 +60,7 @@ export const selectSexData = [
 ]
 export const formLabelWidth = '100px'
 export const form = reactive({
+  local: '',
   id: '',
   name: '',
   phone: '',
@@ -87,6 +71,7 @@ export const form = reactive({
 export const job = ref('')
 export const table = [
   { name: '姓名', prop: 'name', width: 180 },
+  { name: '地区', prop: 'local', width: 180 },
   { name: '登录账号', prop: 'userName', width: 200 },
   { name: '手机号', prop: 'phone', width: 200 },
   { name: '上级', prop: 'superior', width: 200 },
@@ -98,6 +83,7 @@ export const tableData = ref([
   {
     name: '刘恩纶',
     phone: '17390394258',
+    local: '四川',
     userName: '17390394258',
     superior: '我自己',
     job: '业务员',
@@ -106,6 +92,7 @@ export const tableData = ref([
   },
   {
     name: '刘恩纶',
+    local: '四川',
     phone: '17390394258',
     userName: '17390394258',
     superior: '我自己',
@@ -115,6 +102,7 @@ export const tableData = ref([
   },
   {
     name: '刘恩纶',
+    local: '四川',
     phone: '17390394258',
     userName: '17390394258',
     superior: '我自己',

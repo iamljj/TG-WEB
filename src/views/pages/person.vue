@@ -19,6 +19,21 @@
             >
             </el-option>
           </el-select>
+          <el-select
+            v-model="job"
+            @change="selectJob"
+            clearable
+            placeholder="请选择"
+            style="margin-right: 20px"
+          >
+            <el-option
+              v-for="item in optionsJob"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            >
+            </el-option>
+          </el-select>
           <Search :form="form" @search="search"></Search>
         </div>
       </div>
@@ -120,7 +135,14 @@ import {
   formLabelWidth
 } from '@/utils/pageData/personData'
 import { dialogFormVisible } from '@/utils/pageData/publicData'
-import { pageSize, searchAxios, selectJobs, tableChange, tablePost } from '@/utils/request'
+import {
+  pageSize,
+  searchAxios,
+  selectJobs,
+  tableChange,
+  tablePost,
+  seletlocals
+} from '@/utils/request'
 import { ElMessage } from 'element-plus'
 import Table from '@/components/table/table.vue'
 import Search from '@/components/search.vue'
@@ -131,7 +153,8 @@ export default defineComponent({
     Search
   },
   setup() {
-    const url = '/person'
+    console.log(optionsJob)
+    const url = '/service/admin'
     // 选择上级
     const selectSuperior = (val) => {
       console.log(val)
@@ -191,6 +214,7 @@ export default defineComponent({
     const handleAvatarSuccess = (res, file) => {
       console.log(res, file)
     }
+    //获取全部城市
 
     return {
       tableData,

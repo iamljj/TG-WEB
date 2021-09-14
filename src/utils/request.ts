@@ -44,9 +44,17 @@ export const selectJobs = (selectID: string) => {
 }
 // 选择活动页面tab页
 export const getTabActivity = (index: number) => {
-  return axios.get('/activity?index=' + index)
+  return axios.get('/proxy/7003/activity?index=' + index)
 }
 // 选择活动页面tab+index页
 export const getCurrentActivity = (index: number, currIndex: number) => {
   return axios.get('/?index=' + index + '?currIndex=' + currIndex)
+}
+// 查询所有地区
+export const seletlocals = () => {
+  return axios.get('/service/admin/user/locals')
+}
+//查询所有职位
+export const selectJob = () => {
+  return axios.get('/proxy/7003/service/admin/user/Roles')
 }

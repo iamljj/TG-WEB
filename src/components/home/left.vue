@@ -24,11 +24,14 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { useStore } from 'vuex'
+import homeChildren from '@/router/homeChildren'
 export default defineComponent({
   setup() {
-    const store = useStore()
-    const list = store.state.meta
+    const homeChildrenRouter = homeChildren
+    const list = []
+    homeChildrenRouter.forEach((item, index) => {
+      list[index] = item.meta
+    })
     return {
       list
     }

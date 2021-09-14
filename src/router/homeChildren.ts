@@ -33,14 +33,28 @@ export default [
     path: 'changePerson',
     name: 'changePerson',
     component: () => import(/* webpackChunkName: "home" */ '@/views/pages/changePerson.vue'),
-    meta: {}
-  }
-]
-export const asyncRoute = [
+    meta: {
+      title: '个人信息',
+      icon: 'el-icon-pie-chart',
+      path: '/home/changePerson'
+    }
+  },
   {
     path: 'person',
     name: 'person',
     component: () => import(/* webpackChunkName: "home" */ '@/views/pages/person.vue'),
-    meta: { title: '超级管理员', roles: ['cjgly'] }
+    meta: {
+      title: '人员管理',
+      icon: 'el-icon-pie-chart',
+      path: '/home/person'
+    }
   }
+]
+export const asyncRoute = [
+  // {
+  //   path: 'person',
+  //   name: 'person',
+  //   component: () => import(/* webpackChunkName: "home" */ '@/views/pages/person.vue'),
+  //   meta: { title: '超级管理员', roles: ['cjgly'] }
+  // }
 ]
