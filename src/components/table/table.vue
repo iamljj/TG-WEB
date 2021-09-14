@@ -47,9 +47,7 @@ export default defineComponent({
   },
   setup(props) {
     // 选中
-    const handleSelectionChange = (val) => {
-      console.log(val)
-    }
+    const handleSelectionChange = (val) => {}
     // 是否确认删除
     const handleDelete = (scoped) => {
       ElMessageBox.confirm('此操作将永久删除该文件, 是否继续?', '提示', {

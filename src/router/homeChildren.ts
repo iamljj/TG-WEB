@@ -48,6 +48,16 @@ export default [
       icon: 'el-icon-pie-chart',
       path: '/home/person'
     }
+  },
+  {
+    path: 'displayitem',
+    name: 'displayitem',
+    component: () => import(/* webpackChunkName: "home" */ '@/views/pages/DisplayItems.vue'),
+    meta: {
+      title: '陈列项',
+      icon: 'el-icon-pie-chart',
+      path: '/home/displayitem'
+    }
   }
 ]
 export const asyncRoute = [

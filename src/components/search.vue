@@ -3,7 +3,7 @@
     <div class="top-search">
       <el-input
         class="top-search-input"
-        placeholder="请输入内容"
+        :placeholder="searchtext"
         v-model="searchText"
         suffix-icon="el-icon-search"
       ></el-input>
@@ -24,7 +24,8 @@ export default defineComponent({
   name: 'Search',
   emits: ['search'],
   props: {
-    form: Object
+    form: Object,
+    searchtext: String
   },
   setup() {
     const searchText = ref('')

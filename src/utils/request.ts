@@ -11,11 +11,10 @@ export const tableData = (url: string) => {
 }
 // 修改
 export const tableChange = (url: string, form: any) => {
-  return axios.put(url + '?id=' + form.id, form)
+  return axios.post(url + '?id=' + form.id, form)
 }
 // 新增
 export const tablePost = (url: string, form: any) => {
-  console.log(form)
   return axios.post(url, form)
 }
 // 删除
@@ -57,4 +56,8 @@ export const seletlocals = () => {
 //查询所有职位
 export const selectJob = () => {
   return axios.get('/proxy/7003/service/admin/user/Roles')
+}
+//查询陈列箱
+export const displayall = (data) => {
+  return axios.post('/proxy/7003/service/admin/display/findAll', data)
 }
