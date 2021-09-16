@@ -43,9 +43,11 @@ export default defineComponent({
     tableData: Array,
     buttonShow: Boolean,
     form: Object,
-    url: String
+    url: String,
+    id: String,
+    page: Number
   },
-  setup(props) {
+  setup(props, context) {
     // 选中
     const handleSelectionChange = (val) => {}
     // 是否确认删除
@@ -56,13 +58,16 @@ export default defineComponent({
         type: 'warning'
       })
         .then(() => {
-          handleDel(props.url, scoped.id)
-            .then((res) => {
+          const id = props.id.toString()
+          const newData = JSON.parse(JSON.stringify(scoped).replace(id, 'id'))
+          handleDel(props.url, newData.id)
+            .then(() => {
               ElMessage({
                 iconClass: 'el-icon-circle-check',
                 type: 'success',
                 message: '项目操作完成'
               })
+              context.emit('delete:gitlist', props.page)
             })
             .catch(() => {
               Promise.reject({ msg: '接口请求错误' })

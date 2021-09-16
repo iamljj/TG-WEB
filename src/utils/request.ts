@@ -11,7 +11,7 @@ export const tableData = (url: string) => {
 }
 // 修改
 export const tableChange = (url: string, form: any) => {
-  return axios.post(url + '?id=' + form.id, form)
+  return axios.post(url, form)
 }
 // 新增
 export const tablePost = (url: string, form: any) => {
@@ -19,7 +19,7 @@ export const tablePost = (url: string, form: any) => {
 }
 // 删除
 export const handleDel = (url: any, id: string) => {
-  return axios.delete(url + '?id=' + id)
+  return axios.delete(url + id)
 }
 // 搜索
 export const searchAxios = (url: string, searchText: string) => {
@@ -37,10 +37,6 @@ export const getTabCurrent = (index: number, currIndex: number) => {
 export const putInformation = (name: any, newPassword: string) => {
   return axios.put('/', { name: name, password: newPassword })
 }
-// 选择职位查询信息
-export const selectJobs = (selectID: string) => {
-  return axios.get('person?selectID=' + selectID)
-}
 // 选择活动页面tab页
 export const getTabActivity = (index: number) => {
   return axios.get('/proxy/7003/activity?index=' + index)
@@ -51,10 +47,10 @@ export const getCurrentActivity = (index: number, currIndex: number) => {
 }
 // 查询所有地区
 export const seletlocals = () => {
-  return axios.get('/service/admin/user/locals')
+  return axios.get('/proxy/7003/service/admin/user/locals')
 }
 //查询所有职位
-export const selectJob = () => {
+export const selectJobs = () => {
   return axios.get('/proxy/7003/service/admin/user/Roles')
 }
 //查询陈列箱

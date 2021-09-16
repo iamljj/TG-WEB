@@ -1,9 +1,4 @@
 import { ref, reactive } from 'vue'
-import { seletlocals, selectJob } from '@/utils/request'
-export const optionsJob = selectJob().then((res) => {
-  const list = res.data
-  return list
-})
 export const dioJobData = [
   {
     value: '选项1',
@@ -69,6 +64,11 @@ export const form = reactive({
   superior: ''
 })
 export const job = ref('')
+export const optionsJob = ref([])
+export const optionslocal = ref([])
+export const page = ref(1)
+export const pagesize = ref(1)
+
 export const table = [
   { name: '姓名', prop: 'name', width: 180 },
   { name: '地区', prop: 'local', width: 180 },

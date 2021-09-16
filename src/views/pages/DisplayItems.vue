@@ -3,14 +3,17 @@
     <el-card style="height: 87vh; position: relative">
       <div class="top">
         <div class="top-name">陈列项列表</div>
-        <Search @search="search" searchtext="搜索人员名称"></Search>
+        <Search @search="search" searchtext="搜索人员名称 "></Search>
       </div>
       <Table
         :table="table"
         :tableData="tableData"
-        url="/displayitem"
+        url="/proxy/7003/service/admin/display/"
+        id="displayId"
         :form="form"
         :buttonShow="true"
+        @delete:gitlist="handleCurrentChange"
+        :page="page"
       ></Table>
       <el-pagination
         layout="prev, pager, next"
@@ -36,10 +39,10 @@
         style="display: flex; justify-between: center"
       >
         <div style="width: 80%; height: 100%">
-          <el-form-item label="费用项编号" :label-width="formLabelWidth" prop="number">
+          <el-form-item label="费用项编号" :label-width="formLabelWidth" prop="dispalyNumber">
             <el-input v-model="form.dispalyNumber" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="费用项名称" :label-width="formLabelWidth" prop="name">
+          <el-form-item label="费用项名称" :label-width="formLabelWidth" prop="displayName">
             <el-input v-model="form.displayName" autocomplete="off"></el-input>
           </el-form-item>
         </div>
@@ -81,7 +84,8 @@ export default defineComponent({
     Search
   },
   setup() {
-    const url = '/proxy/7003//service/admin/display/save'
+    const url = '/proxy/7003/service/admin/display/save'
+    var searchtext = ''
 
     const change = (val, label) => {
       console.log(val, label)
@@ -100,8 +104,15 @@ export default defineComponent({
     getlist()
     // 搜索
     const search = (searchText: string) => {
-      searchAxios(url, searchText).then((res) => {
-        tableData.value = res.data
+      searchtext = searchText
+      const params = {
+        page: 1,
+        pageSize: pagesize.value,
+        queryKey: searchText
+      }
+      displayall(params).then((res) => {
+        tableData.value = res.data.data.records
+        totol.value = res.data.data.total
       })
     }
     // 翻页
@@ -109,26 +120,26 @@ export default defineComponent({
       page.value = val
       const params = {
         page: val,
-        pageSize: pagesize.value
+        pageSize: pagesize.value,
+        queryKey: searchtext
       }
       displayall(params).then((res) => {
         tableData.value = res.data.data.records
+        totol.value = res.data.data.total
       })
     }
     // 修改页面点击确认
     const submitForm = () => {
       formRules.value.validate((valid: any) => {
         if (valid) {
-          console.log(form.displayId)
           if (form.displayId != '') {
-            console.log(form)
             tableChange(url, form).then(() => {
               handleCurrentChange(page.value)
             })
           } else {
             delete form.displayId
-            tablePost(url, form).then((res) => {
-              tableData.value = res.data
+            tablePost(url, form).then(() => {
+              handleCurrentChange(page.value)
             })
           }
           for (const key in form) {
@@ -144,19 +155,12 @@ export default defineComponent({
         }
       })
     }
-
-    // 上传文件成功后
-    const handleAvatarSuccess = (res, file) => {
-      console.log(res, file)
-    }
-
     return {
       tableData,
       table,
       handleCurrentChange,
       form,
       formId,
-      handleAvatarSuccess,
       dialogFormVisible,
       search,
       formLabelWidth,

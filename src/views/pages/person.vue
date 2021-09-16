@@ -8,29 +8,24 @@
             v-model="job"
             @change="selectJob"
             clearable
-            placeholder="请选择"
+            placeholder="请选择职务"
             style="margin-right: 20px"
           >
-            <el-option
-              v-for="item in optionsJob"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            >
+            <el-option v-for="(item, index) of optionsJob" :key="index" :label="item" :value="item">
             </el-option>
           </el-select>
           <el-select
             v-model="job"
             @change="selectJob"
             clearable
-            placeholder="请选择"
+            placeholder="请选择地区"
             style="margin-right: 20px"
           >
             <el-option
-              v-for="item in optionsJob"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
+              v-for="(item, index) in optionslocal"
+              :key="index"
+              :label="item"
+              :value="item"
             >
             </el-option>
           </el-select>
@@ -121,7 +116,6 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import {
-  optionsJob,
   job,
   table,
   tableData,
@@ -132,7 +126,11 @@ import {
   selectSuperiorData,
   formRules,
   form,
-  formLabelWidth
+  formLabelWidth,
+  optionsJob,
+  optionslocal,
+  page,
+  pagesize
 } from '@/utils/pageData/personData'
 import { dialogFormVisible } from '@/utils/pageData/publicData'
 import {
@@ -153,17 +151,31 @@ export default defineComponent({
     Search
   },
   setup() {
-    console.log(optionsJob)
     const url = '/service/admin'
+    //加载职位选项
+    const getoptionsJob = () => {
+      selectJobs().then((res) => {
+        const list = res.data.data
+        optionsJob.value = list
+      })
+    }
+    getoptionsJob()
+    //加载所有地区选项
+    const getlocals = () => {
+      seletlocals().then((res) => {
+        const list = res.data.data
+        optionslocal.value = list
+      })
+    }
+    getlocals()
+
     // 选择上级
     const selectSuperior = (val) => {
       console.log(val)
     }
     // list选择职位
-    const selectJob = (val) => {
-      selectJobs(val).then((res) => {
-        tableData.value = res.data
-      })
+    const selectJob = () => {
+      console.log(job)
     }
     // 页面改变时调用参数
     const handleCurrentChange = (val: number) => {
@@ -221,7 +233,6 @@ export default defineComponent({
       table,
       handleCurrentChange,
       selectSex,
-      optionsJob,
       phoneShow,
       search,
       form,
@@ -237,7 +248,11 @@ export default defineComponent({
       selectSuperiorData,
       selectDioJob,
       submitForm,
-      dioJobData
+      dioJobData,
+      optionsJob,
+      optionslocal,
+      page,
+      pagesize
     }
   }
 })
