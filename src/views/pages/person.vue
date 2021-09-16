@@ -15,7 +15,7 @@
             </el-option>
           </el-select>
           <el-select
-            v-model="job"
+            v-model="local"
             @change="selectJob"
             clearable
             placeholder="请选择地区"
@@ -29,19 +29,21 @@
             >
             </el-option>
           </el-select>
-          <Search :form="form" @search="search"></Search>
+          <Search :form="form" @search="search" searchtext="搜索人员名称"></Search>
         </div>
       </div>
       <Table
         :table="table"
         :tableData="tableData"
-        url="/person"
+        url="/proxy/7003/service/admin/deleteUser/"
+        id="id"
         :form="form"
         :buttonShow="true"
       ></Table>
       <el-pagination
         layout="prev, pager, next"
-        :total="50"
+        :page-size="pagesize"
+        :total="total"
         @current-change="handleCurrentChange"
         class="pageSelect"
       >
@@ -75,13 +77,13 @@
           </el-form-item>
         </div>
         <div style="width: 40%; margin-left: 10%">
-          <el-form-item label="职务" :label-width="formLabelWidth" prop="job">
-            <el-select v-model="form.job" @change="selectDioJob" clearable placeholder="请选择">
+          <el-form-item label="职务" :label-width="formLabelWidth" prop="role">
+            <el-select v-model="form.role" @change="selectDioJob" clearable placeholder="请选择">
               <el-option
-                v-for="item in dioJobData"
-                :key="item.value"
-                :label="item.label"
-                :value="item.label"
+                v-for="(item, index) in optionsJob"
+                :key="index"
+                :label="item"
+                :value="item"
               >
               </el-option>
             </el-select>
@@ -94,10 +96,21 @@
               placeholder="请选择"
             >
               <el-option
-                v-for="item in selectSuperiorData"
-                :key="item.value"
-                :label="item.label"
-                :value="item.label"
+                v-for="(item, index) in optionsSuperior"
+                :key="index"
+                :label="item.role + '：' + '' + item.name"
+                :value="item.id"
+              >
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="地区" :label-width="formLabelWidth" prop="local">
+            <el-select v-model="form.local" @change="selectSuperior" clearable placeholder="请选择">
+              <el-option
+                v-for="(item, index) in optionslocal"
+                :key="index"
+                :label="item"
+                :value="item"
               >
               </el-option>
             </el-select>
@@ -117,29 +130,30 @@
 import { defineComponent } from 'vue'
 import {
   job,
+  local,
   table,
   tableData,
   rules,
   selectSexData,
   phoneShow,
-  dioJobData,
-  selectSuperiorData,
   formRules,
   form,
   formLabelWidth,
   optionsJob,
   optionslocal,
   page,
-  pagesize
+  pagesize,
+  total,
+  optionsSuperior
 } from '@/utils/pageData/personData'
 import { dialogFormVisible } from '@/utils/pageData/publicData'
 import {
-  pageSize,
-  searchAxios,
   selectJobs,
   tableChange,
   tablePost,
-  seletlocals
+  seletlocals,
+  usersall,
+  getAllSuperior
 } from '@/utils/request'
 import { ElMessage } from 'element-plus'
 import Table from '@/components/table/table.vue'
@@ -151,7 +165,7 @@ export default defineComponent({
     Search
   },
   setup() {
-    const url = '/service/admin'
+    const url = '/proxy/7003/service/admin/users/insertOrUpdate'
     //加载职位选项
     const getoptionsJob = () => {
       selectJobs().then((res) => {
@@ -168,6 +182,27 @@ export default defineComponent({
       })
     }
     getlocals()
+    //加载所有的上级
+    const getSuperior = () => {
+      getAllSuperior().then((res) => {
+        optionsSuperior.value = res.data.data
+      })
+    }
+    getSuperior()
+
+    //首次进入加载数据
+    const getusers = () => {
+      const params = {
+        pages: 1,
+        size: pagesize.value
+      }
+
+      usersall(params).then((res) => {
+        tableData.value = res.data.data.records
+        total.value = res.data.data.total
+      })
+    }
+    getusers()
 
     // 选择上级
     const selectSuperior = (val) => {
@@ -175,36 +210,72 @@ export default defineComponent({
     }
     // list选择职位
     const selectJob = () => {
-      console.log(job)
+      handleCurrentChange(1)
     }
     // 页面改变时调用参数
     const handleCurrentChange = (val: number) => {
-      pageSize(url, val).then((res) => {
-        tableData.value = res.data
+      const params = {
+        pages: val,
+        size: pagesize.value,
+        local: local.value,
+        role: job.value
+      }
+      usersall(params).then((res) => {
+        tableData.value = res.data.data.records
+        total.value = res.data.data.total
       })
     }
     // 搜索
     const search = (searchText: string) => {
-      searchAxios(url, searchText).then((res) => {
-        tableData.value = res.data
+      const params = {
+        pages: 1,
+        size: pagesize.value,
+        userName: searchText
+      }
+      usersall(params).then((res) => {
+        tableData.value = res.data.data.records
+        total.value = res.data.data.total
       })
     }
-    // 修改model选择职位
-    const selectDioJob = (val) => {
-      console.log(val)
-    }
+    //新增和修改
     const submitForm = () => {
       formRules.value.validate((valid: any) => {
         if (valid) {
           if (form.id != '') {
-            tableChange(url, form).then((res) => {
-              tableData.value = res.data
-            })
+            tableChange(url, form)
+              .then(() => {
+                ElMessage({
+                  type: 'success',
+                  iconClass: 'el-icon-circle-check',
+                  message: '修改成功'
+                })
+                handleCurrentChange(page.value)
+              })
+              .catch(() => {
+                ElMessage({
+                  type: 'error',
+                  iconClass: 'el-icon-circle-close',
+                  message: '修改失败'
+                })
+              })
           } else {
             delete form.id
-            tablePost(url, form).then((res) => {
-              tableData.value = res.data
-            })
+            tablePost(url, form)
+              .then(() => {
+                ElMessage({
+                  type: 'success',
+                  iconClass: 'el-icon-circle-check',
+                  message: '新增成功'
+                })
+                handleCurrentChange(page.value)
+              })
+              .catch(() => {
+                ElMessage({
+                  type: 'error',
+                  iconClass: 'el-icon-circle-close',
+                  message: '修改失败'
+                })
+              })
           }
           for (const key in form) {
             form[key] = ''
@@ -222,11 +293,6 @@ export default defineComponent({
     const selectSex = (val) => {
       console.log(val)
     }
-    // 上传文件成功后
-    const handleAvatarSuccess = (res, file) => {
-      console.log(res, file)
-    }
-    //获取全部城市
 
     return {
       tableData,
@@ -237,7 +303,7 @@ export default defineComponent({
       search,
       form,
       job,
-      handleAvatarSuccess,
+      local,
       dialogFormVisible,
       formLabelWidth,
       selectSuperior,
@@ -245,14 +311,13 @@ export default defineComponent({
       selectSexData,
       selectJob,
       formRules,
-      selectSuperiorData,
-      selectDioJob,
-      submitForm,
-      dioJobData,
       optionsJob,
+      submitForm,
       optionslocal,
       page,
-      pagesize
+      pagesize,
+      total,
+      optionsSuperior
     }
   }
 })

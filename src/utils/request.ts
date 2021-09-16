@@ -57,3 +57,11 @@ export const selectJobs = () => {
 export const displayall = (data) => {
   return axios.post('/proxy/7003/service/admin/display/findAll', data)
 }
+//查询所有员工信息
+export const usersall = (data) => {
+  return axios.post('/proxy/7003/service/admin/users', data)
+}
+//查询所有的上级
+export const getAllSuperior = () => {
+  return axios.post('/proxy/7003/service/admin/users/getAllSuperior')
+}

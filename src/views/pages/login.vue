@@ -87,9 +87,11 @@ export default defineComponent({
       }
     }
     const getVercode = () => {
+      console.log(loginUser.value.phone.toString().length)
+      console.log(loginUser.value.phone)
       if (loginUser.value.phone && loginUser.value.phone.toString().length == 11) {
         axios
-          .get(`/proxy/7000/service/sms/LoginCode/${loginUser.value.phone}`)
+          .get(`/proxy/7001/service/sms/LoginCode/${loginUser.value.phone}`)
           .then((res) => {
             isVercode.value = false
             countDown()
