@@ -1,5 +1,5 @@
 export const storage = {
-  set(key: string, data, control = false) {
+  set(key: string, data, control = true) {
     try {
       if (control) {
         sessionStorage.setItem(key, JSON.stringify(data))
@@ -12,20 +12,20 @@ export const storage = {
       return false
     }
   },
-  get(key: string, control = false) {
+  get(key: string, control = true) {
     try {
       let res
       if (control) {
-        res = sessionStorage.getItem(key)
+        res = JSON.parse(sessionStorage.getItem(key))
       } else {
-        res = localStorage.getItem(key)
+        res = JSON.parse(localStorage.getItem(key))
       }
       return res
     } catch (e) {
       console.warn(e)
     }
   },
-  remove(key: string, control = false) {
+  remove(key: string, control = true) {
     try {
       if (control) {
         sessionStorage.removeItem(key)
@@ -38,7 +38,7 @@ export const storage = {
       return false
     }
   },
-  clear(control = false) {
+  clear(control = true) {
     try {
       if (control) {
         sessionStorage.clear()

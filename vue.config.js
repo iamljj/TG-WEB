@@ -64,6 +64,14 @@ module.exports = {
         pathRewrite: {
           '^/proxy/7002': ''
         }
+      },
+      '/proxy/7000': {
+        target: 'http://192.168.0.18:7000',
+        changeOrigin: true,
+        secure: false,
+        pathRewrite: {
+          '^/proxy/7000': ''
+        }
       }
     }
   }

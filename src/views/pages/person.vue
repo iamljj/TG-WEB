@@ -33,6 +33,7 @@
         </div>
       </div>
       <Table
+        @delete:gitlist="handleCurrentChange"
         :table="table"
         :tableData="tableData"
         url="/proxy/7003/service/admin/deleteUser/"
@@ -200,6 +201,12 @@ export default defineComponent({
       usersall(params).then((res) => {
         tableData.value = res.data.data.records
         total.value = res.data.data.total
+        // const list = res.data.data.records
+        // var arr2 = list.filter((item, index, a) => {
+        //   console.log(item.superior);
+        //   return item.superior == '八戒'
+        // })
+        // tableData.value =arr2
       })
     }
     getusers()

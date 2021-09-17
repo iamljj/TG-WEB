@@ -13,8 +13,9 @@ export default createStore({
   },
   mutations: {
     login(state, rawData) {
-      const { token } = rawData
+      const token = rawData
       state.token = token
+      // sessionStorage.setItem('token', token)
       storage.set('token', token)
     },
     user(state, { header, nickName }) {

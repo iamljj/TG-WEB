@@ -3,7 +3,7 @@ let REQUEST_ADDRESS = 'Online' //线上请求地址 baseurl
 let LOGIN_ADDRESS = 'Online'
 if (dev) {
   ;(REQUEST_ADDRESS = 'http://192.168.0.18:7003'), //本地请求地址
-    (LOGIN_ADDRESS = 'http://192.168.0.18:7003') //登录请求地址
+    (LOGIN_ADDRESS = 'http://192.168.0.18:7000') //登录请求地址
 }
 // 传递给后端的token字段名
 const TOKEN_FIELD = 'token'
