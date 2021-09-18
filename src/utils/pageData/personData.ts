@@ -29,6 +29,7 @@ export const page = ref(1)
 export const pagesize = ref(8)
 export const total = ref(1)
 export const optionsSuperior = ref([])
+export const title = ref('')
 
 export const table = [
   { name: '姓名', prop: 'name', width: 180 },

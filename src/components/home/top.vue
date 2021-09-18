@@ -14,7 +14,7 @@
         </span>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item command="b" @click="changePerson">修改个人信息</el-dropdown-item>
+            <!-- <el-dropdown-item command="b" @click="changePerson">修改个人信息</el-dropdown-item> -->
             <el-dropdown-item command="c" @click="logout">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </template>
@@ -33,12 +33,15 @@ export default defineComponent({
   name: 'top',
   setup() {
     const store = useStore<GlobalDataProps>()
-    const nickName = computed(() => store.state.nickName)
+    const nickName = computed(() => storage.get('nickName'))
+    console.log(nickName)
+
     const header = computed(() => store.state.header)
     const handleCommand = (command: string) => {
       console.log(command)
     }
     const logout = () => {
+      router.push('/home')
       storage.clear()
     }
     const changePerson = () => {

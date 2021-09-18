@@ -6,7 +6,7 @@ export default createStore({
   state: {
     token: storage.get('token') || '',
     header: '@/assets/header.png',
-    nickName: '111',
+    nickName: '',
     dialogFormVisible: false,
     meta: [],
     scopedId: ''
@@ -15,12 +15,15 @@ export default createStore({
     login(state, rawData) {
       const token = rawData
       state.token = token
-      // sessionStorage.setItem('token', token)
       storage.set('token', token)
     },
-    user(state, { header, nickName }) {
+    user(state, { header, name, role, id }) {
+      const username = name
       state.header = header
-      state.nickName = nickName
+      state.nickName = username
+      storage.set('nickName', username)
+      storage.set('role', role)
+      storage.set('id', id)
     },
     changeStorage(state, rawData) {
       state.dialogFormVisible = rawData

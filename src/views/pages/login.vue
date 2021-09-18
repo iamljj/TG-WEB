@@ -68,6 +68,7 @@ import axios from 'axios'
 import { GlobalDataProps } from '@/store/types'
 import { buildRoute } from '@/utils/premission'
 import { useStore } from 'vuex'
+import { storage } from '@/utils/storage'
 
 export default defineComponent({
   name: 'login',
@@ -115,6 +116,10 @@ export default defineComponent({
           axios
             .post(`/proxy/7002/service/auth/login`, loginUser.value)
             .then((res) => {
+              console.log(res.data.data.userInfo)
+              store.commit('user', res.data.data.userInfo)
+              console.log(store.state.nickName)
+
               store.commit('login', res.data.data.token)
               const { asyncRoutes } = buildRoute(res.data.data.role)
               const getMeta = router.options.routes[3].children.filter(
@@ -128,7 +133,7 @@ export default defineComponent({
               ElMessage({
                 type: 'error',
                 iconClass: 'el-icon-circle-close',
-                message: '请输入正确的手机号/验证码'
+                message: '请输入正确的手机号/验证码1'
               })
             })
           // 获取token并传入vuex中 通过vuex中方法存储在localstorage
@@ -136,7 +141,7 @@ export default defineComponent({
           ElMessage({
             type: 'error',
             iconClass: 'el-icon-circle-close',
-            message: '请输入正确的手机号或验证码'
+            message: '请输入正确的手机号或验证码2'
           })
         }
       })

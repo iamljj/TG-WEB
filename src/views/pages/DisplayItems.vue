@@ -26,7 +26,7 @@
     </el-card>
     <!-- 修改弹出框 -->
     <el-dialog
-      title="title"
+      :title="title"
       width="25%"
       :before-close="handleClose"
       destroy-on-close
@@ -72,6 +72,7 @@ import {
   pagesize,
   page
 } from '@/utils/pageData/displayItem'
+import { title } from '@/utils/pageData/personData'
 import { dialogFormVisible } from '@/utils/pageData/publicData'
 import { tableChange, searchAxios, tablePost } from '@/utils/request'
 import { ElMessage } from 'element-plus'
@@ -171,7 +172,8 @@ export default defineComponent({
       handleClose,
       totol,
       pagesize,
-      page
+      page,
+      title
     }
   }
 })

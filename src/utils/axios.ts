@@ -9,8 +9,6 @@ import {
 import { ElLoading } from 'element-plus'
 import { storage } from './storage'
 const token = storage.get('token')
-
-// 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxODQwODI1MTU0MyIsInJvbGVzIjoiW3tcImF1dGhvcml0eVwiOlwibWFuYWdlclwifV0iLCJpZCI6MTQyLCJ1c2VybmFtZSI6IjE4NDA4MjUxNTQzIiwiaWF0IjoxNjMxNjc0MDM1LCJleHAiOjE2MzIyNzg4MzV9.4qAer66fk_2mPv-bopERWic31meGUVUeUb9B4CLLI9M'
 token && (axios.defaults.baseURL = REQUEST_ADDRESS)
 !token && (axios.defaults.baseURL = LOGIN_ADDRESS)
 axios.defaults.timeout = 3000

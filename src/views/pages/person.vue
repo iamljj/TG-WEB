@@ -51,7 +51,7 @@
       </el-pagination>
     </el-card>
     <!-- 修改弹出框 -->
-    <el-dialog title="修改" destroy-on-close v-model="dialogFormVisible">
+    <el-dialog :title="title" destroy-on-close v-model="dialogFormVisible" @open="getSuperior">
       <el-form
         :model="form"
         :rules="rules"
@@ -90,12 +90,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="上级" :label-width="formLabelWidth" prop="superior">
-            <el-select
-              v-model="form.superior"
-              @change="selectSuperior"
-              clearable
-              placeholder="请选择"
-            >
+            <el-select v-model="form.superior" clearable placeholder="请选择">
               <el-option
                 v-for="(item, index) in optionsSuperior"
                 :key="index"
@@ -106,7 +101,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="地区" :label-width="formLabelWidth" prop="local">
-            <el-select v-model="form.local" @change="selectSuperior" clearable placeholder="请选择">
+            <el-select v-model="form.local" clearable placeholder="请选择">
               <el-option
                 v-for="(item, index) in optionslocal"
                 :key="index"
@@ -129,6 +124,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import { storage } from '@/utils/storage'
 import {
   job,
   local,
@@ -145,7 +141,8 @@ import {
   page,
   pagesize,
   total,
-  optionsSuperior
+  optionsSuperior,
+  title
 } from '@/utils/pageData/personData'
 import { dialogFormVisible } from '@/utils/pageData/publicData'
 import {
@@ -166,12 +163,25 @@ export default defineComponent({
     Search
   },
   setup() {
+    // location.reload()
     const url = '/proxy/7003/service/admin/users/insertOrUpdate'
     //加载职位选项
     const getoptionsJob = () => {
+      const role = storage.get('role')
       selectJobs().then((res) => {
         const list = res.data.data
-        optionsJob.value = list
+        if (role == '') {
+          optionsJob.value = list
+        } else {
+          switch (role) {
+            case 'admin':
+              var newlist = list.filter((item) => {
+                return item == 'user'
+              })
+              optionsJob.value = newlist
+              break
+          }
+        }
       })
     }
     getoptionsJob()
@@ -186,11 +196,20 @@ export default defineComponent({
     //加载所有的上级
     const getSuperior = () => {
       getAllSuperior().then((res) => {
-        optionsSuperior.value = res.data.data
+        const list = res.data.data
+        if (storage.get('title') == '新增') {
+          const newlist = list.filter((item) => {
+            return item.id == storage.get('id')
+          })
+          optionsSuperior.value = newlist
+        } else {
+          const newlist = list.filter((item) => {
+            return item.id !== storage.get('id')
+          })
+          optionsSuperior.value = newlist
+        }
       })
     }
-    getSuperior()
-
     //首次进入加载数据
     const getusers = () => {
       const params = {
@@ -199,22 +218,18 @@ export default defineComponent({
       }
 
       usersall(params).then((res) => {
-        tableData.value = res.data.data.records
-        total.value = res.data.data.total
-        // const list = res.data.data.records
-        // var arr2 = list.filter((item, index, a) => {
-        //   console.log(item.superior);
-        //   return item.superior == '八戒'
-        // })
-        // tableData.value =arr2
+        // tableData.value = res.data.data.records
+        // total.value = res.data.data.total
+        const list = res.data.data.records
+        var arr2 = list.filter((item) => {
+          return item.superior == storage.get('nickName')
+        })
+        tableData.value = arr2
+        total.value = arr2.length
       })
     }
     getusers()
 
-    // 选择上级
-    const selectSuperior = (val) => {
-      console.log(val)
-    }
     // list选择职位
     const selectJob = () => {
       handleCurrentChange(1)
@@ -228,8 +243,11 @@ export default defineComponent({
         role: job.value
       }
       usersall(params).then((res) => {
-        tableData.value = res.data.data.records
-        total.value = res.data.data.total
+        const list = res.data.data.records
+        var arr2 = list.filter((item) => {
+          return item.superior == storage.get('nickName')
+        })
+        tableData.value = arr2
       })
     }
     // 搜索
@@ -249,6 +267,12 @@ export default defineComponent({
       formRules.value.validate((valid: any) => {
         if (valid) {
           if (form.id != '') {
+            if (form.superior == storage.get('nickName')) {
+              form.superior = storage.get('id')
+              console.log('改成数字了')
+            } else {
+              console.log('没修改' + form.superior)
+            }
             tableChange(url, form)
               .then(() => {
                 ElMessage({
@@ -280,7 +304,7 @@ export default defineComponent({
                 ElMessage({
                   type: 'error',
                   iconClass: 'el-icon-circle-close',
-                  message: '修改失败'
+                  message: '新增失败'
                 })
               })
           }
@@ -297,23 +321,19 @@ export default defineComponent({
         }
       })
     }
-    const selectSex = (val) => {
-      console.log(val)
-    }
 
     return {
       tableData,
       table,
       handleCurrentChange,
-      selectSex,
       phoneShow,
       search,
       form,
       job,
       local,
+      getSuperior,
       dialogFormVisible,
       formLabelWidth,
-      selectSuperior,
       rules,
       selectSexData,
       selectJob,
@@ -324,7 +344,8 @@ export default defineComponent({
       page,
       pagesize,
       total,
-      optionsSuperior
+      optionsSuperior,
+      title
     }
   }
 })
