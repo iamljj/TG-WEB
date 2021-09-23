@@ -78,8 +78,13 @@
           </el-form-item>
         </div>
         <div style="width: 40%; margin-left: 10%">
-          <el-form-item label="职务" :label-width="formLabelWidth" prop="role">
-            <el-select v-model="form.role" @change="selectDioJob" clearable placeholder="请选择">
+          <el-form-item label="职务" :label-width="formLabelWidth" prop="roleName">
+            <el-select
+              v-model="form.roleName"
+              @change="selectDioJob"
+              clearable
+              placeholder="请选择"
+            >
               <el-option
                 v-for="(item, index) in optionsJob"
                 :key="index"
@@ -94,7 +99,7 @@
               <el-option
                 v-for="(item, index) in optionsSuperior"
                 :key="index"
-                :label="item.role + '：' + '' + item.name"
+                :label="item.roleName + '：' + '' + item.name"
                 :value="item.id"
               >
               </el-option>
@@ -142,7 +147,8 @@ import {
   pagesize,
   total,
   optionsSuperior,
-  title
+  title,
+  id
 } from '@/utils/pageData/personData'
 import { dialogFormVisible } from '@/utils/pageData/publicData'
 import {
@@ -151,7 +157,9 @@ import {
   tablePost,
   seletlocals,
   usersall,
-  getAllSuperior
+  getAllSuperior,
+  xj,
+  pageSize
 } from '@/utils/request'
 import { ElMessage } from 'element-plus'
 import Table from '@/components/table/table.vue'
@@ -163,22 +171,64 @@ export default defineComponent({
     Search
   },
   setup() {
-    // location.reload()
+    //控制管理员新增人员的上级
+    const selectDioJob = () => {
+      getAllSuperior().then((res) => {
+        const list = res.data.data
+        if (storage.get('roleName') == '管理员') {
+          switch (form.roleName) {
+            case '团购总监':
+              var newlist3 = list.filter((item) => {
+                return item.roleName == '管理员'
+              })
+              optionsSuperior.value = newlist3
+              break
+            case '团购经理':
+              var newlist4 = list.filter((item) => {
+                return item.roleName == '团购总监' && item.id !== storage.get('id')
+              })
+              optionsSuperior.value = newlist4
+              break
+            case '业务员':
+              var newlist5 = list.filter((item) => {
+                return item.roleName == '团购经理' && item.id !== storage.get('id')
+              })
+              optionsSuperior.value = newlist5
+              break
+            case '检核人员':
+              var newlist6 = list.filter((item) => {
+                return item.roleName == '团购经理' && item.id !== storage.get('id')
+              })
+              optionsSuperior.value = newlist6
+              break
+          }
+        }
+      })
+    }
+
     const url = '/proxy/7003/service/admin/users/insertOrUpdate'
     //加载职位选项
     const getoptionsJob = () => {
       const role = storage.get('role')
+
       selectJobs().then((res) => {
         const list = res.data.data
-        if (role == '') {
+        if (role == 'admin') {
           optionsJob.value = list
         } else {
           switch (role) {
-            case 'admin':
+            case 'manager':
               var newlist = list.filter((item) => {
-                return item == 'user'
+                return item == '业务员' || item == '检核人员'
               })
               optionsJob.value = newlist
+              break
+
+            case 'chief':
+              var newlist1 = list.filter((item) => {
+                return item == '团购经理' || item == '业务员' || item == '检核人员'
+              })
+              optionsJob.value = newlist1
               break
           }
         }
@@ -197,36 +247,103 @@ export default defineComponent({
     const getSuperior = () => {
       getAllSuperior().then((res) => {
         const list = res.data.data
-        if (storage.get('title') == '新增') {
-          const newlist = list.filter((item) => {
-            return item.id == storage.get('id')
-          })
-          optionsSuperior.value = newlist
+        console.log(list)
+        if (storage.get('roleName') == '管理员') {
+          switch (form.roleName) {
+            case '团购总监':
+              var newlist3 = list.filter((item) => {
+                return item.roleName == '管理员'
+              })
+              optionsSuperior.value = newlist3
+              break
+            case '团购经理':
+              var newlist4 = list.filter((item) => {
+                return item.roleName == '团购总监' && item.id !== storage.get('id')
+              })
+              optionsSuperior.value = newlist4
+              break
+            case '业务员':
+              var newlist5 = list.filter((item) => {
+                return item.roleName == '团购经理' && item.id !== storage.get('id')
+              })
+              optionsSuperior.value = newlist5
+              break
+            case '检核人员':
+              var newlist6 = list.filter((item) => {
+                return item.roleName == '团购经理' && item.id !== storage.get('id')
+              })
+              optionsSuperior.value = newlist6
+              break
+          }
         } else {
-          const newlist = list.filter((item) => {
-            return item.id !== storage.get('id')
-          })
-          optionsSuperior.value = newlist
+          console.log(storage.get('title'))
+
+          if (storage.get('title') == '新增') {
+            const newlist = list.filter((item) => {
+              return item.id == storage.get('id')
+            })
+            optionsSuperior.value = newlist
+          } else {
+            switch (storage.get('roleName')) {
+              case '团购总监':
+                var newlist1 = list.filter((item) => {
+                  return item.roleName == '管理员' || item.role == '团购总监'
+                })
+                optionsSuperior.value = newlist1
+                break
+              case '团购经理':
+                var newlist2 = list.filter((item) => {
+                  return (
+                    item.roleName == '团购总监' ||
+                    (item.role == '团购经理' && item.id !== storage.get('id'))
+                  )
+                })
+                optionsSuperior.value = newlist2
+                break
+            }
+          }
         }
       })
+      //把superior字符串变为数字
+      if (storage.get('roleName') !== '管理员') {
+        id.value = storage.get('id')
+      } else {
+        const params = {
+          pages: 1,
+          size: 1,
+          userName: form.superior
+        }
+        usersall(params).then((res) => {
+          res.data.data.records.forEach((item) => {
+            id.value = item.id
+          })
+        })
+      }
     }
     //首次进入加载数据
     const getusers = () => {
-      const params = {
-        pages: 1,
-        size: pagesize.value
-      }
-
-      usersall(params).then((res) => {
-        // tableData.value = res.data.data.records
-        // total.value = res.data.data.total
-        const list = res.data.data.records
-        var arr2 = list.filter((item) => {
-          return item.superior == storage.get('nickName')
+      if (storage.get('roleName') == '管理员') {
+        const params = {
+          pages: 1,
+          size: pagesize.value
+        }
+        usersall(params).then((res) => {
+          tableData.value = res.data.data.records
+          total.value = res.data.data.total
         })
-        tableData.value = arr2
-        total.value = arr2.length
-      })
+      } else {
+        const params = {
+          superiorId: storage.get('id'),
+          pages: 1,
+          size: pagesize.value,
+          local: local.value,
+          role: job.value
+        }
+        xj(params).then((res) => {
+          tableData.value = res.data.data.records
+          total.value = res.data.data.total
+        })
+      }
     }
     getusers()
 
@@ -236,59 +353,121 @@ export default defineComponent({
     }
     // 页面改变时调用参数
     const handleCurrentChange = (val: number) => {
+      page.value = val
       const params = {
         pages: val,
         size: pagesize.value,
         local: local.value,
-        role: job.value
+        roleName: job.value
       }
-      usersall(params).then((res) => {
-        const list = res.data.data.records
-        var arr2 = list.filter((item) => {
-          return item.superior == storage.get('nickName')
+      if (storage.get('roleName') == '管理员') {
+        usersall(params).then((res) => {
+          tableData.value = res.data.data.records
+          total.value = res.data.data.total
         })
-        tableData.value = arr2
-      })
+      } else {
+        const params = {
+          superiorId: storage.get('id'),
+          pages: val,
+          size: pagesize.value,
+          local: local.value,
+          role: job.value
+        }
+        xj(params).then((res) => {
+          tableData.value = res.data.data.records
+          total.value = res.data.data.total
+        })
+      }
     }
     // 搜索
     const search = (searchText: string) => {
       const params = {
         pages: 1,
         size: pagesize.value,
-        userName: searchText
+        userName: searchText,
+        local: local.value,
+        roleName: job.value
       }
-      usersall(params).then((res) => {
-        tableData.value = res.data.data.records
-        total.value = res.data.data.total
-      })
+      if (storage.get('roleName') == '管理员') {
+        usersall(params).then((res) => {
+          tableData.value = res.data.data.records
+          total.value = res.data.data.total
+        })
+      } else {
+        const params = {
+          superiorId: storage.get('id'),
+          pages: 1,
+          size: pagesize.value,
+          userName: searchText,
+          local: local.value,
+          roleName: job.value
+        }
+        xj(params).then((res) => {
+          tableData.value = res.data.data.records
+          total.value = res.data.data.total
+        })
+      }
     }
     //新增和修改
     const submitForm = () => {
       formRules.value.validate((valid: any) => {
         if (valid) {
-          if (form.id != '') {
-            if (form.superior == storage.get('nickName')) {
-              form.superior = storage.get('id')
-              console.log('改成数字了')
+          switch (form.roleName) {
+            case '业务员':
+              form.role = 'user'
+              break
+
+            case '检核人员':
+              form.role = 'feeAudit'
+              break
+            case '团购经理':
+              form.role = 'manager'
+              break
+            case '团购总监':
+              form.role = 'chief'
+              break
+            case '管理员':
+              form.role = 'admin'
+              break
+          }
+          if (form.id != undefined) {
+            if (form.superior.constructor == String) {
+              const newData = JSON.parse(JSON.stringify(form).replace(form.superior, id.value))
+              console.log(newData.role)
+              tableChange(url, newData)
+                .then(() => {
+                  ElMessage({
+                    type: 'success',
+                    iconClass: 'el-icon-circle-check',
+                    message: '修改成功'
+                  })
+                  handleCurrentChange(page.value)
+                })
+                .catch(() => {
+                  ElMessage({
+                    type: 'error',
+                    iconClass: 'el-icon-circle-close',
+                    message: '修改失败'
+                  })
+                })
             } else {
-              console.log('没修改' + form.superior)
+              tableChange(url, form)
+                .then(() => {
+                  ElMessage({
+                    type: 'success',
+                    iconClass: 'el-icon-circle-check',
+                    message: '修改成功'
+                  })
+                  handleCurrentChange(page.value)
+                })
+                .catch(() => {
+                  ElMessage({
+                    type: 'error',
+                    iconClass: 'el-icon-circle-close',
+                    message: '修改失败'
+                  })
+                })
             }
-            tableChange(url, form)
-              .then(() => {
-                ElMessage({
-                  type: 'success',
-                  iconClass: 'el-icon-circle-check',
-                  message: '修改成功'
-                })
-                handleCurrentChange(page.value)
-              })
-              .catch(() => {
-                ElMessage({
-                  type: 'error',
-                  iconClass: 'el-icon-circle-close',
-                  message: '修改失败'
-                })
-              })
           } else {
             delete form.id
             tablePost(url, form)
@@ -304,7 +483,7 @@ export default defineComponent({
                 ElMessage({
                   type: 'error',
                   iconClass: 'el-icon-circle-close',
-                  message: '新增失败'
+                  message: '账号已存在'
                 })
               })
           }
@@ -345,7 +524,10 @@ export default defineComponent({
       pagesize,
       total,
       optionsSuperior,
-      title
+      title,
+      id,
+      xj,
+      selectDioJob
     }
   }
 })

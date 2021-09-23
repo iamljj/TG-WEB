@@ -10,7 +10,7 @@
     >
       <div class="ma left">
         <img src="@/assets/logo.png" alt="" class="left-logo" />
-        <div class="left-text">连客宝</div>
+        <div class="left-text">口子窖数字化营销平台</div>
       </div>
       <div style="margin-top: 52px">
         <el-menu-item :index="item.path" v-for="(item, i) in list" :key="i">
@@ -40,18 +40,19 @@ export default defineComponent({
 </script>
 <style lang="scss" scoped>
 .left {
-  display: flex;
   width: 146px;
   height: 50px;
   margin-top: 31px;
+  margin-left: 25px;
   &-logo {
+    margin-left: 40px;
     height: 50px;
     width: 51px;
     position: relative;
     z-index: 1;
   }
   &-text {
-    font-size: 20px;
+    font-size: 14px;
     font-family: PingFangSC, PingFangSC-Medium;
     font-weight: 500;
     text-align: center;

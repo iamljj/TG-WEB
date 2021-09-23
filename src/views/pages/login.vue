@@ -6,7 +6,7 @@
     </el-col>
     <el-col :span="4">
       <div class="text vertical1">
-        <span>连客宝管理平台</span>
+        <span>口子窖数字化营销平台</span>
       </div>
     </el-col>
     <el-col :span="5"></el-col>
@@ -116,10 +116,7 @@ export default defineComponent({
           axios
             .post(`/proxy/7002/service/auth/login`, loginUser.value)
             .then((res) => {
-              console.log(res.data.data.userInfo)
               store.commit('user', res.data.data.userInfo)
-              console.log(store.state.nickName)
-
               store.commit('login', res.data.data.token)
               const { asyncRoutes } = buildRoute(res.data.data.role)
               const getMeta = router.options.routes[3].children.filter(
@@ -127,13 +124,13 @@ export default defineComponent({
               )
               store.commit('pathRouter', getMeta)
               router.addRoute(asyncRoutes as any)
-              router.push('/home')
+              router.push('/home/person')
             })
             .catch(() => {
               ElMessage({
                 type: 'error',
                 iconClass: 'el-icon-circle-close',
-                message: '请输入正确的手机号/验证码1'
+                message: '请输入正确的手机号或验证码'
               })
             })
           // 获取token并传入vuex中 通过vuex中方法存储在localstorage
@@ -141,7 +138,7 @@ export default defineComponent({
           ElMessage({
             type: 'error',
             iconClass: 'el-icon-circle-close',
-            message: '请输入正确的手机号或验证码2'
+            message: '请输入正确的手机号或验证码'
           })
         }
       })

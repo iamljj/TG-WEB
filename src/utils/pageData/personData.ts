@@ -1,4 +1,5 @@
 import { ref, reactive } from 'vue'
+import { storage } from '../storage'
 export const dioJobData = []
 export const selectSuperiorData = []
 export const selectSexData = [
@@ -19,7 +20,8 @@ export const form = reactive({
   phone: '',
   sex: '',
   role: '',
-  superior: ''
+  superior: '',
+  roleName: ''
 })
 export const job = ref('')
 export const local = ref('')
@@ -30,6 +32,7 @@ export const pagesize = ref(8)
 export const total = ref(1)
 export const optionsSuperior = ref([])
 export const title = ref('')
+export const id = ref('')
 
 export const table = [
   { name: '姓名', prop: 'name', width: 180 },
@@ -37,7 +40,7 @@ export const table = [
   { name: '登录账号', prop: 'phone', width: 200 },
   { name: '手机号', prop: 'phone', width: 200 },
   { name: '上级', prop: 'superior', width: 200 },
-  { name: '职务', prop: 'role', width: 200 },
+  { name: '职务', prop: 'roleName', width: 200 },
   { name: '性别', prop: 'sex', width: 200 },
   { name: '创建时间', prop: 'createTime', width: 200 }
 ]
@@ -47,9 +50,12 @@ export const phoneShow = ref<boolean>(false)
 // 规则
 export const rules = {
   name: [{ required: true, message: '请填写姓名', trigger: 'blur' }],
-  phone: [{ required: true, message: '请填写手机号', trigger: 'blur' }],
+  phone: [
+    { required: true, message: '请填写手机号', trigger: 'blur' },
+    { min: 11, max: 11, message: '请输入11位电话号码', trigger: 'blur' }
+  ],
   sex: [{ message: '请选择性别', trigger: 'change' }],
-  role: [{ required: true, message: '请选择职务', trigger: 'change' }],
+  roleName: [{ required: true, message: '请选择职务', trigger: 'change' }],
   superior: [{ required: true, message: '请选择上级', trigger: 'change' }]
 }
 

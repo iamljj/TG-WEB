@@ -17,13 +17,14 @@ export default createStore({
       state.token = token
       storage.set('token', token)
     },
-    user(state, { header, name, role, id }) {
+    user(state, { header, name, role, id, roleName }) {
       const username = name
       state.header = header
       state.nickName = username
       storage.set('nickName', username)
       storage.set('role', role)
       storage.set('id', id)
+      storage.set('roleName', roleName)
     },
     changeStorage(state, rawData) {
       state.dialogFormVisible = rawData

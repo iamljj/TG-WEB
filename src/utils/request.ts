@@ -65,3 +65,7 @@ export const usersall = (data) => {
 export const getAllSuperior = () => {
   return axios.post('/proxy/7003/service/admin/users/getAllSuperior')
 }
+//查询所有下级
+export const xj = (data) => {
+  return axios.post('/proxy/7003/service/admin/subordinateList/', data)
+}

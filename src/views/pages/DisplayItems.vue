@@ -3,7 +3,7 @@
     <el-card style="height: 87vh; position: relative">
       <div class="top">
         <div class="top-name">陈列项列表</div>
-        <Search @search="search" searchtext="搜索人员名称 "></Search>
+        <Search @search="search" searchtext="费用项名称 "></Search>
       </div>
       <Table
         :table="table"
