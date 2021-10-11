@@ -42,7 +42,7 @@ module.exports = {
     },
     proxy: {
       '/proxy/7003': {
-        target: 'http://192.168.0.18:7003',
+        target: 'http://192.168.0.48:7003',
         changeOrigin: true,
         secure: false,
         pathRewrite: {
@@ -50,7 +50,7 @@ module.exports = {
         }
       },
       '/proxy/7001': {
-        target: 'http://192.168.0.18:7001',
+        target: 'http://192.168.0.48:7001',
         changeOrigin: true,
         secure: false,
         pathRewrite: {
@@ -58,7 +58,7 @@ module.exports = {
         }
       },
       '/proxy/7002': {
-        target: 'http://192.168.0.18:7002',
+        target: 'http://192.168.0.48:7002',
         changeOrigin: true,
         secure: false,
         pathRewrite: {
@@ -66,7 +66,7 @@ module.exports = {
         }
       },
       '/proxy/7000': {
-        target: 'http://192.168.0.18:7000',
+        target: 'http://192.168.0.48:7000',
         changeOrigin: true,
         secure: false,
         pathRewrite: {
