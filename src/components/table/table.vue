@@ -49,7 +49,7 @@ export default defineComponent({
   },
   setup(props, context) {
     // 选中
-    const handleSelectionChange = (val) => {}
+    // const handleSelectionChange = (val) => {}
     // 是否确认删除
     const handleDelete = (scoped) => {
       ElMessageBox.confirm('此操作将永久删除该文件, 是否继续?', '提示', {
@@ -87,7 +87,7 @@ export default defineComponent({
         })
     }
     return {
-      handleSelectionChange,
+      // handleSelectionChange,
       handleDelete,
       handleClick
     }

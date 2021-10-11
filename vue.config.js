@@ -3,7 +3,7 @@ const TerserPlugin = require('terser-webpack-plugin')
  * @type {import('@vue/cli-service').ProjectOptions}
  */
 module.exports = {
-  // lintOnSave: false,
+  lintOnSave: false,
   productionSourceMap: false,
   configureWebpack: (config) => {
     config.devtool = 'source-map'
@@ -30,7 +30,7 @@ module.exports = {
   },
   chainWebpack: (config) => {
     config.plugin('html').tap((args) => {
-      args[0].title = 'vue'
+      args[0].title = '口子窖数字化营销平台'
       return args
     })
   },
