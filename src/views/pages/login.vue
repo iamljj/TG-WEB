@@ -5,7 +5,7 @@
       <img src="@/assets/logo.png" alt="" class="vertical1" />
     </el-col>
     <el-col :span="4">
-      <div class="text vertical1">
+      <div class="text vertical1" style="margin-left: 20px">
         <span>口子窖数字化营销平台</span>
       </div>
     </el-col>

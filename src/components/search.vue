@@ -2,6 +2,7 @@
   <div>
     <div class="top-search">
       <el-input
+        @input="change"
         class="top-search-input"
         :placeholder="searchtext"
         v-model="searchText"
@@ -29,6 +30,10 @@ export default defineComponent({
   },
   setup() {
     const searchText = ref('')
+    const change = () => {
+      if (!searchText) {
+      }
+    }
 
     return { showAdd, searchText }
   }

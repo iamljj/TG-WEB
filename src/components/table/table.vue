@@ -67,7 +67,7 @@ export default defineComponent({
                 type: 'success',
                 message: '项目操作完成'
               })
-              context.emit('delete:gitlist', props.page)
+              context.emit('delete:gitlist', 1)
             })
             .catch(() => {
               Promise.reject({ msg: '接口请求错误' })

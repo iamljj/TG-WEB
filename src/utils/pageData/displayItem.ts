@@ -29,7 +29,7 @@ export const form = reactive({
 })
 export const totol = ref(1)
 export const page = ref(1)
-export const pagesize = ref(5)
+export const pagesize = ref(8)
 export const formLabelWidth = ref<string>('100px;')
 
 // 关闭dio时

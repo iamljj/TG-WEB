@@ -42,7 +42,7 @@ export const table = [
   { name: '上级', prop: 'superior', width: 200 },
   { name: '职务', prop: 'roleName', width: 200 },
   { name: '性别', prop: 'sex', width: 200 },
-  { name: '创建时间', prop: 'createTime', width: 200 }
+  { name: '创建时间', prop: 'refreshTime', width: 200 }
 ]
 export const tableData = ref([])
 // 电话号码修改是否展示
