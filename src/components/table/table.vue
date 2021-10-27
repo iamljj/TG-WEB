@@ -9,7 +9,7 @@
       style="width: 100%"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column type="index" width="55"> </el-table-column>
+      <el-table-column label="序号" type="index" width="100"> </el-table-column>
       <el-table-column
         v-for="(item, i) in table"
         :key="i"
@@ -18,11 +18,21 @@
         :width="item.width"
       >
       </el-table-column>
-      <el-table-column fixed="right" label="操作" width="150" v-if="buttonShow">
+      <el-table-column fixed="right" label="操作" width="180" v-if="buttonShow">
         <template #default="scope">
           <el-button @click="handleClick(scope.row, form)" type="text">修改</el-button>
           <el-button type="text" style="color: orange" @click="handleDelete(scope.row)"
             >删除</el-button
+          >
+          <el-button type="text" @click="Enable(scope.row)" v-if="scope.row.status == '停用'">
+            启用</el-button
+          >
+          <el-button
+            type="text"
+            style="color: orange"
+            @click="Deactivated(scope.row)"
+            v-if="scope.row.status == '启用'"
+            >停用</el-button
           >
         </template>
       </el-table-column>
@@ -31,10 +41,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, ref } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { handleDel } from '@/utils/request'
+import { handleDel, tableChange } from '@/utils/request'
 import { handleClick } from '@/utils/pageData/publicData'
+import { statuChange } from '@/utils/request'
 
 export default defineComponent({
   name: 'Table',
@@ -45,7 +56,9 @@ export default defineComponent({
     form: Object,
     url: String,
     id: String,
-    page: Number
+    page: Number,
+    isshow: String,
+    url1: String
   },
   setup(props, context) {
     // 选中
@@ -60,6 +73,8 @@ export default defineComponent({
         .then(() => {
           const id = props.id.toString()
           const newData = JSON.parse(JSON.stringify(scoped).replace(id, 'id'))
+          console.log(props.url)
+
           handleDel(props.url, newData.id)
             .then(() => {
               ElMessage({
@@ -86,10 +101,21 @@ export default defineComponent({
           })
         })
     }
+    const Deactivated = (scope) => {
+      scope.status = '停用'
+      statuChange(scope.id, 0)
+    }
+    const Enable = (scope) => {
+      scope.status = '启用'
+
+      statuChange(scope.id, 1)
+    }
     return {
-      // handleSelectionChange,
       handleDelete,
-      handleClick
+      handleClick,
+      Deactivated,
+      Enable,
+      open
     }
   }
 })

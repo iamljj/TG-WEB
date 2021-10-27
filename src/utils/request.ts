@@ -10,8 +10,12 @@ export const tableData = (url: string) => {
   return axios.get(url)
 }
 // 修改
-export const tableChange = (url: string, form: any) => {
+export const tableChange = (url: any, form: any) => {
   return axios.post(url, form)
+}
+//修改状态
+export const statuChange = (id: Number, status: Number) => {
+  return axios.get(`/proxy/7003/service/admin/updateStatus/${id}/${status}`)
 }
 // 新增
 export const tablePost = (url: string, form: any) => {
@@ -67,5 +71,17 @@ export const getAllSuperior = () => {
 }
 //查询所有下级
 export const xj = (data) => {
-  return axios.post('/proxy/7003/service/admin/subordinateList/', data)
+  return axios.post('/proxy/7003/service/admin/subordinateList', data)
+}
+//查询所有角色
+export const role = (data) => {
+  return axios.post('/proxy/7003/service/admin/searchRole', data)
+}
+//获取组织架构
+export const getOrganization = () => {
+  return axios.get('/proxy/7003/service/admin/structureDetails')
+}
+//新增节点
+export const addnode = (data) => {
+  return axios.post('/proxy/7003/service/admin/addChildNode', data)
 }

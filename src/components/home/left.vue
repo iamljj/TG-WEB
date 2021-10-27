@@ -1,7 +1,6 @@
 <template>
   <div>
     <el-menu
-      :uniqueOpened="true"
       class="el-menu-vertical-demo"
       background-color="#302d35"
       text-color="#fff"
@@ -13,8 +12,25 @@
         <div class="left-text">口子窖数字化营销平台</div>
       </div>
       <div style="margin-top: 52px">
-        <el-menu-item :index="item.path" v-for="(item, i) in list" :key="i">
-          <i :class="item.icon"></i>
+        <el-submenu v-for="(item, i) in routers" :key="i" :index="i">
+          <template #title><i class="el-icon-setting"></i>{{ item.title }}</template>
+          <el-menu-item v-for="(items, i) in item.chlidren" :key="i" :index="items.path">
+            <img
+              :src="require('../../assets/' + items.image + '.png')"
+              v-if="items.image"
+              class="img"
+            />
+            <i :class="items.icon" v-if="items.icon"></i>
+            <template #title>{{ items.title }}</template>
+          </el-menu-item>
+        </el-submenu>
+        <el-menu-item :index="item.path" v-for="(item, i) in list" :key="i" v-show="!item.isshow">
+          <img
+            :src="require('../../assets/' + item.image + '.png')"
+            v-if="item.image"
+            class="img"
+          />
+          <i :class="item.icon" v-if="item.icon"></i>
           <template #title>{{ item.title }}</template>
         </el-menu-item>
       </div>
@@ -25,6 +41,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import homeChildren from '@/router/homeChildren'
+import { Routers } from '@/router/homeChildren'
 export default defineComponent({
   setup() {
     const homeChildrenRouter = homeChildren
@@ -32,8 +49,12 @@ export default defineComponent({
     homeChildrenRouter.forEach((item, index) => {
       list[index] = item.meta
     })
+    console.log(list)
+    const routers = Routers
+
     return {
-      list
+      list,
+      routers
     }
   }
 })
@@ -61,12 +82,22 @@ export default defineComponent({
     height: 100%;
     flex: 1;
   }
+  .icon {
+    width: 32px;
+    height: 32px;
+  }
 }
 .el-menu-vertical-demo {
   height: 100vh;
   text-align: left;
   i {
     margin-right: 20px;
+  }
+  .img {
+    margin-right: 20px;
+    margin-left: 6px;
+    height: 18px;
+    width: 18px;
   }
 }
 </style>

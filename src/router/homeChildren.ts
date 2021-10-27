@@ -18,6 +18,28 @@ export default [
       icon: 'el-icon-s-order',
       path: '/home/displayitem'
     }
+  },
+  {
+    path: 'role',
+    name: 'role',
+    component: () => import(/* webpackChunkName: "home" */ '@/views/pages/Role.vue'),
+    meta: {
+      title: '角色管理',
+      path: '/home/role',
+      image: 'role',
+      isshow: 'false'
+    }
+  },
+  {
+    path: 'organization',
+    name: 'organization',
+    component: () => import(/* webpackChunkName: "home" */ '@/views/pages/organization.vue'),
+    meta: {
+      title: '组织架构',
+      path: '/home/organization',
+      image: 'role',
+      isshow: 'false'
+    }
   }
   // {
   //   path: 'activity',
@@ -59,6 +81,26 @@ export default [
   //     path: '/home/changePerson'
   //   }
   // },
+]
+export const Routers = [
+  {
+    title: '系统设置',
+    chlidren: [
+      {
+        name: 'role',
+        component: () => import(/* webpackChunkName: "home" */ '@/views/pages/Role.vue'),
+        title: '角色管理',
+        path: '/home/role',
+        image: 'role'
+      },
+      {
+        name: 'organization',
+        title: '组织架构',
+        path: '/home/organization',
+        image: 'organization'
+      }
+    ]
+  }
 ]
 export const asyncRoute = [
   // {

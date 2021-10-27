@@ -2,19 +2,20 @@
   <div>
     <el-card style="height: 87vh; position: relative">
       <div class="top">
-        <div class="top-name">陈列项列表</div>
-        <Search @search="search" searchtext="费用项名称 "></Search>
+        <div class="top-name">角色管理</div>
+        <Search @search="search" searchtext="角色名字 "></Search>
       </div>
       <Table
-        :isshow="false"
+        :isshow="true"
         :table="table"
         :tableData="tableData"
-        url="/proxy/7003/service/admin/display/"
         id="displayId"
         :form="form"
         :buttonShow="true"
         @delete:gitlist="handleCurrentChange"
         :page="page"
+        url="/proxy/7003/service/admin/deleteRole/"
+        url1="/proxy/7003/service/admin/updateStatus/"
       ></Table>
       <el-pagination
         layout="prev, pager, next"
@@ -40,14 +41,31 @@
         style="display: flex; justify-between: center"
       >
         <div style="width: 80%; height: 100%">
-          <el-form-item label="费用项编号" :label-width="formLabelWidth" prop="dispalyNumber">
-            <el-input v-model="form.dispalyNumber" autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="费用项名称" :label-width="formLabelWidth" prop="displayName">
-            <el-input v-model="form.displayName" autocomplete="off"></el-input>
+          <el-form-item label="角色名字" :label-width="formLabelWidth" prop="roleName">
+            <el-input v-model="form.roleDesc" autocomplete="off"></el-input>
           </el-form-item>
         </div>
       </el-form>
+      <h1>权限</h1>
+      <el-select v-model="form.structure" placeholder="Select">
+        <el-option
+          v-for="item in category"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        >
+        </el-option>
+      </el-select>
+      <el-tree
+        :data="data"
+        ref="tree"
+        show-checkbox
+        node-key="id"
+        :default-expanded-keys="[2, 7]"
+        :default-checked-keys="rolelist"
+        :props="defaultProps"
+      >
+      </el-tree>
       <template #footer>
         <span class="dialog-footer">
           <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -71,11 +89,16 @@ import {
   formRules,
   totol,
   pagesize,
-  page
-} from '@/utils/pageData/displayItem'
+  page,
+  data,
+  defaultProps,
+  tree,
+  category,
+  rolelist
+} from '@/utils/pageData/role'
 import { title } from '@/utils/pageData/personData'
 import { dialogFormVisible } from '@/utils/pageData/publicData'
-import { tableChange, searchAxios, tablePost } from '@/utils/request'
+import { tableChange, searchAxios, tablePost, role } from '@/utils/request'
 import { ElMessage } from 'element-plus'
 import Table from '@/components/table/table.vue'
 import Search from '@/components/search.vue'
@@ -86,7 +109,8 @@ export default defineComponent({
     Search
   },
   setup() {
-    const url = '/proxy/7003/service/admin/display/save'
+    const url = '/proxy/7003/service/admin/addRole'
+    const url1 = '/proxy/7003/service/admin/updataRole'
     var searchtext = ''
 
     const change = (val, label) => {
@@ -94,12 +118,22 @@ export default defineComponent({
     }
     //首次进页面刷新数据
     const getlist = () => {
+      console.log([1, 2, 3])
+
       const params = {
-        page: page.value,
-        pageSize: pagesize.value
+        roleDesc: '',
+        page: '1',
+        pagesize: pagesize.value
       }
-      displayall(params).then((res) => {
+      role(params).then((res) => {
         tableData.value = res.data.data.records
+        tableData.value.forEach((item) => {
+          if (item.status == 1) {
+            item.status = '启用'
+          } else {
+            item.status = '停用'
+          }
+        })
         totol.value = res.data.data.total
       })
     }
@@ -110,10 +144,17 @@ export default defineComponent({
       const params = {
         page: 1,
         pageSize: pagesize.value,
-        queryKey: searchText
+        roleDesc: searchText
       }
-      displayall(params).then((res) => {
+      role(params).then((res) => {
         tableData.value = res.data.data.records
+        tableData.value.forEach((item) => {
+          if (item.status == 1) {
+            item.status = '启用'
+          } else {
+            item.status = '停用'
+          }
+        })
         totol.value = res.data.data.total
       })
     }
@@ -123,10 +164,19 @@ export default defineComponent({
       const params = {
         page: val,
         pageSize: pagesize.value,
-        queryKey: searchtext
+        roleDesc: searchtext
       }
-      displayall(params).then((res) => {
+      role(params).then((res) => {
         tableData.value = res.data.data.records
+        tableData.value.forEach((item) => {
+          if (item.status == 1) {
+            item.status = '启用'
+          } else {
+            item.status = '停用'
+          }
+        })
+        console.log(tableData.value)
+
         totol.value = res.data.data.total
       })
     }
@@ -134,13 +184,28 @@ export default defineComponent({
     const submitForm = () => {
       formRules.value.validate((valid: any) => {
         if (valid) {
-          if (form.displayId != '') {
-            tableChange(url, form).then(() => {
+          const son = tree.value.getCheckedKeys()
+          const father = tree.value.getHalfCheckedKeys()
+          if (form.id != '') {
+            const params = {
+              id: form.id,
+              jurisdiction: son,
+              fatherJurisdiction: father,
+              structure: form.structure,
+              roleDesc: form.roleDesc
+            }
+            tableChange(url1, params).then(() => {
               handleCurrentChange(page.value)
             })
           } else {
-            delete form.displayId
-            tablePost(url, form).then(() => {
+            delete form.id
+            const params = {
+              jurisdiction: son,
+              fatherJurisdiction: father,
+              structure: form.structure,
+              roleDesc: form.roleDesc
+            }
+            tablePost(url, params).then(() => {
               handleCurrentChange(page.value)
             })
           }
@@ -174,7 +239,12 @@ export default defineComponent({
       totol,
       pagesize,
       page,
-      title
+      title,
+      data,
+      defaultProps,
+      tree,
+      category,
+      rolelist
     }
   }
 })
