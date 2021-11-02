@@ -15,11 +15,6 @@ axios.defaults.timeout = 3000
 // loading
 let loading: any
 const startLoading = () => {
-  interface options {
-    lock: boolean
-    text: string
-    background: string
-  }
   const options = {
     lock: true,
     text: '加载中'
@@ -51,9 +46,9 @@ axios.interceptors.response.use(
       }
       if (response.data) return response
       return Promise.reject({ response })
-    } catch (e) {
+    } catch ({ message }) {
       endLoading()
-      return Promise.reject(e.message)
+      return Promise.reject(message)
     }
   },
   (error) => {

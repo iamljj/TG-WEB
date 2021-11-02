@@ -30,7 +30,7 @@ module.exports = {
   },
   chainWebpack: (config) => {
     config.plugin('html').tap((args) => {
-      args[0].title = 'vue'
+      args[0].title = '数字化营销团购'
       return args
     })
   },
