@@ -7,17 +7,17 @@
     v-model="dialogFormVisible1"
   >
     <el-form
-      :model="node"
+      :model="nodeitem"
       :rules="rules"
       ref="formRules"
       style="display: flex; justify-between: center"
     >
       <div style="width: 80%; height: 100%">
         <el-form-item label="上级节点" label-width="100px" prop="departmentName">
-          <el-input v-model="node.departmentName" autocomplete="off" disabled></el-input>
+          <el-input v-model="nodeitem.departmentName" autocomplete="off" disabled></el-input>
         </el-form-item>
         <el-form-item label="新增节点名" label-width="100px" prop="addname">
-          <el-input v-model="node.addname" autocomplete="off"></el-input>
+          <el-input v-model="nodeitem.addname" autocomplete="off"></el-input>
         </el-form-item>
       </div>
     </el-form>
@@ -28,7 +28,10 @@
     </template>
   </el-dialog>
   <el-dialog v-model="dialogFormVisible2" title="删除" width="30%" center>
-    <span>确定要删除嘛</span>
+    <span
+      >确定要删除
+      <p style="color: red">{{ nodeitem.label }}</p></span
+    >
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="dialogFormVisible2 = false">取消</el-button>
@@ -38,45 +41,34 @@
   </el-dialog>
   <div class="flex">
     <el-card
-      style="width: 20%; margin-right: 10px; height: 85vh; border-radius: 10px; overflow: auto"
+      style="width: 15%; margin-right: 50px; height: 85vh; border-radius: 10px; overflow: auto"
     >
       <div class="search">
         <el-input
           @input="change"
           class="top-search-input"
-          :placeholder="searchtext"
+          placeholder="输入组织框架节点"
           v-model="filterText"
           suffix-icon="el-icon-search"
-          style="border-radius:10px;height：20px"
         ></el-input>
         <div style="display: flex">
           <h1 style="flex: 1">组织架构</h1>
-          <h5>节点操作</h5>
         </div>
         <el-tree
           :data="data"
           ref="Tree"
           node-key="path"
-          :default-expanded-keys="['1']"
+          :default-expanded-keys="['000000010060']"
           :props="defaultProps"
-          :expand-on-click-node="false"
           :filter-node-method="filterNode"
         >
           <template #default="{ node, data }">
-            <span class="custom-tree-node">
-              <span @click="getdata(data)">{{ node.label }}</span>
-              <span>
-                <a
-                  @click="add(data)"
-                  class="el-icon-circle-plus"
-                  style="color: blue; margin-right: 8px; font-size: 16px"
-                ></a>
-                <el-icon>
-                  <circle-plus />
-                </el-icon>
-                <a @click="remove(data)" class="el-icon-remove" style="color: red; font-size: 16px">
-                </a>
-              </span>
+            <span class="custom-tree-node" @click="getdata(data, node)">
+              <span
+                @click="getdata(data)"
+                :style="{ color: node.label == nodeitem.departmentName ? 'red' : '#606266' }"
+                >{{ node.label }}</span
+              >
             </span>
           </template>
         </el-tree>
@@ -84,8 +76,14 @@
     </el-card>
     <el-card style="height: 79vh; position: relative; margin-top: 6vh">
       <div class="top">
-        <div class="top-name">角色管理</div>
-        <Search @search="search" searchtext="费项名称 "></Search>
+        <div class="top-name">经销商管理</div>
+        <Search @search="search" searchtext="经销商名字" name="绑定"></Search>
+        <el-button type="primary" size="medium" class="top-search-button" @click="add(form)"
+          >新增节点</el-button
+        >
+        <el-button type="primary" size="medium" class="top-search-button" @click="remove(form)"
+          >删除节点</el-button
+        >
       </div>
       <Table
         :isshow="true"
@@ -108,39 +106,34 @@
     </el-card>
     <!-- 修改弹出框 -->
     <el-dialog
-      :title="title"
-      width="25%"
+      title="绑定经销商"
+      width="60%"
       :before-close="handleClose"
+      custom-class="bind"
       destroy-on-close
       v-model="dialogFormVisible"
+      @open="getdistribution"
     >
-      <el-form
-        :model="form"
-        :rules="rules"
-        ref="formRules"
-        style="display: flex; justify-between: center"
-      >
-        <div style="width: 80%; height: 100%">
-          <el-form-item label="角色名字" :label-width="formLabelWidth" prop="roleName">
-            <el-input v-model="form.roleName" autocomplete="off"></el-input>
-          </el-form-item>
+      <h3 style="color: #333333; margin-top: 0px">上级节点：{{ nodeitem.departmentName }}</h3>
+      <div class="TreeTransfer">
+        <el-card class="life" style="overflow: auto">
+          <template #header>
+            <span>待选</span>
+          </template>
+          <el-tree
+            :data="Distribution"
+            show-checkbox
+            node-key="id"
+            :default-expanded-keys="[2, 3]"
+            :default-checked-keys="[5]"
+            :props="defaultProps"
+          />
+        </el-card>
+        <div class="middle">
+          <el-button type="warning" style="margin-left: 8px">Warning</el-button>
+          <el-button type="success" style="margin-top: 100px">Success</el-button>
         </div>
-      </el-form>
-      <h1>权限</h1>
-      <el-tree
-        :data="data"
-        ref="tree"
-        show-checkbox
-        node-key="id"
-        :default-expanded-keys="[2, 7]"
-        :props="defaultProps"
-      >
-      </el-tree>
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button type="primary" @click="submitForm">确 定</el-button>
-        </span>
-      </template>
+      </div>
     </el-dialog>
   </div>
 </template>
@@ -164,13 +157,22 @@ import {
   defaultProps,
   tree,
   filterText,
-  node,
+  nodeitem,
   dialogFormVisible1,
-  dialogFormVisible2
+  dialogFormVisible2,
+  Distribution
 } from '@/utils/pageData/organization'
 import { title } from '@/utils/pageData/personData'
 import { dialogFormVisible } from '@/utils/pageData/publicData'
-import { tableChange, searchAxios, tablePost, getOrganization, addnode } from '@/utils/request'
+import {
+  tableChange,
+  searchAxios,
+  tablePost,
+  getOrganization,
+  addnode,
+  deletenode,
+  getDistribution
+} from '@/utils/request'
 import { ElMessage } from 'element-plus'
 import Table from '@/components/table/table.vue'
 import Search from '@/components/search.vue'
@@ -187,24 +189,40 @@ export default defineComponent({
     watch(filterText, (val) => {
       Tree.value.filter(val)
     })
+    const getdistribution = () => {
+      const params = {
+        departmentName: nodeitem.departmentName,
+        path: nodeitem.path
+      }
+      //   getDistribution(params)
+      //     .then((res) => {})
+      //     .catch(() => {
+      //       ElMessage({
+      //         type: 'error',
+      //         iconClass: 'el-icon-circle-close',
+      //         message: '请先选择节点'
+      //       })
+      //     })
+    }
+    const getdata = (data) => {
+      nodeitem.path = data.path
+      nodeitem.departmentName = data.departmentName
+    }
     const filterNode = (val, data) => {
       if (!val) return true
       return data.departmentName.indexOf(val) !== -1
     }
 
-    const add = (data) => {
-      node.path = data.path
-      node.departmentName = data.departmentName
+    const add = () => {
       dialogFormVisible1.value = true
     }
-    const remove = (data) => {
-      node.path = data.path
+    const remove = () => {
       dialogFormVisible2.value = true
     }
     const submitnode = () => {
       const params = {
-        departmentName: node.addname,
-        fatherPath: node.path
+        departmentName: nodeitem.addname,
+        fatherPath: nodeitem.path
       }
       addnode(params)
         .then(() => {
@@ -222,8 +240,37 @@ export default defineComponent({
           })
         })
       dialogFormVisible1.value = false
-      node.addname = ''
+      nodeitem.addname = ''
       getorganization()
+    }
+    const nodedelete = () => {
+      deletenode(nodeitem.path)
+        .then((res) => {
+          if (res.data.code == 200) {
+            ElMessage({
+              type: 'success',
+              iconClass: 'el-icon-circle-close',
+              message: '删除成功'
+            })
+            dialogFormVisible2.value = false
+            getorganization()
+          } else {
+            ElMessage({
+              type: 'error',
+              iconClass: 'el-icon-circle-close',
+              message: res.data.message
+            })
+            dialogFormVisible2.value = false
+          }
+        })
+        .catch(() => {
+          ElMessage({
+            type: 'error',
+            iconClass: 'el-icon-circle-close',
+            message: '此节点还有人员存在，请移除人员再删除或请先选中节点'
+          })
+          dialogFormVisible2.value = false
+        })
     }
     const change = (val, label) => {
       console.log(val, label)
@@ -328,11 +375,15 @@ export default defineComponent({
       filterText,
       Tree,
       filterNode,
-      node,
+      nodeitem,
       dialogFormVisible1,
       submitnode,
       dialogFormVisible2,
-      remove
+      remove,
+      nodedelete,
+      getdata,
+      Distribution,
+      getdistribution
     }
   }
 })
@@ -341,6 +392,10 @@ export default defineComponent({
 <style scoped lang="scss">
 .flex {
   display: flex;
+  .search {
+    height: 20px;
+    border-radius: 10px;
+  }
   .top {
     display: flex;
     justify-content: space-between;
@@ -353,6 +408,28 @@ export default defineComponent({
       font-size: 20px;
       font-family: PingFangSC, PingFangSC-Medium;
       font-weight: 700;
+    }
+    .top-search-button {
+      height: 40px;
+      width: 96px;
+      margin-left: -370px;
+      margin-right: 10px;
+      border-radius: 10px;
+    }
+  }
+  .TreeTransfer {
+    display: flex;
+
+    .life {
+      width: 40%;
+      height: 60vh;
+    }
+    .middle {
+      width: 10%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
     }
   }
   .pageSelect {
@@ -393,6 +470,22 @@ export default defineComponent({
     width: 178px;
     height: 178px;
     display: block;
+  }
+}
+</style>
+<style lang="scss">
+.bind {
+  border-radius: 20px;
+  .el-dialog__header {
+    background-color: #409eff;
+    border-radius: 20px 20px 0 0;
+    color: #fff !important;
+  }
+  .el-dialog__title {
+    color: white;
+  }
+  .el-dialog__close {
+    color: white;
   }
 }
 </style>

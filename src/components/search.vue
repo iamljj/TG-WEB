@@ -11,9 +11,9 @@
       <el-button type="primary" class="top-search-button" @click="$emit('search', searchText)"
         >搜索</el-button
       >
-      <el-button type="primary" size="medium" class="top-search-button" @click="showAdd(form)"
-        >添加</el-button
-      >
+      <el-button type="primary" size="medium" class="top-search-button" @click="showAdd(form)">{{
+        name
+      }}</el-button>
     </div>
   </div>
 </template>
@@ -26,8 +26,10 @@ export default defineComponent({
   emits: ['search'],
   props: {
     form: Object,
-    searchtext: String
+    searchtext: String,
+    name: String
   },
+
   setup() {
     const searchText = ref('')
     const change = () => {

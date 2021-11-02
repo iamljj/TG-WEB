@@ -3,12 +3,12 @@ import { tableType, tableDataType, rulesChange, formType, optionData } from './p
 
 export const table: tableType[] = [
   {
-    name: '角色',
+    name: '经销商',
     prop: 'roleName',
     width: 450
   },
   {
-    name: '状态',
+    name: '节点',
     prop: 'state',
     width: 450
   }
@@ -35,12 +35,15 @@ export const form = reactive({
   state: '',
   roleid: ''
 })
-export const node = reactive({
+export const nodeitem = reactive({
   path: null,
   departmentName: '',
-  addname: ''
+  addname: '',
+  id: '',
+  label: ''
 })
 export const data = ref([])
+export const Distribution = ref([])
 export const defaultProps = ref({
   children: 'oaPeopleDepts',
   label: 'departmentName'

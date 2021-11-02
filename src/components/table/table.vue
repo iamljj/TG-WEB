@@ -20,8 +20,14 @@
       </el-table-column>
       <el-table-column fixed="right" label="操作" width="180" v-if="buttonShow">
         <template #default="scope">
-          <el-button @click="handleClick(scope.row, form)" type="text">修改</el-button>
-          <el-button type="text" style="color: orange" @click="handleDelete(scope.row)"
+          <el-button @click="handleClick(scope.row, form)" type="text" v-if="!scope.row.state"
+            >修改</el-button
+          >
+          <el-button
+            type="text"
+            style="color: orange"
+            @click="handleDelete(scope.row)"
+            v-if="!scope.row.state"
             >删除</el-button
           >
           <el-button type="text" @click="Enable(scope.row)" v-if="scope.row.status == '停用'">
@@ -33,6 +39,13 @@
             @click="Deactivated(scope.row)"
             v-if="scope.row.status == '启用'"
             >停用</el-button
+          >
+          <el-button
+            type="text"
+            style="color: orange"
+            @click="Deactivated(scope.row)"
+            v-if="scope.row.state"
+            >解绑</el-button
           >
         </template>
       </el-table-column>

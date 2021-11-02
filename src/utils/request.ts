@@ -85,3 +85,11 @@ export const getOrganization = () => {
 export const addnode = (data) => {
   return axios.post('/proxy/7003/service/admin/addChildNode', data)
 }
+//删除节点
+export const deletenode = (id) => {
+  return axios.delete(`/proxy/7003/service/admin/deleteChildNode/${id}`)
+}
+//查询经销商
+export const getDistribution = (data) => {
+  return axios.post('/proxy/7003/service/admin/searchDealer', data)
+}
