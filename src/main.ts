@@ -8,7 +8,6 @@ import { dateFormat } from './utils/date'
 import 'element-plus/packages/theme-chalk/src/base.scss'
 import { components, plugins } from './elementUI'
 import '@/scss/index.scss'
-
 const app = createApp(App)
 components.forEach((component) => {
   app.component(component.name, component)

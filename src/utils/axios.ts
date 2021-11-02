@@ -8,7 +8,7 @@ import {
 } from '@/config'
 import { ElLoading } from 'element-plus'
 import { storage } from './storage'
-const token = storage.get(TOKEN_FIELD)
+const token = storage.get('token')
 token && (axios.defaults.baseURL = REQUEST_ADDRESS)
 !token && (axios.defaults.baseURL = LOGIN_ADDRESS)
 axios.defaults.timeout = 3000
@@ -44,7 +44,10 @@ axios.interceptors.response.use(
         }
         if (!isLegal) return Promise.reject({ code, msg, data: response.data })
       }
-      if (response.data) return response
+      if (response.data) {
+        return response
+      }
+
       return Promise.reject({ response })
     } catch ({ message }) {
       endLoading()

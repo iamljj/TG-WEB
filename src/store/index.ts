@@ -6,20 +6,25 @@ export default createStore({
   state: {
     token: storage.get('token') || '',
     header: '@/assets/header.png',
-    nickName: '111',
+    nickName: '',
     dialogFormVisible: false,
     meta: [],
     scopedId: ''
   },
   mutations: {
     login(state, rawData) {
-      const { token } = rawData
+      const token = rawData
       state.token = token
       storage.set('token', token)
     },
-    user(state, { header, nickName }) {
+    user(state, { header, name, role, id, roleName }) {
+      const username = name
       state.header = header
-      state.nickName = nickName
+      state.nickName = username
+      storage.set('nickName', username)
+      storage.set('role', role)
+      storage.set('id', id)
+      storage.set('roleName', roleName)
     },
     changeStorage(state, rawData) {
       state.dialogFormVisible = rawData

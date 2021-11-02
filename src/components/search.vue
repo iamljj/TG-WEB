@@ -2,17 +2,18 @@
   <div>
     <div class="top-search">
       <el-input
+        @input="change"
         class="top-search-input"
-        placeholder="请输入内容"
+        :placeholder="searchtext"
         v-model="searchText"
         suffix-icon="el-icon-search"
       ></el-input>
       <el-button type="primary" class="top-search-button" @click="$emit('search', searchText)"
         >搜索</el-button
       >
-      <el-button type="primary" size="medium" class="top-search-button" @click="showAdd(form)"
-        >添加</el-button
-      >
+      <el-button type="primary" size="medium" class="top-search-button" @click="showAdd(form)">{{
+        name
+      }}</el-button>
     </div>
   </div>
 </template>
@@ -24,10 +25,17 @@ export default defineComponent({
   name: 'Search',
   emits: ['search'],
   props: {
-    form: Object
+    form: Object,
+    searchtext: String,
+    name: String
   },
+
   setup() {
     const searchText = ref('')
+    const change = () => {
+      if (!searchText) {
+      }
+    }
 
     return { showAdd, searchText }
   }

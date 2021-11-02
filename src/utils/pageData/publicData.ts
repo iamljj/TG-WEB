@@ -1,7 +1,21 @@
 import { ref } from 'vue'
 import { phoneShow } from './personData'
 import { activeShow } from './activityData'
+import { storage } from '../storage'
+import { title } from './personData'
+import { rolelist } from './role'
 export const dialogFormVisible = ref<boolean>(false)
+// 添加框弹出，子组件触发
+export const showAdd = (form) => {
+  for (const key in form) {
+    delete form[key]
+  }
+  phoneShow.value = false
+  dialogFormVisible.value = true
+  activeShow.value = false
+  storage.set('title', '新增')
+  title.value = storage.get('title')
+}
 // 修改
 export const handleClick = (scoped: any, form) => {
   phoneShow.value = true
@@ -10,14 +24,10 @@ export const handleClick = (scoped: any, form) => {
   for (const key in scoped) {
     form[key] = scoped[key]
   }
-}
-// 添加框弹出，子组件触发
-export const showAdd = (form) => {
-  console.log('我触发了添加')
-  for (const key in form) {
-    delete form[key]
+  storage.set('title', '修改')
+  title.value = storage.get('title')
+  if (form.jurisdiction) {
+    storage.set('rolelist', form.jurisdiction)
+    rolelist.value = storage.get('rolelist')
   }
-  phoneShow.value = false
-  dialogFormVisible.value = true
-  activeShow.value = false
 }

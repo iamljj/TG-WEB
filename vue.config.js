@@ -3,7 +3,7 @@ const TerserPlugin = require('terser-webpack-plugin')
  * @type {import('@vue/cli-service').ProjectOptions}
  */
 module.exports = {
-  // lintOnSave: false,
+  lintOnSave: false,
   productionSourceMap: false,
   configureWebpack: (config) => {
     config.devtool = 'source-map'
@@ -30,22 +30,27 @@ module.exports = {
   },
   chainWebpack: (config) => {
     config.plugin('html').tap((args) => {
-      args[0].title = '数字化营销团购'
+      args[0].title = '口子窖数字化营销平台'
       return args
     })
   },
   devServer: {
+    host: '192.168.0.70',
+    overlay: {
+      warning: false,
+      errors: true
+    },
     proxy: {
-      '/proxy/7000': {
-        target: 'http://192.168.0.22:7000',
+      '/proxy/7003': {
+        target: 'http://192.168.0.50:7003',
         changeOrigin: true,
         secure: false,
         pathRewrite: {
-          '^/proxy/7000': ''
+          '^/proxy/7003': ''
         }
       },
       '/proxy/7001': {
-        target: 'http://192.168.0.22:7001',
+        target: 'http://192.168.0.50:7001',
         changeOrigin: true,
         secure: false,
         pathRewrite: {
@@ -53,11 +58,19 @@ module.exports = {
         }
       },
       '/proxy/7002': {
-        target: 'http://192.168.0.22:7002',
+        target: 'http://192.168.0.50:7002',
         changeOrigin: true,
         secure: false,
         pathRewrite: {
           '^/proxy/7002': ''
+        }
+      },
+      '/proxy/7000': {
+        target: 'http://192.168.0.50:7000',
+        changeOrigin: true,
+        secure: false,
+        pathRewrite: {
+          '^/proxy/7000': ''
         }
       }
     }
