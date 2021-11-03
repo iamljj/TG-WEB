@@ -277,10 +277,15 @@ export default defineComponent({
     }
     //首次进入加载组织架构
     const getorganization = () => {
-      getOrganization().then((res) => {
-        data.value = res.data.data
-        console.log(data.value)
-      })
+      getOrganization()
+        .then((res) => {
+          data.value = res.data.data
+          console.log(data.value)
+          console.log(res)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
     }
     getorganization()
     //首次进页面刷新数据

@@ -2,10 +2,40 @@
   <div>
     <el-card style="height: 87vh; position: relative">
       <div class="top">
-        <div class="top-name">角色管理</div>
-        <Search @search="search" searchtext="角色名字 "></Search>
+        <div class="top-name">岗位管理</div>
+        <Search @search="search" searchtext="角色名字 " name="新增"></Search>
       </div>
-      <Table
+      <el-tabs type="border-card">
+        <el-tab-pane label="内部"
+          ><Table
+            :isshow="true"
+            :table="table"
+            :tableData="tableData"
+            id="displayId"
+            :form="form"
+            :buttonShow="true"
+            @delete:gitlist="handleCurrentChange"
+            :page="page"
+            url="/proxy/7003/service/admin/deleteRole/"
+            url1="/proxy/7003/service/admin/updateStatus/"
+          ></Table
+        ></el-tab-pane>
+        <el-tab-pane label="外部"
+          ><Table
+            :isshow="true"
+            :table="table"
+            :tableData="tableData"
+            id="displayId"
+            :form="form"
+            :buttonShow="true"
+            @delete:gitlist="handleCurrentChange"
+            :page="page"
+            url="/proxy/7003/service/admin/deleteRole/"
+            url1="/proxy/7003/service/admin/updateStatus/"
+          ></Table
+        ></el-tab-pane>
+      </el-tabs>
+      <!-- <Table
         :isshow="true"
         :table="table"
         :tableData="tableData"
@@ -16,7 +46,7 @@
         :page="page"
         url="/proxy/7003/service/admin/deleteRole/"
         url1="/proxy/7003/service/admin/updateStatus/"
-      ></Table>
+      ></Table> -->
       <el-pagination
         layout="prev, pager, next"
         :total="totol"
@@ -41,7 +71,7 @@
         style="display: flex; justify-between: center"
       >
         <div style="width: 80%; height: 100%">
-          <el-form-item label="角色名字" :label-width="formLabelWidth" prop="roleName">
+          <el-form-item label="岗位名字" :label-width="formLabelWidth" prop="roleName">
             <el-input v-model="form.roleDesc" autocomplete="off"></el-input>
           </el-form-item>
         </div>
