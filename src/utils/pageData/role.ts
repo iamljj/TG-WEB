@@ -4,16 +4,15 @@ import { tableType, tableDataType, rulesChange, formType, optionData } from './p
 
 export const table: tableType[] = [
   {
-    name: '角色',
+    name: '岗位名称',
     prop: 'roleDesc',
     width: 400
   },
   {
-    name: '状态',
+    name: '关联人数',
     prop: 'status',
     width: 400
-  },
-  { name: '组织架构', prop: 'structure', width: 400 }
+  }
 ]
 export const tableData = ref()
 export const rules = { roleDesc: [{ required: true, message: '请填角色名称', trigger: 'blur' }] }

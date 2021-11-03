@@ -24,7 +24,7 @@ export default [
     name: 'role',
     component: () => import(/* webpackChunkName: "home" */ '@/views/systems/Role.vue'),
     meta: {
-      title: '角色管理',
+      title: '岗位管理',
       path: '/home/role',
       image: 'role',
       isshow: 'false'
