@@ -35,44 +35,44 @@ module.exports = {
     })
   },
   devServer: {
-    host: '192.168.0.70',
-    overlay: {
-      warning: false,
-      errors: true
-    },
-    proxy: {
-      '/proxy/7003': {
-        target: 'http://192.168.0.50:7003',
-        changeOrigin: true,
-        secure: false,
-        pathRewrite: {
-          '^/proxy/7003': ''
-        }
-      },
-      '/proxy/7001': {
-        target: 'http://192.168.0.50:7001',
-        changeOrigin: true,
-        secure: false,
-        pathRewrite: {
-          '^/proxy/7001': ''
-        }
-      },
-      '/proxy/7002': {
-        target: 'http://192.168.0.50:7002',
-        changeOrigin: true,
-        secure: false,
-        pathRewrite: {
-          '^/proxy/7002': ''
-        }
-      },
-      '/proxy/7000': {
-        target: 'http://192.168.0.50:7000',
-        changeOrigin: true,
-        secure: false,
-        pathRewrite: {
-          '^/proxy/7000': ''
-        }
-      }
-    }
+    // host: '192.168.0.96',
+    // overlay: {
+    //   warning: false,
+    //   errors: true
+    // },
+    // proxy: {
+    //   '/proxy/7003': {
+    //     target: 'http://192.168.0.48:9999',
+    //     changeOrigin: true,
+    //     secure: false,
+    //     pathRewrite: {
+    //       '^/proxy/7003': ''
+    //     }
+    //   },
+    //   '/proxy/7001': {
+    //     target: 'http://192.168.0.48:9999',
+    //     changeOrigin: true,
+    //     secure: false,
+    //     pathRewrite: {
+    //       '^/proxy/7001': ''
+    //     }
+    //   },
+    //   '/proxy/7002': {
+    //     target: 'http://192.168.0.48:9999',
+    //     changeOrigin: true,
+    //     secure: false,
+    //     pathRewrite: {
+    //       '^/proxy/7002': ''
+    //     }
+    //   },
+    //   '/proxy/7000': {
+    //     target: 'http://192.168.0.48:9999',
+    //     changeOrigin: true,
+    //     secure: false,
+    //     pathRewrite: {
+    //       '^/proxy/7000': ''
+    //     }
+    //   }
+    // }
   }
 }

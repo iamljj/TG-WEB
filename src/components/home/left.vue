@@ -12,6 +12,15 @@
         <div class="left-text">口子窖数字化营销平台</div>
       </div>
       <div style="margin-top: 52px">
+        <el-menu-item :index="item.path" v-for="(item, i) in list" :key="i" v-show="!item.isshow">
+          <img
+            :src="require('../../assets/' + item.image + '.png')"
+            v-if="item.image"
+            class="img"
+          />
+          <i :class="item.icon" v-if="item.icon"></i>
+          <template #title>{{ item.title }}</template>
+        </el-menu-item>
         <el-submenu v-for="(item, i) in routers" :key="i" :index="i">
           <template #title><i class="el-icon-setting"></i>{{ item.title }}</template>
           <el-menu-item v-for="(items, i) in item.chlidren" :key="i" :index="items.path">
@@ -24,15 +33,6 @@
             <template #title>{{ items.title }}</template>
           </el-menu-item>
         </el-submenu>
-        <el-menu-item :index="item.path" v-for="(item, i) in list" :key="i" v-show="!item.isshow">
-          <img
-            :src="require('../../assets/' + item.image + '.png')"
-            v-if="item.image"
-            class="img"
-          />
-          <i :class="item.icon" v-if="item.icon"></i>
-          <template #title>{{ item.title }}</template>
-        </el-menu-item>
       </div>
     </el-menu>
   </div>

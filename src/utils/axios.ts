@@ -11,7 +11,7 @@ import { storage } from './storage'
 const token = storage.get('token')
 token && (axios.defaults.baseURL = REQUEST_ADDRESS)
 !token && (axios.defaults.baseURL = LOGIN_ADDRESS)
-axios.defaults.timeout = 3000
+// axios.defaults.timeout = 3000
 // loading
 let loading: any
 const startLoading = () => {

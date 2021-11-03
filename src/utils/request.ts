@@ -15,7 +15,7 @@ export const tableChange = (url: any, form: any) => {
 }
 //修改状态
 export const statuChange = (id: Number, status: Number) => {
-  return axios.get(`/proxy/7003/service/admin/updateStatus/${id}/${status}`)
+  return axios.get(`/service/admin/updateStatus/${id}/${status}`)
 }
 // 新增
 export const tablePost = (url: string, form: any) => {
@@ -43,7 +43,7 @@ export const putInformation = (name: any, newPassword: string) => {
 }
 // 选择活动页面tab页
 export const getTabActivity = (index: number) => {
-  return axios.get('/proxy/7003/activity?index=' + index)
+  return axios.get('/activity?index=' + index)
 }
 // 选择活动页面tab+index页
 export const getCurrentActivity = (index: number, currIndex: number) => {
@@ -51,45 +51,45 @@ export const getCurrentActivity = (index: number, currIndex: number) => {
 }
 // 查询所有地区
 export const seletlocals = () => {
-  return axios.get('/proxy/7003/service/admin/user/locals')
+  return axios.get('/service/admin/user/locals')
 }
 //查询所有职位
 export const selectJobs = () => {
-  return axios.get('/proxy/7003/service/admin/user/Roles')
+  return axios.get('/service/admin/user/Roles')
 }
 //查询陈列箱
 export const displayall = (data) => {
-  return axios.post('/proxy/7003/service/admin/display/findAll', data)
+  return axios.post('/service/admin/display/findAll', data)
 }
 //查询所有员工信息
 export const usersall = (data) => {
-  return axios.post('/proxy/7003/service/admin/users', data)
+  return axios.post('/service/admin/users', data)
 }
 //查询所有的上级
 export const getAllSuperior = () => {
-  return axios.post('/proxy/7003/service/admin/users/getAllSuperior')
+  return axios.post('/service/admin/users/getAllSuperior')
 }
 //查询所有下级
 export const xj = (data) => {
-  return axios.post('/proxy/7003/service/admin/subordinateList', data)
+  return axios.post('/service/admin/subordinateList', data)
 }
 //查询所有角色
 export const role = (data) => {
-  return axios.post('/proxy/7003/service/admin/searchRole', data)
+  return axios.post('/service/admin/searchRole', data)
 }
 //获取组织架构
 export const getOrganization = () => {
-  return axios.get('/proxy/7003/service/admin/structureDetails')
+  return axios.get('/service/admin/structureDetails')
 }
 //新增节点
 export const addnode = (data) => {
-  return axios.post('/proxy/7003/service/admin/addChildNode', data)
+  return axios.post('/service/admin/addChildNode', data)
 }
 //删除节点
 export const deletenode = (id) => {
-  return axios.delete(`/proxy/7003/service/admin/deleteChildNode/${id}`)
+  return axios.delete(`/service/admin/deleteChildNode/${id}`)
 }
 //查询经销商
 export const getDistribution = (data) => {
-  return axios.post('/proxy/7003/service/admin/searchDealer', data)
+  return axios.post('/service/admin/searchDealer', data)
 }

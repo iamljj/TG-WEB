@@ -11,7 +11,7 @@ const routes: any = [
   {
     path: '/login',
     name: 'Login',
-    component: () => import(/* webpackChunkName: "login" */ '@/views/pages/login.vue'),
+    component: () => import(/* webpackChunkName: "login" */ '@/views/account/login.vue'),
     meta: {
       title: '登录'
     }
@@ -19,12 +19,12 @@ const routes: any = [
   {
     path: '/:catchAll(.*)',
     name: '404',
-    component: () => import(/*webpackChunkName: '404' */ '@/views/pages/error.vue')
+    component: () => import(/*webpackChunkName: '404' */ '@/views/error/error.vue')
   },
   {
     path: '/home',
     name: 'home',
-    component: () => import(/*webpackChunkName: 'home' */ '@/views/pages/home.vue'),
+    component: () => import(/*webpackChunkName: 'home' */ '@/views/home/home.vue'),
     children: require('./homeChildren').default
   }
 ]

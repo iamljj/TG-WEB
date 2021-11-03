@@ -2,7 +2,7 @@ export default [
   {
     path: 'person',
     name: 'person',
-    component: () => import(/* webpackChunkName: "home" */ '@/views/pages/person.vue'),
+    component: () => import(/* webpackChunkName: "home" */ '@/views/home/person.vue'),
     meta: {
       title: '人员管理',
       icon: 'el-icon-s-check',
@@ -12,7 +12,7 @@ export default [
   {
     path: 'displayitem',
     name: 'displayitem',
-    component: () => import(/* webpackChunkName: "home" */ '@/views/pages/DisplayItems.vue'),
+    component: () => import(/* webpackChunkName: "home" */ '@/views/displayItem/DisplayItems.vue'),
     meta: {
       title: '陈列项',
       icon: 'el-icon-s-order',
@@ -22,7 +22,7 @@ export default [
   {
     path: 'role',
     name: 'role',
-    component: () => import(/* webpackChunkName: "home" */ '@/views/pages/Role.vue'),
+    component: () => import(/* webpackChunkName: "home" */ '@/views/systems/Role.vue'),
     meta: {
       title: '角色管理',
       path: '/home/role',
@@ -33,7 +33,7 @@ export default [
   {
     path: 'organization',
     name: 'organization',
-    component: () => import(/* webpackChunkName: "home" */ '@/views/pages/organization.vue'),
+    component: () => import(/* webpackChunkName: "home" */ '@/views/systems/organization.vue'),
     meta: {
       title: '组织架构',
       path: '/home/organization',
@@ -88,7 +88,7 @@ export const Routers = [
     chlidren: [
       {
         name: 'role',
-        component: () => import(/* webpackChunkName: "home" */ '@/views/pages/Role.vue'),
+        component: () => import(/* webpackChunkName: "home" */ '@/views/systems/Role.vue'),
         title: '角色管理',
         path: '/home/role',
         image: 'role'
