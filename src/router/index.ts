@@ -35,18 +35,19 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  if (to.path != '/login' && to.name != '404' && !storage.get('token')) {
-    ElMessage({
-      type: 'error',
-      iconClass: 'el-icon-circle-close',
-      message: '你还未登录，请登录'
-    })
-    next({
-      path: '/login'
-    })
-  } else {
-    next()
-  }
+  // if (to.path != '/login' && to.name != '404' && !storage.get('token')) {
+  //   ElMessage({
+  //     type: 'error',
+  //     iconClass: 'el-icon-circle-close',
+  //     message: '你还未登录，请登录'
+  //   })
+  //   next({
+  //     path: '/login'
+  //   })
+  // } else {
+  //   next()
+  // }
+  next()
 })
 
 export default router

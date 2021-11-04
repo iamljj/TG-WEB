@@ -8,38 +8,45 @@
         v-model="searchText"
         suffix-icon="el-icon-search"
       ></el-input>
-      <el-button type="primary" class="top-search-button" @click="$emit('search', searchText)"
+      <el-button
+        type="primary"
+        class="top-search-button"
+        @click="$emit('search', searchText)"
         >搜索</el-button
       >
-      <el-button type="primary" size="medium" class="top-search-button" @click="showAdd(form)">{{
-        name
-      }}</el-button>
+      <el-button
+        type="primary"
+        size="medium"
+        class="top-search-button"
+        @click="showAdd(form)"
+        >{{ name }}</el-button
+      >
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
-import { showAdd } from '@/utils/pageData/publicData'
+import { defineComponent, ref } from "vue";
+import { showAdd } from "@/utils/pageData/publicData";
 export default defineComponent({
-  name: 'Search',
-  emits: ['search'],
+  name: "Search",
+  emits: ["search"],
   props: {
     form: Object,
     searchtext: String,
-    name: String
+    name: String,
   },
 
   setup() {
-    const searchText = ref('')
+    const searchText = ref("");
     const change = () => {
       if (!searchText) {
       }
-    }
+    };
 
-    return { showAdd, searchText }
-  }
-})
+    return { showAdd, searchText };
+  },
+});
 </script>
 
 <style scoped lang="scss">

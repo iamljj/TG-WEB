@@ -12,7 +12,12 @@
         <div class="left-text">口子窖数字化营销平台</div>
       </div>
       <div style="margin-top: 52px">
-        <el-menu-item :index="item.path" v-for="(item, i) in list" :key="i" v-show="!item.isshow">
+        <el-menu-item
+          :index="item.path"
+          v-for="(item, i) in list"
+          :key="i"
+          v-show="!item.isshow"
+        >
           <img
             :src="require('../../assets/' + item.image + '.png')"
             v-if="item.image"
@@ -21,7 +26,7 @@
           <i :class="item.icon" v-if="item.icon"></i>
           <template #title>{{ item.title }}</template>
         </el-menu-item>
-        <el-submenu v-for="(item, i) in routers" :key="i" :index="i">
+        <el-submenu v-for="(item, i) in routers" :key="i" :index="String(i)">
           <template #title><i class="el-icon-setting"></i>{{ item.title }}</template>
           <el-menu-item v-for="(items, i) in item.chlidren" :key="i" :index="items.path">
             <img
@@ -39,25 +44,25 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
-import homeChildren from '@/router/homeChildren'
-import { Routers } from '@/router/homeChildren'
+import { defineComponent } from "vue";
+import homeChildren from "@/router/homeChildren";
+import { Routers } from "@/router/homeChildren";
 export default defineComponent({
   setup() {
-    const homeChildrenRouter = homeChildren
-    const list = []
+    const homeChildrenRouter = homeChildren;
+    const list = [];
     homeChildrenRouter.forEach((item, index) => {
-      list[index] = item.meta
-    })
-    console.log(list)
-    const routers = Routers
+      list[index] = item.meta;
+    });
+    console.log(list);
+    const routers = Routers;
 
     return {
       list,
-      routers
-    }
-  }
-})
+      routers,
+    };
+  },
+});
 </script>
 <style lang="scss" scoped>
 .left {

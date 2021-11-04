@@ -30,7 +30,8 @@ import {
   ElDatePicker,
   ElUpload,
   ElOption,
-  ElTree
+  ElTree,
+  ElIcon
 } from 'element-plus'
 export const components: any[] = [
   ElTree,
@@ -62,6 +63,7 @@ export const components: any[] = [
   ElContainer,
   ElAside,
   ElMain,
-  ElHeader
+  ElHeader,
+  ElIcon
 ]
 export const plugins: any[] = [ElLoading, ElMessage]

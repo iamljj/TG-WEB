@@ -34,7 +34,7 @@ export default defineComponent({
   setup() {
     const store = useStore<GlobalDataProps>()
     const nickName = computed(() => storage.get('nickName'))
-    console.log(nickName)
+    // console.log(nickName.value)
 
     const header = computed(() => store.state.header)
     const handleCommand = (command: string) => {

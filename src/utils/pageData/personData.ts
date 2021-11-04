@@ -34,17 +34,6 @@ export const optionsSuperior = ref([])
 export const title = ref('')
 export const id = ref('')
 
-export const table = [
-  { name: '姓名', prop: 'name', width: 180 },
-  { name: '地区', prop: 'local', width: 180 },
-  { name: '登录账号', prop: 'phone', width: 200 },
-  { name: '手机号', prop: 'phone', width: 200 },
-  { name: '上级', prop: 'superior', width: 200 },
-  { name: '职务', prop: 'roleName', width: 200 },
-  { name: '性别', prop: 'sex', width: 200 },
-  { name: '创建时间', prop: 'refreshTime', width: 200 }
-]
-export const tableData = ref([])
 // 电话号码修改是否展示
 export const phoneShow = ref<boolean>(false)
 // 规则
@@ -60,3 +49,92 @@ export const rules = {
 }
 
 export const formRules: any = ref(null)
+
+// tabPane数据
+interface labelValueType {
+  label: string
+  value: string
+}
+export const tabs: Array<labelValueType> = [
+  {
+    label: '内部架构',
+    value: '内部架构'
+  },
+  {
+    label: '外部架构',
+    value: '外部架构'
+  }
+]
+
+// 组织架构
+export interface treeDataType {
+  label: string
+  children?: Array<treeDataType>
+}
+export const treeData: Array<treeDataType> = [
+  {
+    label: '营销总公司',
+    children: [
+      {
+        label: '安徽销售片区',
+        children: [
+          {
+            label: '淮北办事处'
+          },
+          {
+            label: '阜阳办事处'
+          }
+        ]
+      }
+    ]
+  }
+]
+
+// 搜索条件
+export const jobs: Array<labelValueType> = [
+  {
+    label: '总经理',
+    value: '总经理'
+  },
+  {
+    label: '业务员',
+    value: '业务员'
+  },
+  {
+    label: '团购经理',
+    value: '团购经理'
+  }
+]
+
+export const status: Array<labelValueType> = [
+  {
+    label: '启用',
+    value: '启用'
+  },
+  {
+    label: '停用',
+    value: '停用'
+  }
+]
+
+// 表格
+export const columns: Array<any> = [
+  { type: 'selection' },
+  { type: 'index' },
+  { label: '姓名', prop: 'name' },
+  { label: '电话号码', prop: 'phone' },
+  { label: '岗位', prop: 'job' },
+  { label: '节点', prop: 'node' },
+  { label: '创建人', prop: 'creater' },
+  { label: '状态', prop: 'state' },
+]
+export const tableData = [
+  {
+    name: '张三',
+    phone: '13012312345',
+    job: '总经理',
+    node: '',
+    creater: '',
+    state: '',
+  }
+]
