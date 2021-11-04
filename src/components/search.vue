@@ -19,8 +19,10 @@
         size="medium"
         class="top-search-button"
         @click="showAdd(form)"
-        >{{ name }}</el-button
+        v-if="!isShow"
       >
+        新增
+      </el-button>
     </div>
   </div>
 </template>
@@ -35,6 +37,7 @@ export default defineComponent({
     form: Object,
     searchtext: String,
     name: String,
+    isShow: Boolean,
   },
 
   setup() {

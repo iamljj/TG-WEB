@@ -40,6 +40,17 @@ export default [
       image: 'role',
       isshow: 'false'
     }
+  },
+  {
+    path: 'dealer',
+    name: 'dealer',
+    component: () => import(/* webpackChunkName: "home" */ '@/views/systems/dealer.vue'),
+    meta: {
+      title: '绑定经销商',
+      path: '/home/dealer',
+      image: 'role',
+      isshow: 'false'
+    }
   }
   // {
   //   path: 'activity',
@@ -89,7 +100,7 @@ export const Routers = [
       {
         name: 'role',
         component: () => import(/* webpackChunkName: "home" */ '@/views/systems/Role.vue'),
-        title: '角色管理',
+        title: '岗位管理',
         path: '/home/role',
         image: 'role'
       },
