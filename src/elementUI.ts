@@ -30,9 +30,11 @@ import {
   ElDatePicker,
   ElUpload,
   ElOption,
-  ElTree
+  ElTree,
+  ElTransfer
 } from 'element-plus'
 export const components: any[] = [
+  ElTransfer,
   ElTree,
   ElButton,
   ElRow,

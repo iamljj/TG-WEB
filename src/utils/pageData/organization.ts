@@ -43,6 +43,7 @@ export const nodeitem = reactive({
   label: ''
 })
 export const data = ref([])
+export const  dealers =ref([])
 export const Distribution = ref([])
 export const defaultProps = ref({
   children: 'oaPeopleDepts',

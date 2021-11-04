@@ -11,9 +11,15 @@
       <el-button type="primary" class="top-search-button" @click="$emit('search', searchText)"
         >搜索</el-button
       >
-      <el-button type="primary" size="medium" class="top-search-button" @click="showAdd(form)">{{
-        name
-      }}</el-button>
+      <el-button
+        type="primary"
+        size="medium"
+        class="top-search-button"
+        @click="showAdd(form)"
+        v-if="!isShow"
+      >
+        新增
+      </el-button>
     </div>
   </div>
 </template>
@@ -27,7 +33,8 @@ export default defineComponent({
   props: {
     form: Object,
     searchtext: String,
-    name: String
+    name: String,
+    isShow:Boolean
   },
 
   setup() {

@@ -77,12 +77,15 @@
     <el-card style="height: 79vh; position: relative; margin-top: 6vh">
       <div class="top">
         <div class="top-name">经销商管理</div>
-        <Search @search="search" searchtext="经销商名字" name="绑定"></Search>
+        <Search @search="search" searchtext="经销商名字" name="绑定" :isShow="true"></Search>
         <el-button type="primary" size="medium" class="top-search-button" @click="add(form)"
           >新增节点</el-button
         >
         <el-button type="primary" size="medium" class="top-search-button" @click="remove(form)"
           >删除节点</el-button
+        >
+        <el-button type="primary" size="medium" class="top-search-button text" @click="dealer"
+          >关联经销商</el-button
         >
       </div>
       <Table
@@ -104,37 +107,6 @@
       >
       </el-pagination>
     </el-card>
-    <!-- 修改弹出框 -->
-    <el-dialog
-      title="绑定经销商"
-      width="60%"
-      :before-close="handleClose"
-      custom-class="bind"
-      destroy-on-close
-      v-model="dialogFormVisible"
-      @open="getdistribution"
-    >
-      <h3 style="color: #333333; margin-top: 0px">上级节点：{{ nodeitem.departmentName }}</h3>
-      <div class="TreeTransfer">
-        <el-card class="life" style="overflow: auto">
-          <template #header>
-            <span>待选</span>
-          </template>
-          <el-tree
-            :data="Distribution"
-            show-checkbox
-            node-key="id"
-            :default-expanded-keys="[2, 3]"
-            :default-checked-keys="[5]"
-            :props="defaultProps"
-          />
-        </el-card>
-        <div class="middle">
-          <el-button type="warning" style="margin-left: 8px">Warning</el-button>
-          <el-button type="success" style="margin-top: 100px">Success</el-button>
-        </div>
-      </div>
-    </el-dialog>
   </div>
 </template>
 
@@ -160,7 +132,7 @@ import {
   nodeitem,
   dialogFormVisible1,
   dialogFormVisible2,
-  Distribution
+  Distribution,
 } from '@/utils/pageData/organization'
 import { title } from '@/utils/pageData/personData'
 import { dialogFormVisible } from '@/utils/pageData/publicData'
@@ -175,6 +147,7 @@ import {
 } from '@/utils/request'
 import { ElMessage } from 'element-plus'
 import Table from '@/components/table/table.vue'
+import router from '@/router/index'
 import Search from '@/components/search.vue'
 export default defineComponent({
   name: 'ShopName',
@@ -189,6 +162,9 @@ export default defineComponent({
     watch(filterText, (val) => {
       Tree.value.filter(val)
     })
+    const dealer = () => {
+      router.push('/home/dealer')
+    }
     const getdistribution = () => {
       const params = {
         departmentName: nodeitem.departmentName,
@@ -388,7 +364,8 @@ export default defineComponent({
       nodedelete,
       getdata,
       Distribution,
-      getdistribution
+      getdistribution,
+      dealer
     }
   }
 })
@@ -421,9 +398,13 @@ export default defineComponent({
       margin-right: 10px;
       border-radius: 10px;
     }
+    .text {
+      padding-left: 15px;
+    }
   }
   .TreeTransfer {
     display: flex;
+    justify-content: center;
 
     .life {
       width: 40%;
