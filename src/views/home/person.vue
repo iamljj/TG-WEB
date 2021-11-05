@@ -9,7 +9,7 @@
     >
       <el-card>
         <div class="tableBar">
-          <p>{{ activeName }}列表</p>
+          <p class="tableBar-title">{{ activeName }}列表</p>
           <div class="tableBar-condition">
             <el-row class="spanRow">
               <el-input
@@ -41,13 +41,30 @@
                 </el-option>
               </el-select>
             </el-row>
-            <el-button type="primary">搜索</el-button>
-            <el-button type="primary">导入</el-button>
-            <el-button type="primary">新增</el-button>
-            <el-button type="primary">删除</el-button>
+            <el-button type="primary" class="spanRow">搜索</el-button>
+            <template v-if="isExternal">
+              <el-dropdown>
+                <el-button type="primary" class="spanRow"> 导入 </el-button>
+                <template #dropdown>
+                  <el-dropdown-menu>
+                    <el-dropdown-item @click="downloadTemp">下载模板</el-dropdown-item>
+                    <el-dropdown-item @click="importTemp">导入</el-dropdown-item>
+                  </el-dropdown-menu>
+                </template>
+              </el-dropdown>
+              <el-button type="primary" @click="addExternalPerson"
+                >新增外部人员</el-button
+              >
+              <el-button type="primary" @click="deleteExteranlPerson">删除</el-button>
+            </template>
           </div>
         </div>
-        <Table :columns="columns" :tableData="tableData" v-loading="loading">
+        <Table
+          ref="table"
+          :columns="tableCol_"
+          :tableData="tableData_"
+          v-loading="loading"
+        >
           <el-table-column label="操作">
             <template #default="scope">
               <el-button size="mini" type="text">启用</el-button>
@@ -57,11 +74,52 @@
         </Table>
       </el-card>
     </Tabs>
+    <el-dialog v-model="dialogVisible" :title="dialogTitle" width="30%">
+      <el-form
+        ref="form"
+        :model="form"
+        :rules="formRules"
+        label-width="100px"
+        label-position="left"
+      >
+        <el-form-item prop="name" label="姓名">
+          <el-input v-model="form.name" placeholder="请输入人员姓名" />
+        </el-form-item>
+        <el-form-item prop="phone" label="电话">
+          <el-input v-model="form.phone" placeholder="请输入人员电话" />
+        </el-form-item>
+        <el-form-item prop="job" label="岗位">
+          <el-select v-model="form.job" placeholder="请选择人员岗位">
+            <el-option
+              v-for="(item, index) in jobs"
+              :key="index"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="架构节点" prop="node">
+          <el-input v-model="form.node" placeholder="请输入架构节点" />
+          <TreeNode
+            :treeData="treeData"
+            :isExpand="false"
+            :isSearch="false"
+            @nodeClick="nodeClick"
+          />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="dialogVisible = false">取消</el-button>
+          <el-button type="primary" @click="dialogVisible = false">确认</el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, toRefs } from "vue";
+import { computed, defineComponent, reactive, ref, toRefs, watch } from "vue";
 import {
   tabs,
   treeData,
@@ -69,6 +127,7 @@ import {
   status,
   columns,
   tableData,
+  formRules,
 } from "@/utils/pageData/personData";
 import Table from "@/components/table/primeryTable.vue";
 import Tabs from "@/components/tabsButton.vue";
@@ -83,29 +142,70 @@ export default defineComponent({
   setup() {
     // 切换架构
     let activeName = ref("内部架构");
+    const tabChange = (tab) => {
+      activeName.value = tab.props.name;
+    };
+    // 查询条件
     let searchKey = ref("");
     let searchJob = ref("");
     let searchStatu = ref("");
+
+    // 数据加载中
     let loading = ref(false);
+    // 内外部架构判别
+    const isExternal = computed(() => (activeName.value == "内部架构" ? false : true));
+    // 表格列
+    let tableData_ = tableData;
+    let tableCol_ = reactive(columns);
+
+    // 下载
+    const downloadTemp = () => {};
+    // 导入
+    const importTemp = () => {};
+    // 新增
+    const addExternalPerson = () => {
+      dialogVisible.value = true;
+    };
+    // 删除
+    const deleteExteranlPerson = () => {};
+    // dialog标题
+    let dialogTitle = ref("新增账号");
+    let dialogVisible = ref(false);
+    let form = reactive({
+      name: "",
+      phone: "",
+      job: "",
+      node: "",
+    });
+    const nodeClick = (data) => {
+      form.node = data.label;
+      console.log(form);
+    };
 
     return {
       tabs,
       activeName,
+      tabChange,
       treeData,
       searchKey,
       searchJob,
       searchStatu,
       jobs,
       status,
-      columns,
-      tableData,
+      tableData_,
       loading,
+      isExternal,
+      tableCol_,
+      dialogTitle,
+      dialogVisible,
+      formRules,
+      form,
+      nodeClick,
+      downloadTemp,
+      importTemp,
+      addExternalPerson,
+      deleteExteranlPerson,
     };
-  },
-  methods: {
-    tabChange(tab) {
-      this.activeName = tab.props.name;
-    },
   },
 });
 </script>
@@ -130,11 +230,17 @@ export default defineComponent({
   display: flex;
   justify-content: space-between;
   align-items: center;
+  &-title {
+    font-size: 20px;
+    font-family: PingFangSC, PingFangSC-Medium;
+    font-weight: 500;
+    color: #333333;
+  }
   &-condition {
     display: inherit;
   }
 }
 .spanRow {
-  margin-right: 5px !important;
+  margin-right: 10px !important;
 }
 </style>
