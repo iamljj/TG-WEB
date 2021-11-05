@@ -38,3 +38,5 @@ export const tableData = ref([
     address: 'No. 189, Grove St, Los Angeles'
   }
 ])
+export const getDealer = ref()
+export const daleteDealer = ref([])
