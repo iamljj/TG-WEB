@@ -48,8 +48,6 @@ export const rules = {
   superior: [{ required: true, message: '请选择上级', trigger: 'change' }]
 }
 
-export const formRules: any = ref(null)
-
 // tabPane数据
 interface labelValueType {
   label: string
@@ -120,13 +118,13 @@ export const status: Array<labelValueType> = [
 // 表格
 export const columns: Array<any> = [
   { type: 'selection' },
-  { type: 'index' },
+  { type: 'index', label: '序号' },
   { label: '姓名', prop: 'name' },
   { label: '电话号码', prop: 'phone' },
   { label: '岗位', prop: 'job' },
   { label: '节点', prop: 'node' },
   { label: '创建人', prop: 'creater' },
-  { label: '状态', prop: 'state' },
+  { label: '状态', prop: 'state' }
 ]
 export const tableData = [
   {
@@ -135,6 +133,19 @@ export const tableData = [
     job: '总经理',
     node: '',
     creater: '',
-    state: '',
+    state: ''
   }
 ]
+
+// form 验证
+export const formRules: Object = {
+  name: [{ required: true, message: '人员姓名不能为空', trigger: 'blur' }],
+  phone: [{ required: true, message: '人员电话不能为空', trigger: 'blur' }],
+  job: [{ required: true, message: '人员岗位不能为空', trigger: 'change' }],
+  node: [{ required: true, message: '架构节点不能为空', trigger: 'blur' }]
+}
+
+interface jobType {
+  label: string
+  value: string
+}
