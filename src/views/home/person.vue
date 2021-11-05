@@ -17,7 +17,7 @@
                 prefix-icon="el-icon-search"
                 placeholder="请输入电话或者姓名"
               >
-              </el-input>
+              </el-input> 
             </el-row>
             <el-row class="spanRow">
               <el-select v-model="searchJob" clearable placeholder="请根据岗位查询">

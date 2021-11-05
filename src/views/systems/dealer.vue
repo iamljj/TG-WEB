@@ -5,6 +5,15 @@
       <el-tabs type="border-card" class="tabs">
         <el-tab-pane label="待选">
           <div style="height: 76vh; position: relative; width: 100%vw">
+            <el-pagination
+              layout="prev, pager, next"
+              :total="1000"
+              :pager-count="11"
+              :page-size="8"
+              @current-change="handleCurrentChange"
+              class="pageSelect"
+            >
+            </el-pagination>
             <div class="header">
               <div class="text">
                 <h4>关联节点：{{}}</h4>
@@ -44,7 +53,6 @@
                   suffix-icon="el-icon-search"
                 ></el-input>
                 <el-button type="primary" style="height: 20px; margin-left: 20px">搜索</el-button>
-                <el-button type="primary" style="height: 20px; margin-left: 20px">关联</el-button>
               </div>
             </div>
             <div class="body">
@@ -52,7 +60,9 @@
                 ref="multipleTable"
                 :data="tableData"
                 style="width: 100%"
-                @selection-change="handleSelectionChange"
+                @selection-change="fetchDealer"
+                @select="fetchDealer"
+                @select-all="fetchDealer"
               >
                 <el-table-column type="selection" width="316" />
                 <el-table-column type="index" width="316" label="序号" />
@@ -67,6 +77,15 @@
         </el-tab-pane>
         <el-tab-pane label="已选">
           <div style="height: 76vh; position: relative; width: 100%vw">
+            <el-pagination
+              layout="prev, pager, next"
+              :total="1000"
+              :pager-count="11"
+              :page-size="8"
+              @current-change="handleCurrentChange"
+              class="pageSelect"
+            >
+            </el-pagination>
             <div class="header">
               <div class="text">
                 <h4>关联节点：{{}}</h4>
@@ -106,15 +125,29 @@
                   suffix-icon="el-icon-search"
                 ></el-input>
                 <el-button type="primary" style="height: 20px; margin-left: 20px">搜索</el-button>
-                <el-button type="danger" style="height: 20px; margin-left: 20px">删除</el-button>
+
+                <el-button
+                  type="danger"
+                  style="height: 20px; margin-left: 20px"
+                  @click="deleteselected"
+                  >删除</el-button
+                >
+                <el-button
+                  type="primary"
+                  style="height: 20px; margin-left: 20px"
+                  @click="deleteselected"
+                  >同步</el-button
+                >
               </div>
             </div>
             <div class="body">
               <el-table
-                ref="multipleTable"
-                :data="tableData"
+                ref="multipleTable1"
+                :data="getDealer"
                 style="width: 100%"
                 @selection-change="handleSelectionChange"
+                @select="daletedealer"
+                @select-all="daletedealer"
               >
                 <el-table-column type="selection" width="316" />
                 <el-table-column type="index" width="316" label="序号" />
@@ -133,14 +166,39 @@
 </template>
 
 <script lang="ts">
-import { tableData } from '@/utils/pageData/dealer'
+import { tableData, getDealer, daleteDealer } from '@/utils/pageData/dealer'
 import { defineComponent, ref, watch } from 'vue'
 export default defineComponent({
   name: 'dealer',
   components: {},
-  setup(){
-    return{
-      tableData
+  setup() {
+
+    let deletelist = ref(null)
+    const multipleTable = ref(null)
+    //获取选中数据
+    const fetchDealer = (selection) => {
+      getDealer.value = selection
+    }
+    //获取要删除的数据
+    const daletedealer = (selection) => {
+      deletelist = selection
+      console.log()
+    }
+    //改变待选框中多选框的状态
+    const deleteselected = () => {
+      deletelist.forEach((item) => {
+        multipleTable.value.toggleRowSelection(item, false)
+      })
+    }
+    return {
+      tableData,
+      fetchDealer,
+      getDealer,
+      daleteDealer,
+      daletedealer,
+      multipleTable,
+      deletelist,
+      deleteselected
     }
   }
 })
@@ -160,6 +218,13 @@ export default defineComponent({
         display: flex;
         justify-content: center;
       }
+    }
+    .pageSelect {
+      position: absolute;
+      bottom: 2px;
+      transform: translateX(-50%);
+      left: 50%;
+      z-index: 999;
     }
   }
   .top {
