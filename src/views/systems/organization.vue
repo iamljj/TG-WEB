@@ -1,57 +1,8 @@
 <template>
-  <el-dialog
-    title="新增"
-    width="25%"
-    :before-close="handleClose"
-    destroy-on-close
-    v-model="dialogFormVisible1"
-  >
-    <el-form
-      :model="nodeitem"
-      :rules="rules"
-      ref="formRules"
-      style="display: flex; justify-between: center"
-    >
-      <div style="width: 80%; height: 100%">
-        <el-form-item label="上级节点" label-width="100px" prop="departmentName">
-          <el-input
-            v-model="nodeitem.departmentName"
-            autocomplete="off"
-            disabled
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="新增节点名" label-width="100px" prop="addname">
-          <el-input v-model="nodeitem.addname" autocomplete="off"></el-input>
-        </el-form-item>
-      </div>
-    </el-form>
-    <template #footer>
-      <span class="dialog-footer">
-        <el-button type="primary" @click="submitnode">确 定</el-button>
-      </span>
-    </template>
-  </el-dialog>
-  <el-dialog v-model="dialogFormVisible2" title="删除" width="30%" center>
-    <span
-      >确定要删除
-      <p style="color: red">{{ nodeitem.label }}</p></span
-    >
-    <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="dialogFormVisible2 = false">取消</el-button>
-        <el-button type="primary" @click="nodedelete">确认</el-button>
-      </span>
-    </template>
-  </el-dialog>
   <div class="flex">
     <el-card
-      style="
-        width: 15%;
-        margin-right: 50px;
-        height: 85vh;
-        border-radius: 10px;
-        overflow: auto;
-      "
+      class="flex-lfet"
+      style="width: 15%; margin-right: 50px; height: 85vh; border-radius: 10px; overflow: auto"
     >
       <div class="search">
         <TreeNode
@@ -65,17 +16,8 @@
     <el-card style="height: 79vh; position: relative; margin-top: 6vh">
       <div class="top">
         <div class="top-name">经销商管理</div>
-        <Search
-          @search="search"
-          searchtext="经销商名字"
-          name="绑定"
-          :isShow="true"
-        ></Search>
-        <el-button
-          type="primary"
-          size="medium"
-          class="top-search-button text"
-          @click="dealer"
+        <Search @search="search" searchtext="经销商名字" name="绑定" :isShow="true"></Search>
+        <el-button type="primary" size="medium" class="top-search-button text" @click="dealer"
           >关联经销商</el-button
         >
       </div>
@@ -102,8 +44,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watch } from "vue";
-import { displayall } from "@/utils/request";
+import { defineComponent, ref, watch } from 'vue'
+import { displayall } from '@/utils/request'
 import {
   table,
   tableData,
@@ -121,39 +63,33 @@ import {
   nodeitem,
   dialogFormVisible1,
   dialogFormVisible2,
-  Distribution,
-} from "@/utils/pageData/organization";
-import { title, treeData } from "@/utils/pageData/personData";
-import { dialogFormVisible } from "@/utils/pageData/publicData";
-import {
-  tableChange,
-  tablePost,
-  getOrganization,
-  addnode,
-  deletenode,
-} from "@/utils/request";
-import { ElMessage } from "element-plus";
-import Table from "@/components/table/table.vue";
-import router from "@/router/index";
-import Search from "@/components/search.vue";
-import TreeNode from "@/components/treeNode.vue";
+  Distribution
+} from '@/utils/pageData/organization'
+import { title, treeData } from '@/utils/pageData/personData'
+import { dialogFormVisible } from '@/utils/pageData/publicData'
+import { tableChange, tablePost, getOrganization, addnode, deletenode } from '@/utils/request'
+import { ElMessage } from 'element-plus'
+import Table from '@/components/table/table.vue'
+import router from '@/router/index'
+import Search from '@/components/search.vue'
+import TreeNode from '@/components/treeNode.vue'
 export default defineComponent({
-  name: "ShopName",
+  name: 'ShopName',
   components: {
     Table,
     Search,
-    TreeNode,
+    TreeNode
   },
   setup() {
-    const url = "";
+    const url = ''
     const dealer = () => {
-      router.push("/home/dealer");
-    };
+      router.push('/home/dealer')
+    }
     const getdistribution = () => {
       const params = {
         departmentName: nodeitem.departmentName,
-        path: nodeitem.path,
-      };
+        path: nodeitem.path
+      }
       //   getDistribution(params)
       //     .then((res) => {})
       //     .catch(() => {
@@ -163,101 +99,101 @@ export default defineComponent({
       //         message: '请先选择节点'
       //       })
       //     })
-    };
+    }
     // 架构右键菜单
-    let isContextMenu = ref(true);
+    let isContextMenu = ref(true)
     const contextMenus: Array<any> = [
       {
-        label: "新增节点",
-        icon: "el-icon-plus",
+        label: '新增节点',
+        icon: 'el-icon-plus',
         onClick() {
-          console.log("新增节点");
-        },
+          console.log('新增节点')
+        }
       },
       {
-        label: "删除节点",
-        icon: "el-icon-minus",
+        label: '删除节点',
+        icon: 'el-icon-minus',
         onClick() {
-          console.log("删除节点");
-        },
+          console.log('删除节点')
+        }
       },
       {
-        label: "修改节点",
-        icon: "el-icon-edit",
+        label: '修改节点',
+        icon: 'el-icon-edit',
         onClick() {
-          console.log("修改节点");
-        },
-      },
-    ];
+          console.log('修改节点')
+        }
+      }
+    ]
     const submitnode = () => {
       const params = {
         departmentName: nodeitem.addname,
-        fatherPath: nodeitem.path,
-      };
+        fatherPath: nodeitem.path
+      }
       addnode(params)
         .then(() => {
           ElMessage({
-            type: "success",
-            iconClass: "el-icon-circle-close",
-            message: "新增成功",
-          });
+            type: 'success',
+            iconClass: 'el-icon-circle-close',
+            message: '新增成功'
+          })
         })
         .catch(() => {
           ElMessage({
-            type: "error",
-            iconClass: "el-icon-circle-close",
-            message: "修改失败",
-          });
-        });
-      dialogFormVisible1.value = false;
-      nodeitem.addname = "";
-      getorganization();
-    };
+            type: 'error',
+            iconClass: 'el-icon-circle-close',
+            message: '修改失败'
+          })
+        })
+      dialogFormVisible1.value = false
+      nodeitem.addname = ''
+      getorganization()
+    }
     const nodedelete = () => {
       deletenode(nodeitem.path)
         .then((res) => {
           if (res.data.code == 200) {
             ElMessage({
-              type: "success",
-              iconClass: "el-icon-circle-close",
-              message: "删除成功",
-            });
-            dialogFormVisible2.value = false;
-            getorganization();
+              type: 'success',
+              iconClass: 'el-icon-circle-close',
+              message: '删除成功'
+            })
+            dialogFormVisible2.value = false
+            getorganization()
           } else {
             ElMessage({
-              type: "error",
-              iconClass: "el-icon-circle-close",
-              message: res.data.message,
-            });
-            dialogFormVisible2.value = false;
+              type: 'error',
+              iconClass: 'el-icon-circle-close',
+              message: res.data.message
+            })
+            dialogFormVisible2.value = false
           }
         })
         .catch(() => {
           ElMessage({
-            type: "error",
-            iconClass: "el-icon-circle-close",
-            message: "此节点还有人员存在，请移除人员再删除或请先选中节点",
-          });
-          dialogFormVisible2.value = false;
-        });
-    };
+            type: 'error',
+            iconClass: 'el-icon-circle-close',
+            message: '此节点还有人员存在，请移除人员再删除或请先选中节点'
+          })
+          dialogFormVisible2.value = false
+        })
+    }
     const change = (val, label) => {
-      console.log(val, label);
-    };
+      console.log(val, label)
+    }
     //首次进入加载组织架构
     const getorganization = () => {
       getOrganization()
         .then((res) => {
-          data.value = res.data.data;
-          console.log(data.value);
-          console.log(res);
+          data.value = res.data.data
+          console.log(data.value)
+          console.log(res)
         })
         .catch((err) => {
-          console.log(err);
-        });
-    };
-    getorganization();
+          console.log(err)
+        })
+    }
+    getorganization()
     //首次进页面刷新数据
     const getlist = () => {
       // const params = {
@@ -268,61 +204,61 @@ export default defineComponent({
       //   tableData.value = res.data.data.records
       //   totol.value = res.data.data.total
       // })
-    };
-    getlist();
+    }
+    getlist()
     // 搜索
     const search = (searchText: string) => {
       const params = {
         page: 1,
         pageSize: pagesize.value,
-        queryKey: searchText,
-      };
+        queryKey: searchText
+      }
       displayall(params).then((res) => {
-        tableData.value = res.data.data.records;
-        totol.value = res.data.data.total;
-      });
-    };
+        tableData.value = res.data.data.records
+        totol.value = res.data.data.total
+      })
+    }
     // 翻页
     const handleCurrentChange = (val: number) => {
-      page.value = val;
+      page.value = val
       const params = {
         page: val,
-        pageSize: pagesize.value,
-      };
+        pageSize: pagesize.value
+      }
       displayall(params).then((res) => {
-        tableData.value = res.data.data.records;
-        totol.value = res.data.data.total;
-      });
-    };
+        tableData.value = res.data.data.records
+        totol.value = res.data.data.total
+      })
+    }
     // 修改页面点击确认
     const submitForm = () => {
-      console.log(tree.value.getCheckedKeys());
-      console.log(tree.value.getHalfCheckedKeys());
+      console.log(tree.value.getCheckedKeys())
+      console.log(tree.value.getHalfCheckedKeys())
       formRules.value.validate((valid: any) => {
         if (valid) {
-          if (form.roleid != "") {
+          if (form.roleid != '') {
             tableChange(url, form).then(() => {
-              handleCurrentChange(page.value);
-            });
+              handleCurrentChange(page.value)
+            })
           } else {
-            delete form.roleid;
+            delete form.roleid
             tablePost(url, form).then(() => {
-              handleCurrentChange(page.value);
-            });
+              handleCurrentChange(page.value)
+            })
           }
           for (const key in form) {
-            form[key] = "";
+            form[key] = ''
           }
-          dialogFormVisible.value = false;
+          dialogFormVisible.value = false
         } else {
           ElMessage({
-            type: "error",
-            iconClass: "el-icon-circle-close",
-            message: "请检查输入的是否正确",
-          });
+            type: 'error',
+            iconClass: 'el-icon-circle-close',
+            message: '请检查输入的是否正确'
+          })
         }
-      });
-    };
+      })
+    }
     return {
       tableData,
       table,
@@ -353,10 +289,10 @@ export default defineComponent({
       dealer,
       treeData,
       isContextMenu,
-      contextMenus,
-    };
-  },
-});
+      contextMenus
+    }
+  }
+})
 </script>
 
 <style scoped lang="scss">
@@ -434,22 +370,6 @@ export default defineComponent({
     width: 178px;
     height: 178px;
     display: block;
-  }
-}
-</style>
-<style lang="scss">
-.bind {
-  border-radius: 20px;
-  .el-dialog__header {
-    background-color: #409eff;
-    border-radius: 20px 20px 0 0;
-    color: #fff !important;
-  }
-  .el-dialog__title {
-    color: white;
-  }
-  .el-dialog__close {
-    color: white;
   }
 }
 </style>

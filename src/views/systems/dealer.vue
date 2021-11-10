@@ -1,10 +1,10 @@
 <template>
   <div class="dealer-container">
     <h3>关联经销商</h3>
-    <div style="height: 83vh; position: relative">
+    <div class="left-card">
       <el-tabs type="border-card" class="tabs">
         <el-tab-pane label="待选">
-          <div style="height: 76vh; position: relative; width: 100%vw">
+          <div class="tabs-size">
             <el-pagination
               layout="prev, pager, next"
               :total="1000"
@@ -19,7 +19,7 @@
                 <h4>关联节点：{{}}</h4>
               </div>
               <div class="right">
-                <el-select v-model="value" placeholder="省" style="width: 100px">
+                <el-select v-model="value" placeholder="省" class="width">
                   <el-option
                     v-for="item in options"
                     :key="item.value"
@@ -27,7 +27,7 @@
                     :value="item.value"
                   >
                   </el-option> </el-select
-                ><el-select v-model="value" placeholder="市" style="width: 100px">
+                ><el-select v-model="value" placeholder="市" class="width">
                   <el-option
                     v-for="item in options"
                     :key="item.value"
@@ -35,7 +35,7 @@
                     :value="item.value"
                   >
                   </el-option> </el-select
-                ><el-select v-model="value" placeholder="县" style="width: 100px">
+                ><el-select v-model="value" placeholder="县" class="width">
                   <el-option
                     v-for="item in options"
                     :key="item.value"
@@ -45,21 +45,19 @@
                   </el-option>
                 </el-select>
                 <el-input
-                  style="width: 200px; margin-left: 20px"
                   @input="change"
                   class="top-search-input"
                   placeholder="经销商名字"
                   v-model="searchText"
                   suffix-icon="el-icon-search"
                 ></el-input>
-                <el-button type="primary" style="height: 20px; margin-left: 20px">搜索</el-button>
+                <el-button type="primary" class="button">搜索</el-button>
               </div>
             </div>
             <div class="body">
               <el-table
                 ref="multipleTable"
                 :data="tableData"
-                style="width: 100%"
                 @selection-change="fetchDealer"
                 @select="fetchDealer"
                 @select-all="fetchDealer"
@@ -76,7 +74,7 @@
           </div>
         </el-tab-pane>
         <el-tab-pane label="已选">
-          <div style="height: 76vh; position: relative; width: 100%vw">
+          <div class="tabs-size">
             <el-pagination
               layout="prev, pager, next"
               :total="1000"
@@ -91,7 +89,7 @@
                 <h4>关联节点：{{}}</h4>
               </div>
               <div class="right">
-                <el-select v-model="value" placeholder="省" style="width: 100px">
+                <el-select v-model="value" placeholder="省" class="width">
                   <el-option
                     v-for="item in options"
                     :key="item.value"
@@ -99,7 +97,7 @@
                     :value="item.value"
                   >
                   </el-option> </el-select
-                ><el-select v-model="value" placeholder="市" style="width: 100px">
+                ><el-select v-model="value" placeholder="市" class="width">
                   <el-option
                     v-for="item in options"
                     :key="item.value"
@@ -107,7 +105,7 @@
                     :value="item.value"
                   >
                   </el-option> </el-select
-                ><el-select v-model="value" placeholder="县" style="width: 100px">
+                ><el-select v-model="value" placeholder="县" class="width">
                   <el-option
                     v-for="item in options"
                     :key="item.value"
@@ -117,34 +115,22 @@
                   </el-option>
                 </el-select>
                 <el-input
-                  style="width: 200px; margin-left: 20px"
                   @input="change"
                   class="top-search-input"
                   placeholder="经销商名字"
                   v-model="searchText"
                   suffix-icon="el-icon-search"
                 ></el-input>
-                <el-button type="primary" style="height: 20px; margin-left: 20px">搜索</el-button>
+                <el-button type="primary" class="button">搜索</el-button>
 
-                <el-button
-                  type="danger"
-                  style="height: 20px; margin-left: 20px"
-                  @click="deleteselected"
-                  >删除</el-button
-                >
-                <el-button
-                  type="primary"
-                  style="height: 20px; margin-left: 20px"
-                  @click="deleteselected"
-                  >同步</el-button
-                >
+                <el-button type="danger" class="button" @click="deleteselected">删除</el-button>
+                <el-button type="primary" class="button" @click="deleteselected">同步</el-button>
               </div>
             </div>
             <div class="body">
               <el-table
                 ref="multipleTable1"
                 :data="getDealer"
-                style="width: 100%"
                 @selection-change="handleSelectionChange"
                 @select="daletedealer"
                 @select-all="daletedealer"
@@ -172,7 +158,6 @@ export default defineComponent({
   name: 'dealer',
   components: {},
   setup() {
-
     let deletelist = ref(null)
     const multipleTable = ref(null)
     //获取选中数据
@@ -206,7 +191,14 @@ export default defineComponent({
 
 <style lang="scss">
 .dealer-container {
+  .left-card {
+    height: 83vh;
+    position: relative;
+  }
   .tabs {
+    .tabs-size {
+      height: 76vh;
+    }
     .header {
       display: flex;
       justify-content: center;
@@ -217,6 +209,18 @@ export default defineComponent({
       .right {
         display: flex;
         justify-content: center;
+        .width {
+          width: 100px;
+        }
+        .top-search-input {
+          width: 200px;
+          margin-left: 20px;
+          margin-right: 20px;
+        }
+        .button {
+          height: 20px;
+          margin-right: 20px;
+        }
       }
     }
     .pageSelect {

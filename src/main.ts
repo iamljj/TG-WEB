@@ -12,9 +12,6 @@ import '@/assets/iconfont/iconfont.css'
 import '@imengyu/vue3-context-menu/lib/vue3-context-menu.css'
 const app = createApp(App)
 components.forEach((component) => {
-  if (component.locale) {
-    app.use(component.name, component.locale)
-  }
   app.component(component.name, component)
 })
 plugins.forEach((plugin) => {
