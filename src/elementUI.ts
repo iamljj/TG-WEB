@@ -66,4 +66,7 @@ export const components: any[] = [
   ElHeader,
   ElIcon
 ]
-export const plugins: any[] = [ElLoading]
+
+// 插件和指令
+import ContextMenu from '@imengyu/vue3-context-menu'
+export const plugins: any[] = [ElLoading, ContextMenu]

@@ -9,6 +9,7 @@
       :default-expand-all="isExpand"
       :filter-node-method="filterNode"
       @node-click="nodeClick"
+      @contextmenu="buildMenus"
     />
   </div>
 </template>
@@ -28,6 +29,18 @@ export default defineComponent({
       type: Boolean,
       default() {
         return true;
+      },
+    },
+    isContextMenu: {
+      type: Boolean,
+      default() {
+        return false;
+      },
+    },
+    contextMenus: {
+      type: Array,
+      default() {
+        [];
       },
     },
   },
@@ -54,6 +67,22 @@ export default defineComponent({
     },
     nodeClick(node, data) {
       this.$emit("nodeClick", data);
+    },
+    contextmenu(e, data, node) {
+      console.log(e, data, node);
+    },
+    buildMenus(e) {
+      e.preventDefault();
+
+      let options: any = {
+        x: e.x,
+        y: e.y,
+        items: [],
+      };
+      if (this.isContextMenu) {
+        options.items = this.contextMenus;
+      }
+      this.$contextmenu(options);
     },
   },
 });
