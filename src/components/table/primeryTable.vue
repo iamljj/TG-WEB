@@ -14,7 +14,7 @@
       :prop="col.prop"
       :label="col.label"
       :width="col.width"
-    >
+    :key="i">
     </el-table-column>
     <slot />
   </el-table>

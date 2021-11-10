@@ -51,6 +51,17 @@ export default [
       image: 'role',
       isshow: 'false'
     }
+  },
+  {
+    path: 'log',
+    name: 'log',
+    component: () => import(/* webpackChunkName: "home" */ '@/views/systems/log.vue'),
+    meta: {
+      title: '操作日志',
+      path: '/home/log',
+      image: 'log',
+      isshow: 'false'
+    }
   }
   // {
   //   path: 'activity',
@@ -108,6 +119,12 @@ export const Routers = [
         name: 'organization',
         title: '组织架构',
         path: '/home/organization',
+        image: 'organization'
+      },
+      {
+        name: 'log',
+        title: '操作日志',
+        path: '/home/log',
         image: 'organization'
       }
     ]

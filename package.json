@@ -18,7 +18,9 @@
     "dayjs": "^1.10.7",
     "element-plus": "^1.0.2-beta.62",
     "mockjs": "^1.1.0",
+    "primevue": "^3.0.0",
     "ssh2-sftp-client": "7.0.0",
+    "vant-ui": "^2.1.11",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0",
     "vuex": "^4.0.0-0"

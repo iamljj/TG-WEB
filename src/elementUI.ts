@@ -1,4 +1,4 @@
-import locale from 'element-plus/lib/locale/lang/zh-cn'
+import zhCn from 'element-plus/lib/locale/lang/zh-cn'
 import {
   ElButton,
   ElCard,
@@ -31,9 +31,11 @@ import {
   ElUpload,
   ElOption,
   ElTree,
-  ElIcon
+  ElIcon,
+  ElConfigProvider
 } from 'element-plus'
 export const components: any[] = [
+  ElConfigProvider,
   ElTree,
   ElButton,
   ElRow,
@@ -48,7 +50,7 @@ export const components: any[] = [
   ElDropdown,
   ElDropdownItem,
   ElSelect,
-  ElDatePicker,
+  { ElDatePicker, locale: zhCn },
   ElUpload,
   ElPagination,
   ElLoading,
@@ -66,4 +68,4 @@ export const components: any[] = [
   ElHeader,
   ElIcon
 ]
-export const plugins: any[] = [ElLoading, ElMessage]
+export const plugins: any[] = [ElLoading, ElMessage,ElDatePicker]
