@@ -1,25 +1,26 @@
-export default [
+export const routers = [
   {
-    path: 'person',
+    path: '/home/person',
     name: 'person',
     component: () => import(/* webpackChunkName: "home" */ '@/views/home/person.vue'),
+    title: '人员管理',
+    icon: 'iconperson',
     meta: {
-      title: '人员管理',
-      icon: 'el-icon-s-check',
-      path: '/home/person'
+      keepAlive: true
     }
   },
   {
-    path: 'displayitem',
+    path: '/home/displayitem',
     name: 'displayitem',
     component: () => import(/* webpackChunkName: "home" */ '@/views/displayItem/DisplayItems.vue'),
+    title: '陈列项',
+    icon: 'iconmanage',
     meta: {
-      title: '陈列项',
-      icon: 'el-icon-s-order',
-      path: '/home/displayitem'
+      keepAlive: false
     }
   },
   {
+<<<<<<< HEAD
     path: 'role',
     name: 'role',
     component: () => import(/* webpackChunkName: "home" */ '@/views/systems/Role.vue'),
@@ -106,18 +107,31 @@ export default [
 ]
 export const Routers = [
   {
+=======
+>>>>>>> 51dd7e03e11b8e9d761c7a7f2619edd63c1ff31b
     title: '系统设置',
-    chlidren: [
+    name: 'system',
+    icon: 'iconsystem',
+    path: '/home/system',
+    component: () => import(/* webpackChunkName: "system" */ '@/views/systems/container.vue'),
+    children: [
       {
+        path: '/home/system/role',
         name: 'role',
-        component: () => import(/* webpackChunkName: "home" */ '@/views/systems/Role.vue'),
+        component: () => import(/* webpackChunkName: "system" */ '@/views/systems/Role.vue'),
         title: '岗位管理',
-        path: '/home/role',
-        image: 'role'
+        icon: 'iconframework',
+        meta: {
+          keepAlive: false
+        }
       },
       {
+        path: '/home/system/organization',
         name: 'organization',
+        component: () =>
+          import(/* webpackChunkName: "system" */ '@/views/systems/organization.vue'),
         title: '组织架构',
+<<<<<<< HEAD
         path: '/home/organization',
         image: 'organization'
       },
@@ -126,15 +140,34 @@ export const Routers = [
         title: '操作日志',
         path: '/home/log',
         image: 'organization'
+=======
+        icon: 'iconframework',
+        meta: {
+          keepAlive: false
+        }
+      },
+      {
+        name: 'process',
+        path: '/home/system/approval',
+        component: () => import(/* webpackChunkName: "system" */ '@/views/systems/process.vue'),
+        title: '审批流管理',
+        icon: 'iconframework',
+        meta: {
+          keepAlive: false
+        }
+>>>>>>> 51dd7e03e11b8e9d761c7a7f2619edd63c1ff31b
       }
     ]
   }
-]
-export const asyncRoute = [
+
   // {
-  //   path: 'person',
-  //   name: 'person',
-  //   component: () => import(/* webpackChunkName: "home" */ '@/views/pages/person.vue'),
-  //   meta: { title: '超级管理员', roles: ['cjgly'] }
+  //   path: '/home/dealer',
+  //   name: 'dealer',
+  //   component: () => import(/* webpackChunkName: "home" */ '@/views/systems/dealer.vue'),
+  //   title: '绑定经销商',
+  //   icon: 'role',
+  //   meta: {
+  //     isshow: 'false'
+  //   }
   // }
 ]

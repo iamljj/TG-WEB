@@ -1,13 +1,18 @@
 <template>
   <el-container style="height: 100vh">
     <el-aside width="250px">
-      <left></left>
+      <left :routers="sildeMenus"></left>
     </el-aside>
     <el-container>
       <el-header style="background: #ffffff">
         <top></top>
       </el-header>
       <el-main style="background: #f4f6f4">
+        <!-- <router-view v-slot="keepAliveRouter">
+          <keep-alive>
+            <component :is="keepAliveRouter" />
+          </keep-alive>
+        </router-view> -->
         <router-view></router-view>
       </el-main>
     </el-container>
@@ -15,30 +20,34 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted } from 'vue'
-import left from '@/components/home/left.vue'
-import top from '@/components/home/top.vue'
-import { tableData } from '@/utils/request'
-import { useStore } from 'vuex'
-import { GlobalDataProps } from '@/store/types'
+import { defineComponent, onMounted } from "vue";
+import left from "@/components/home/left.vue";
+import top from "@/components/home/top.vue";
+import { routers } from "@/router/homeChildren";
+import { useStore } from "vuex";
 
 export default defineComponent({
-  name: 'home',
+  name: "home",
   components: {
     left,
-    top
+    top,
   },
   setup() {
-    // const store = useStore<GlobalDataProps>()
-    // 请求商品列表数据
-    onMounted(() => {
-      // tableData('/').then((res) => {
-      //   store.commit('getHeader', res)
-      // })
-    })
-    return {}
-  }
-})
+    const sildeMenus = routers;
+    const store = useStore();
+    let keepAliveRouter = [];
+    sildeMenus.forEach((route) => {
+      if (route.meta && route.meta.keepAlive) {
+        keepAliveRouter.push(route.name);
+      }
+    });
+    store.commit("SET_KEEP_ALIVE_ROUTER", keepAliveRouter);
+    return {
+      sildeMenus,
+      keepAliveRouter,
+    };
+  },
+});
 </script>
 
 <style lang="scss">

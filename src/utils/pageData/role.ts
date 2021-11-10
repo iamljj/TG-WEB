@@ -28,6 +28,7 @@ export const form = reactive({
   structure: '',
   jurisdiction: []
 })
+// 权限树
 export const data = ref([
   {
     id: 1,

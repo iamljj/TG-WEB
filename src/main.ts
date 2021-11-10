@@ -6,10 +6,11 @@ import '@/utils/axios'
 import { dev } from './config'
 import { dateFormat } from './utils/date'
 import 'element-plus/packages/theme-chalk/src/base.scss'
-import zhCn from 'element-plus/lib/locale/lang/zh-cn' 
+import zhCn from 'element-plus/lib/locale/lang/zh-cn'
 import { components, plugins } from './elementUI'
 import '@/scss/index.scss'
 import Calendar from 'primevue/calendar'
+import '@/assets/iconfont/iconfont.css'
 const app = createApp(App)
 app.component('Calendar', Calendar)
 components.forEach((component) => {
@@ -18,9 +19,9 @@ components.forEach((component) => {
   }
   app.component(component.name, component)
 })
-
 plugins.forEach((plugin) => {
-  app.use(plugin, { locale: zhCn })
+  app.use(plugin);
 })
+
 if (dev) console.log('dev: ' + dateFormat(Date.now(), '0'))
 app.use(store).use(router).mount('#app')

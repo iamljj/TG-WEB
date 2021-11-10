@@ -8,8 +8,8 @@ export default createStore({
     header: '@/assets/header.png',
     nickName: '',
     dialogFormVisible: false,
-    meta: [],
-    scopedId: ''
+    scopedId: '',
+    keepAliveRouter: []
   },
   mutations: {
     login(state, rawData) {
@@ -29,13 +29,12 @@ export default createStore({
     changeStorage(state, rawData) {
       state.dialogFormVisible = rawData
     },
-    pathRouter(state, meta) {
-      state.meta = meta.map((item) => {
-        return item.meta
-      })
-    },
+
     changeScopedId(state, scopedId) {
       state.scopedId = scopedId
+    },
+    SET_KEEP_ALIVE_ROUTER(state, payload = []) {
+      state.keepAliveRouter = payload
     }
   },
   actions: {},

@@ -37,10 +37,10 @@ export default defineComponent({
   setup() {},
   methods: {
     selectAll(selection) {
-      console.log(selection);
+      this.$emit("selectAll", selection);
     },
     select(selection, row) {
-      console.log(selection, row);
+      this.$emit("select", row);
     },
   },
 });
