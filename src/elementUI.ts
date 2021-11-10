@@ -66,8 +66,4 @@ export const components: any[] = [
   ElHeader,
   ElIcon
 ]
-<<<<<<< HEAD
-export const plugins: any[] = [ElLoading, ElMessage,ElDatePicker]
-=======
 export const plugins: any[] = [ElLoading]
->>>>>>> 51dd7e03e11b8e9d761c7a7f2619edd63c1ff31b
