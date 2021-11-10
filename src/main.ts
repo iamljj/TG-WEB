@@ -9,6 +9,7 @@ import 'element-plus/packages/theme-chalk/src/base.scss'
 import { components, plugins } from './elementUI'
 import '@/scss/index.scss'
 import '@/assets/iconfont/iconfont.css'
+import '@imengyu/vue3-context-menu/lib/vue3-context-menu.css'
 const app = createApp(App)
 components.forEach((component) => {
   app.component(component.name, component)

@@ -1,6 +1,11 @@
 <template>
   <div class="person">
-    <TreeNode :treeData="treeData" class="person-left" />
+    <TreeNode
+      :treeData="treeData"
+      :isContextMenu="isContextMenu"
+      :contextMenus="contextMenus"
+      class="person-left"
+    />
     <Tabs
       class="person-right"
       :tabs="tabs"
@@ -161,6 +166,31 @@ export default defineComponent({
     const tabChange = (tab) => {
       activeName.value = tab.props.name;
     };
+    // 架构右键菜单
+    let isContextMenu = ref(true);
+    const contextMenus: Array<any> = [
+      {
+        label: "新增节点",
+        icon: "el-icon-plus",
+        onClick() {
+          console.log("新增节点");
+        },
+      },
+      {
+        label: "删除节点",
+        icon: "el-icon-minus",
+        onClick() {
+          console.log("删除节点");
+        },
+      },
+      {
+        label: "修改节点",
+        icon: "el-icon-edit",
+        onClick() {
+          console.log("修改节点");
+        },
+      },
+    ];
     // 查询条件
     let searchKey = ref("");
     let searchJob = ref("");
@@ -230,6 +260,8 @@ export default defineComponent({
       formRules,
       importShow,
       uploadUrl,
+      isContextMenu,
+      contextMenus,
       tabChange,
       downloadTemp,
       importTemp,

@@ -8,11 +8,11 @@
         <top></top>
       </el-header>
       <el-main style="background: #f4f6f4">
-        <!-- <router-view v-slot="keepAliveRouter">
+        <router-view v-slot="keepAliveRouter">
           <keep-alive>
             <component :is="keepAliveRouter" />
           </keep-alive>
-        </router-view> -->
+        </router-view>
         <router-view></router-view>
       </el-main>
     </el-container>
