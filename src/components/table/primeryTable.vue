@@ -16,7 +16,7 @@
       :width="col.width"
     :key="i">
     </el-table-column>
-    <slot />
+    <slot/>
   </el-table>
 </template>
 <script lang="ts">

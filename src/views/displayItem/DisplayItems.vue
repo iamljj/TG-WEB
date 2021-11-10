@@ -5,17 +5,14 @@
         <div class="top-name">陈列项列表</div>
         <Search @search="search" searchtext="费用项名称 "></Search>
       </div>
-      <Table
-        :isshow="false"
-        :table="table"
-        :tableData="tableData"
-        url="/proxy/7003/service/admin/display/"
-        id="displayId"
-        :form="form"
-        :buttonShow="true"
-        @delete:gitlist="handleCurrentChange"
-        :page="page"
-      ></Table>
+      <Table ref="table" :columns="table" :tableData="tableData" v-loading="loading">
+        <el-table-column label="操作">
+          <template #default="scope">
+            <el-button size="mini" type="text">修改</el-button>
+            <el-button size="mini" type="text">删除</el-button>
+          </template>
+        </el-table-column></Table
+      >
       <el-pagination
         layout="prev, pager, next"
         :total="totol"
@@ -58,10 +55,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent, reactive, ref } from 'vue'
 import { displayall } from '@/utils/request'
 import {
-  table,
+  columns,
   tableData,
   formLabelWidth,
   formId,
@@ -77,7 +74,7 @@ import { title } from '@/utils/pageData/personData'
 import { dialogFormVisible } from '@/utils/pageData/publicData'
 import { tableChange, searchAxios, tablePost } from '@/utils/request'
 import { ElMessage } from 'element-plus'
-import Table from '@/components/table/table.vue'
+import Table from '@/components/table/primeryTable.vue'
 import Search from '@/components/search.vue'
 export default defineComponent({
   name: 'ShopName',
@@ -86,6 +83,10 @@ export default defineComponent({
     Search
   },
   setup() {
+    //表格列
+    let table = columns
+    // 数据加载中
+    let loading = ref(false)
     const url = '/proxy/7003/service/admin/display/save'
     var searchtext = ''
 
@@ -159,7 +160,7 @@ export default defineComponent({
     }
     return {
       tableData,
-      table,
+      columns,
       handleCurrentChange,
       form,
       formId,
@@ -174,7 +175,9 @@ export default defineComponent({
       totol,
       pagesize,
       page,
-      title
+      title,
+      table,
+      loading
     }
   }
 })

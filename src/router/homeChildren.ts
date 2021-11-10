@@ -56,18 +56,16 @@ export const routers = [
         meta: {
           keepAlive: false
         }
+      },
+      {
+        path: '/home/dealer',
+        name: 'dealer',
+        component: () => import(/* webpackChunkName: "home" */ '@/views/systems/dealer.vue'),
+        icon: 'role',
+        meta: {
+          keepAlive: 'false'
+        }
       }
     ]
   }
-
-  // {
-  //   path: '/home/dealer',
-  //   name: 'dealer',
-  //   component: () => import(/* webpackChunkName: "home" */ '@/views/systems/dealer.vue'),
-  //   title: '绑定经销商',
-  //   icon: 'role',
-  //   meta: {
-  //     isshow: 'false'
-  //   }
-  // }
 ]
