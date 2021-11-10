@@ -56,7 +56,7 @@
       <div class="search">
         <TreeNode
           :treeData="treeData"
-          :isContextMenu="isContextMenu"
+          :isContextMenu="true"
           :contextMenus="contextMenus"
           class="person-left"
         />

@@ -141,7 +141,7 @@ export const tableData = [
 export const formRules: Object = {
   name: [{ required: true, message: '人员姓名不能为空', trigger: 'blur' }],
   phone: [{ required: true, message: '人员电话不能为空', trigger: 'blur' }],
-  job: [{ required: true, message: '人员岗位不能为空', trigger: 'change' }],
+  roles: [{ required: true, message: '人员角色不能为空', trigger: 'change' }],
   node: [{ required: true, message: '架构节点不能为空', trigger: 'blur' }]
 }
 

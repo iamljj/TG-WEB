@@ -1,11 +1,6 @@
 <template>
   <div class="person">
-    <TreeNode
-      :treeData="treeData"
-      :isContextMenu="isContextMenu"
-      :contextMenus="contextMenus"
-      class="person-left"
-    />
+    <TreeNode :treeData="treeData" class="person-left" />
     <Tabs
       class="person-right"
       :tabs="tabs"
@@ -95,8 +90,13 @@
         <el-form-item prop="phone" label="电话">
           <el-input v-model="form.phone" placeholder="请输入人员电话" />
         </el-form-item>
-        <el-form-item prop="job" label="岗位">
-          <el-select v-model="form.job" placeholder="请选择人员岗位">
+        <el-form-item prop="roles" label="角色" style="width: 100%">
+          <el-select
+            v-model="form.roles"
+            multiple
+            class="rowWidth"
+            placeholder="请选择人员角色"
+          >
             <el-option
               v-for="(item, index) in jobs"
               :key="index"
@@ -155,7 +155,7 @@ export default defineComponent({
       form: {
         name: "",
         phone: "",
-        job: "",
+        roles: "",
         node: "",
       },
     };
@@ -166,31 +166,7 @@ export default defineComponent({
     const tabChange = (tab) => {
       activeName.value = tab.props.name;
     };
-    // 架构右键菜单
-    let isContextMenu = ref(true);
-    const contextMenus: Array<any> = [
-      {
-        label: "新增节点",
-        icon: "el-icon-plus",
-        onClick() {
-          console.log("新增节点");
-        },
-      },
-      {
-        label: "删除节点",
-        icon: "el-icon-minus",
-        onClick() {
-          console.log("删除节点");
-        },
-      },
-      {
-        label: "修改节点",
-        icon: "el-icon-edit",
-        onClick() {
-          console.log("修改节点");
-        },
-      },
-    ];
+
     // 查询条件
     let searchKey = ref("");
     let searchJob = ref("");
@@ -260,8 +236,6 @@ export default defineComponent({
       formRules,
       importShow,
       uploadUrl,
-      isContextMenu,
-      contextMenus,
       tabChange,
       downloadTemp,
       importTemp,
