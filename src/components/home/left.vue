@@ -12,32 +12,26 @@
         <div class="left-text">口子窖数字化营销平台</div>
       </div>
       <div style="margin-top: 52px">
-        <el-menu-item
-          :index="item.path"
-          v-for="(item, i) in list"
-          :key="i"
-          v-show="!item.isshow"
-        >
-          <img
-            :src="require('../../assets/' + item.image + '.png')"
-            v-if="item.image"
-            class="img"
-          />
-          <i :class="item.icon" v-if="item.icon"></i>
-          <template #title>{{ item.title }}</template>
-        </el-menu-item>
-        <el-submenu v-for="(item, i) in routers" :key="i" :index="String(i)">
-          <template #title><i class="el-icon-setting"></i>{{ item.title }}</template>
-          <el-menu-item v-for="(items, i) in item.chlidren" :key="i" :index="items.path">
-            <img
-              :src="require('../../assets/' + items.image + '.png')"
-              v-if="items.image"
-              class="img"
-            />
-            <i :class="items.icon" v-if="items.icon"></i>
-            <template #title>{{ items.title }}</template>
+        <template v-for="routers in sildeMenus" :key="routers.name">
+          <el-menu-item :index="routers.path" v-if="!routers.children">
+            <i class="iconfont" :class="routers.icon"></i>
+            <template #title>{{ routers.title }}</template>
           </el-menu-item>
-        </el-submenu>
+          <el-submenu :index="routers.name" v-if="routers.children">
+            <template #title>
+              <i class="iconfont" :class="routers.icon"></i>
+              {{ routers.title }}
+            </template>
+            <el-menu-item
+              :index="router.path"
+              v-for="router in routers.children"
+              :key="router.name"
+            >
+              <i class="iconfont" :class="router.icon"></i>
+              <template #title>{{ router.title }}</template>
+            </el-menu-item>
+          </el-submenu>
+        </template>
       </div>
     </el-menu>
   </div>
@@ -45,21 +39,15 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import homeChildren from "@/router/homeChildren";
-import { Routers } from "@/router/homeChildren";
-export default defineComponent({
-  setup() {
-    const homeChildrenRouter = homeChildren;
-    const list = [];
-    homeChildrenRouter.forEach((item, index) => {
-      list[index] = item.meta;
-    });
-    console.log(list);
-    const routers = Routers;
 
+export default defineComponent({
+  props: {
+    routers: Array,
+  },
+  setup(props) {
+    const sildeMenus = props.routers;
     return {
-      list,
-      routers,
+      sildeMenus,
     };
   },
 });

@@ -17,7 +17,7 @@
                 prefix-icon="el-icon-search"
                 placeholder="请输入电话或者姓名"
               >
-              </el-input> 
+              </el-input>
             </el-row>
             <el-row class="spanRow">
               <el-select v-model="searchJob" clearable placeholder="请根据岗位查询">
@@ -64,6 +64,8 @@
           :columns="tableCol_"
           :tableData="tableData_"
           v-loading="loading"
+          @select="select"
+          @selectAll="selectAll"
         >
           <el-table-column label="操作">
             <template #default="scope">
@@ -115,6 +117,7 @@
         </span>
       </template>
     </el-dialog>
+    <ImportFile :dialogVisibled="importShow" :uploadUrl="uploadUrl" />
   </div>
 </template>
 
@@ -132,14 +135,27 @@ import {
 import Table from "@/components/table/primeryTable.vue";
 import Tabs from "@/components/tabsButton.vue";
 import TreeNode from "@/components/treeNode.vue";
+import ImportFile from "@/components/upload/uploadFile.vue";
+import { ElMessageBox } from "element-plus";
 export default defineComponent({
   name: "person",
   components: {
     Table,
     Tabs,
     TreeNode,
+    ImportFile,
   },
-  setup() {
+  data() {
+    return {
+      form: {
+        name: "",
+        phone: "",
+        job: "",
+        node: "",
+      },
+    };
+  },
+  setup(props, ctx) {
     // 切换架构
     let activeName = ref("内部架构");
     const tabChange = (tab) => {
@@ -158,34 +174,47 @@ export default defineComponent({
     let tableData_ = tableData;
     let tableCol_ = reactive(columns);
 
+    const select = (row) => {
+      console.log(row);
+    };
+    const selectAll = (selection) => {};
     // 下载
     const downloadTemp = () => {};
     // 导入
-    const importTemp = () => {};
+    const importTemp = () => {
+      importShow.value = true;
+    };
     // 新增
     const addExternalPerson = () => {
       dialogVisible.value = true;
     };
     // 删除
-    const deleteExteranlPerson = () => {};
+    const deleteExteranlPerson = () => {
+      ElMessageBox.confirm("是否确认删除", "提示", {
+        cancelButtonText: "取消",
+        confirmButtonText: "确定",
+        showClose: false,
+        callback(actions, instace) {
+          console.log(actions);
+          if (actions == "cancel") {
+            console.log("取消");
+          } else {
+            console.log("确定");
+          }
+        },
+      });
+    };
     // dialog标题
     let dialogTitle = ref("新增账号");
     let dialogVisible = ref(false);
-    let form = reactive({
-      name: "",
-      phone: "",
-      job: "",
-      node: "",
-    });
-    const nodeClick = (data) => {
-      form.node = data.label;
-      console.log(form);
-    };
+
+    // 导入文件
+    let importShow = ref(false);
+    let uploadUrl = "";
 
     return {
       tabs,
       activeName,
-      tabChange,
       treeData,
       searchKey,
       searchJob,
@@ -199,13 +228,22 @@ export default defineComponent({
       dialogTitle,
       dialogVisible,
       formRules,
-      form,
-      nodeClick,
+      importShow,
+      uploadUrl,
+      tabChange,
       downloadTemp,
       importTemp,
       addExternalPerson,
       deleteExteranlPerson,
+      select,
+      selectAll,
     };
+  },
+  methods: {
+    nodeClick(data) {
+      this.form.node = data.label;
+      console.log(this.form);
+    },
   },
 });
 </script>

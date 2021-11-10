@@ -7,7 +7,6 @@ import {
   ElFormItem,
   ElInput,
   ElLoading,
-  ElMessage,
   ElRow,
   ElContainer,
   ElAside,
@@ -51,7 +50,6 @@ export const components: any[] = [
   ElDatePicker,
   ElUpload,
   ElPagination,
-  ElLoading,
   ElDropdownMenu,
   ElMenuItem,
   ElDialog,
@@ -66,4 +64,4 @@ export const components: any[] = [
   ElHeader,
   ElIcon
 ]
-export const plugins: any[] = [ElLoading, ElMessage]
+export const plugins: any[] = [ElLoading]

@@ -1,5 +1,6 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
 import { REQUEST_ADDRESS } from '@/config'
+import { routers } from './homeChildren'
 import { storage } from '@/utils/storage'
 import { ElMessage } from 'element-plus'
 
@@ -25,7 +26,7 @@ const routes: any = [
     path: '/home',
     name: 'home',
     component: () => import(/*webpackChunkName: 'home' */ '@/views/home/home.vue'),
-    children: require('./homeChildren').default
+    children: routers
   }
 ]
 
