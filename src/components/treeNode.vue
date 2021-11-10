@@ -14,8 +14,8 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
-import { treeDataType } from '@/utils/pageData/personData'
+import { defineComponent, reactive, ref } from "vue";
+import { treeDataType } from "@/utils/pageData/personData";
 export default defineComponent({
   props: {
     treeData: Array,
@@ -46,19 +46,24 @@ export default defineComponent({
   },
   setup() {
     const defaultProps = {
-      children: 'children',
-      label: 'label'
-    }
-    let filterText = ref('')
+      children: "children",
+      label: "label",
+    };
+    let filterText = ref("");
+    let options: any = reactive({});
     return {
       defaultProps,
-      filterText
-    }
+      filterText,
+      options,
+    };
   },
   watch: {
     filterText(val) {
-      ;(this.$refs.tree as Array<treeDataType>).filter(val)
-    }
+      (this.$refs.tree as Array<treeDataType>).filter(val);
+    },
+    isContextMenu(val) {
+      console.log(val);
+    },
   },
   methods: {
     filterNode(value, data) {
@@ -68,24 +73,20 @@ export default defineComponent({
     nodeClick(node, data) {
       this.$emit('nodeClick', data)
     },
-    contextmenu(e, data, node) {
-      console.log(e, data, node)
-    },
     buildMenus(e) {
-      e.preventDefault()
-
-      let options: any = {
-        x: e.x,
-        y: e.y,
-        items: []
-      }
       if (this.isContextMenu) {
-        options.items = this.contextMenus
+        let options: any = {
+          x: e.x,
+          y: e.y,
+          items: [],
+        };
+        e.preventDefault();
+        options.items = this.contextMenus;
+        (this as any).$contextmenu(options);
       }
-      this.$contextmenu(options)
-    }
-  }
-})
+    },
+  },
+});
 </script>
 <style lang="scss" scoped>
 .tree {
