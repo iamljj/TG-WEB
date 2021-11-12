@@ -9,13 +9,13 @@
       :default-expand-all="isExpand"
       :filter-node-method="filterNode"
       @node-click="nodeClick"
-      @contextmenu="buildMenus"
+      @node-contextmenu="contextmenu"
     />
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, reactive, ref } from "vue";
-import { treeDataType } from "@/utils/pageData/personData";
+import { defineComponent, reactive, ref } from 'vue'
+import { treeDataType } from '@/utils/pageData/personData'
 export default defineComponent({
   props: {
     treeData: Array,
@@ -46,47 +46,60 @@ export default defineComponent({
   },
   setup() {
     const defaultProps = {
-      children: "children",
-      label: "label",
-    };
-    let filterText = ref("");
-    let options: any = reactive({});
+      children: 'children',
+      label: 'label'
+    }
+    let filterText = ref('')
+    let options: any = reactive({})
     return {
       defaultProps,
       filterText,
-      options,
-    };
+      options
+    }
   },
   watch: {
     filterText(val) {
-      (this.$refs.tree as Array<treeDataType>).filter(val);
+      ;(this.$refs.tree as Array<treeDataType>).filter(val)
     },
     isContextMenu(val) {
-      console.log(val);
-    },
+      // console.log(val)
+    }
   },
   methods: {
     filterNode(value, data) {
       if (!value) return true
       return data.label.indexOf(value) !== -1
     },
-    nodeClick(node, data) {
-      this.$emit('nodeClick', data)
+    nodeClick(node) {
+      this.$emit('nodeClick', node)
     },
-    buildMenus(e) {
+    contextmenu(e, data, node) {
+      this.$emit('node-context', e, data, node)
       if (this.isContextMenu) {
         let options: any = {
           x: e.x,
           y: e.y,
-          items: [],
-        };
-        e.preventDefault();
-        options.items = this.contextMenus;
-        (this as any).$contextmenu(options);
+          items: []
+        }
+        e.preventDefault()
+        options.items = this.contextMenus
+        ;(this as any).$contextmenu(options)
       }
-    },
-  },
-});
+    }
+    // buildMenus(e) {
+    //   if (this.isContextMenu) {
+    //     let options: any = {
+    //       x: e.x,
+    //       y: e.y,
+    //       items: []
+    //     }
+    //     e.preventDefault()
+    //     options.items = this.contextMenus
+    //     ;(this as any).$contextmenu(options)
+    //   }
+    // }
+  }
+})
 </script>
 <style lang="scss" scoped>
 .tree {

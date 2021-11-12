@@ -15,7 +15,7 @@
               <el-input
                 v-model="searchKey"
                 prefix-icon="el-icon-search"
-                placeholder="请输入电话或者姓名"
+                placeholder="请输入 电话或者姓名"
               >
               </el-input>
             </el-row>
