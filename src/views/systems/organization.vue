@@ -6,7 +6,6 @@
           :treeData="treeData"
           :isContextMenu="true"
           :contextMenus="contextMenus"
-          @nodeClick="nodeClick"
           @node-context="nodeContext"
           class="person-left"
         />
@@ -24,7 +23,7 @@
           <el-button class="button" type="primary" @click="dealer">绑定经销商</el-button>
         </div>
       </div>
-      <Table ref="table" :columns="tableCol_" :tableData="tableData_" v-loading="loading">
+      <Table ref="table" :columns="tableCol_" :tableData="tableData_">
         <el-table-column label="操作">
           <template #default="scope">
             <el-button size="medium" type="text">解绑</el-button>
@@ -41,7 +40,45 @@
       </el-pagination>
     </el-card>
   </div>
-  <el-dialog v-model="AddNode" width="30%" class="mydialog" title="新增节点"></el-dialog>
+  <el-dialog v-model="dialogVisible" width="30%" title="新增节点">
+    <el-form ref="form" :model="form_" label-width="120px">
+      <el-form-item label="上级节点">
+        <el-input v-model="form_.label" disabled></el-input>
+      </el-form-item>
+      <el-form-item label="节点名称">
+        <el-input v-model="form_.name"></el-input>
+      </el-form-item>
+      <el-form-item label="业务类型">
+        <el-select v-model="form_.business" placeholder="请选择业务类型">
+          <el-option
+            v-for="(item, i) in business_"
+            :label="item.lable"
+            :value="item.label"
+            :key="i"
+          ></el-option>
+        </el-select>
+      </el-form-item>
+    </el-form>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="dialogVisible = false">取消</el-button>
+        <el-button type="primary" @click="dialogVisible = false">确认</el-button>
+      </span>
+    </template>
+  </el-dialog>
+  <el-dialog title="修改节点名称" width="20%" v-model="EditNode">
+    <el-form ref="form" :model="form_" label-width="120px">
+      <el-form-item label="节点名称">
+        <el-input v-model="form_.label"></el-input>
+      </el-form-item>
+    </el-form>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="EditNode = false">取消</el-button>
+        <el-button type="primary" @click="EditNode = false">确认</el-button>
+      </span>
+    </template>
+  </el-dialog>
 </template>
 
 <script lang="ts">
@@ -49,39 +86,29 @@ import { defineComponent, ref, watch, reactive } from 'vue'
 import { displayall } from '@/utils/request'
 import {
   tableData,
-  formLabelWidth,
-  formId,
   form,
-  handleClose,
-  rules,
-  formRules,
   totol,
   pagesize,
   page,
   data,
-  tree,
-  nodeitem,
-  dialogFormVisible1,
-  dialogFormVisible2,
-  Distribution,
-  columns
+  columns,
+  business
 } from '@/utils/pageData/organization'
 import { title, treeData } from '@/utils/pageData/personData'
-import { dialogFormVisible } from '@/utils/pageData/publicData'
 import { tableChange, tablePost, getOrganization, addnode, deletenode } from '@/utils/request'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import Table from '@/components/table/primeryTable.vue'
 import router from '@/router/index'
-import Search from '@/components/search.vue'
 import TreeNode from '@/components/treeNode.vue'
 export default defineComponent({
   name: 'ShopName',
   components: {
     Table,
-    Search,
     TreeNode
   },
   setup() {
+    //业务类型
+    const business_ = reactive(business)
     const url = ''
     //搜索框的文本值
     let searchKey = ref('')
@@ -91,7 +118,10 @@ export default defineComponent({
     let tableData_ = tableData
 
     //弹窗的model值
-    let AddNode = ref(false)
+    let dialogVisible = ref(false)
+    let EditNode = ref(false)
+    //弹窗表单的值
+    let form_ = reactive(form)
 
     //跳转到经销商绑定
     const dealer = () => {
@@ -99,9 +129,9 @@ export default defineComponent({
     }
 
     //点击树节点获取数据
-    let node = ref(null)
     const nodeContext = (e, data) => {
-      node.value = data
+      form_.label = data.label
+      form_.id = data.id
     }
 
     // 架构右键菜单
@@ -112,21 +142,37 @@ export default defineComponent({
 
         icon: 'el-icon-plus',
         onClick() {
-          AddNode.value = true
+          dialogVisible.value = true
         }
       },
       {
         label: '删除节点',
         icon: 'el-icon-minus',
         onClick() {
-          console.log('删除节点')
+          ElMessageBox.confirm(`确定要删除${form_.label}`, '删除', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          })
+            .then(() => {
+              ElMessage({
+                type: 'success',
+                message: 'Delete completed'
+              })
+            })
+            .catch(() => {
+              ElMessage({
+                type: 'info',
+                message: 'Delete canceled'
+              })
+            })
         }
       },
       {
-        label: '修改节点',
+        label: '修改节点名称',
         icon: 'el-icon-edit',
         onClick() {
-          console.log('修改节点')
+          EditNode.value = true
         }
       }
     ]
@@ -160,35 +206,25 @@ export default defineComponent({
     // 修改页面点击确认
 
     return {
-      AddNode,
+      dialogVisible,
       tableData_,
       handleCurrentChange,
-      form,
-      formId,
-      dialogFormVisible,
       search,
-      formLabelWidth,
-      rules,
-      formRules,
-      handleClose,
       totol,
       pagesize,
       page,
       title,
       data,
-      tree,
-      nodeitem,
-      dialogFormVisible1,
-      dialogFormVisible2,
-      Distribution,
       dealer,
       treeData,
       isContextMenu,
       contextMenus,
       searchKey,
       tableCol_,
-      node,
-      nodeContext
+      nodeContext,
+      form_,
+      business_,
+      EditNode
     }
   }
 })
@@ -300,4 +336,3 @@ export default defineComponent({
   }
 }
 </style>
-

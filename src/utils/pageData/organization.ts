@@ -20,40 +20,36 @@ export const formRules: any = ref(null)
 // 选中的id
 export const formId = ref(null)
 
-export const form = reactive({
-  roleName: '',
-  state: '',
-  roleid: ''
-})
-export const nodeitem = reactive({
-  path: null,
-  departmentName: '',
-  addname: '',
-  id: '',
-  label: ''
-})
+export const form = {
+  label: '',
+  name: '',
+  id: null,
+  business: ''
+}
+export const business = [
+  {
+    label: '团购',
+    value: '团购'
+  },
+  {
+    label: '直销',
+    value: '直销'
+  },
+  {
+    label: '配送',
+    value: '配送'
+  },
+  {
+    label: '费用',
+    value: '费用'
+  },
+  {
+    label: '全部',
+    value: '全部'
+  }
+]
 export const data = ref([])
 export const dealers = ref([])
-export const Distribution = ref([])
-export const defaultProps = ref({
-  children: 'oaPeopleDepts',
-  label: 'departmentName'
-})
 export const totol = ref(1)
-export const tree = ref()
 export const page = ref(1)
 export const pagesize = ref(8)
-export const formLabelWidth = ref<string>('100px;')
-export const filterText = ref('')
-export const dialogFormVisible1 = ref<Boolean>(false)
-export const dialogFormVisible2 = ref<Boolean>(false)
-
-// 关闭dio时
-export const handleClose = (done: any) => {
-  for (const key in form) {
-    form[key] = ''
-  }
-  done()
-}
-
-export const seachtext: string = ''

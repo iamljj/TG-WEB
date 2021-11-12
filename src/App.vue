@@ -33,4 +33,7 @@ body {
     }
   }
 }
+.el-message-box__message {
+  color: red;
+}
 </style>
