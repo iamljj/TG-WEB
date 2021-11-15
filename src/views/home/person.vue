@@ -7,74 +7,76 @@
       :activeName="activeName"
       @handleClick="tabChange"
     >
-      <el-card>
-        <div class="tableBar">
-          <p class="tableBar-title">{{ activeName }}列表</p>
-          <div class="tableBar-condition">
-            <el-row class="spanRow">
-              <el-input
-                v-model="searchKey"
-                prefix-icon="el-icon-search"
-                placeholder="请输入电话或者姓名"
-              >
-              </el-input>
-            </el-row>
-            <el-row class="spanRow">
-              <el-select v-model="searchJob" clearable placeholder="请根据岗位查询">
-                <el-option
-                  v-for="item in jobs"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
+      <template v-slot:[activeName]>
+        <el-card>
+          <div class="tableBar">
+            <p class="tableBar-title">{{ activeName }}列表</p>
+            <div class="tableBar-condition">
+              <el-row class="spanRow">
+                <el-input
+                  v-model="searchKey"
+                  prefix-icon="el-icon-search"
+                  placeholder="请输入电话或者姓名"
                 >
-                </el-option>
-              </el-select>
-            </el-row>
-            <el-row class="spanRow">
-              <el-select v-model="searchStatu" clearable placeholder="请根据状态查询">
-                <el-option
-                  v-for="item in status"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
+                </el-input>
+              </el-row>
+              <el-row class="spanRow">
+                <el-select v-model="searchJob" clearable placeholder="请根据岗位查询">
+                  <el-option
+                    v-for="item in jobs"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  >
+                  </el-option>
+                </el-select>
+              </el-row>
+              <el-row class="spanRow">
+                <el-select v-model="searchStatu" clearable placeholder="请根据状态查询">
+                  <el-option
+                    v-for="item in status"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  >
+                  </el-option>
+                </el-select>
+              </el-row>
+              <el-button type="primary" class="spanRow">搜索</el-button>
+              <template v-if="isExternal">
+                <el-dropdown>
+                  <el-button type="primary" class="spanRow"> 导入 </el-button>
+                  <template #dropdown>
+                    <el-dropdown-menu>
+                      <el-dropdown-item @click="downloadTemp">下载模板</el-dropdown-item>
+                      <el-dropdown-item @click="importTemp">导入</el-dropdown-item>
+                    </el-dropdown-menu>
+                  </template>
+                </el-dropdown>
+                <el-button type="primary" @click="addExternalPerson"
+                  >新增外部人员</el-button
                 >
-                </el-option>
-              </el-select>
-            </el-row>
-            <el-button type="primary" class="spanRow">搜索</el-button>
-            <template v-if="isExternal">
-              <el-dropdown>
-                <el-button type="primary" class="spanRow"> 导入 </el-button>
-                <template #dropdown>
-                  <el-dropdown-menu>
-                    <el-dropdown-item @click="downloadTemp">下载模板</el-dropdown-item>
-                    <el-dropdown-item @click="importTemp">导入</el-dropdown-item>
-                  </el-dropdown-menu>
-                </template>
-              </el-dropdown>
-              <el-button type="primary" @click="addExternalPerson"
-                >新增外部人员</el-button
-              >
-              <el-button type="primary" @click="deleteExteranlPerson">删除</el-button>
-            </template>
+                <el-button type="primary" @click="deleteExteranlPerson">删除</el-button>
+              </template>
+            </div>
           </div>
-        </div>
-        <Table
-          ref="table"
-          :columns="tableCol_"
-          :tableData="tableData_"
-          v-loading="loading"
-          @select="select"
-          @selectAll="selectAll"
-        >
-          <el-table-column label="操作">
-            <template #default="scope">
-              <el-button size="mini" type="text">启用</el-button>
-              <el-button size="mini" type="text">禁用</el-button>
-            </template>
-          </el-table-column>
-        </Table>
-      </el-card>
+          <Table
+            ref="table"
+            :columns="tableCol_"
+            :tableData="tableData_"
+            v-loading="loading"
+            @select="select"
+            @selectAll="selectAll"
+          >
+            <el-table-column label="操作">
+              <template #default="scope">
+                <el-button size="mini" type="text">启用</el-button>
+                <el-button size="mini" type="text">禁用</el-button>
+              </template>
+            </el-table-column>
+          </Table>
+        </el-card>
+      </template>
     </Tabs>
     <el-dialog v-model="dialogVisible" :title="dialogTitle" width="30%">
       <el-form
@@ -275,7 +277,7 @@ export default defineComponent({
   justify-content: space-between;
   align-items: center;
   &-title {
-    font-size: 20px;
+    font-size: 1.6rem;
     font-family: PingFangSC, PingFangSC-Medium;
     font-weight: 500;
     color: #333333;

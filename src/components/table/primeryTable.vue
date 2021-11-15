@@ -14,6 +14,7 @@
       :prop="col.prop"
       :label="col.label"
       :width="col.width"
+      show-overflow-tooltip
     >
     </el-table-column>
     <slot />
@@ -21,8 +22,11 @@
 </template>
 <script lang="ts">
 import { defineComponent } from "vue";
-
+import Draggable from "vue3-draggable";
 export default defineComponent({
+  components: {
+    Draggable,
+  },
   props: {
     columns: {
       type: Array,

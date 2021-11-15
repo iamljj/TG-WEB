@@ -8,6 +8,7 @@ import { dateFormat } from './utils/date'
 import 'element-plus/packages/theme-chalk/src/base.scss'
 import { components, plugins } from './elementUI'
 import '@/scss/index.scss'
+import '@/scss/reset.scss'
 import '@/assets/iconfont/iconfont.css'
 import '@imengyu/vue3-context-menu/lib/vue3-context-menu.css'
 const app = createApp(App)
