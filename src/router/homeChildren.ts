@@ -56,18 +56,26 @@ export const routers = [
         meta: {
           keepAlive: false
         }
+      },
+      {
+        name: 'business',
+        path: '/home/system/business',
+        component: () => import(/* webpackChunkName: "system" */ '@/views/systems/business.vue'),
+        title: '业务类型管理',
+        icon: 'iconframework',
+        meta: {
+          keepAlive: false
+        }
+      },
+      {
+        path: '/home/dealer',
+        name: 'dealer',
+        component: () => import(/* webpackChunkName: "home" */ '@/views/systems/dealer.vue'),
+        icon: 'role',
+        meta: {
+          keepAlive: 'false'
+        }
       }
     ]
   }
-
-  // {
-  //   path: '/home/dealer',
-  //   name: 'dealer',
-  //   component: () => import(/* webpackChunkName: "home" */ '@/views/systems/dealer.vue'),
-  //   title: '绑定经销商',
-  //   icon: 'role',
-  //   meta: {
-  //     isshow: 'false'
-  //   }
-  // }
 ]

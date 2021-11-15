@@ -1,8 +1,7 @@
 <template>
   <router-view />
 </template>
-
-<style>
+<style lang="scss">
 body {
   margin: 0px;
   border: 0px;
@@ -16,5 +15,25 @@ body {
 }
 .el-message__icon {
   font-size: 30px;
+}
+//修改弹窗样式
+.el-dialog {
+  border-radius: 10px !important;
+  .el-dialog__header {
+    background-color: #409eff;
+    border-radius: 10px 10px 0 0;
+  }
+  .el-dialog__title {
+    color: #fff;
+  }
+  .el-dialog__close {
+    color: #fff !important;
+    &:hover {
+      color: #fff !important;
+    }
+  }
+}
+.el-message-box__message {
+  color: red;
 }
 </style>

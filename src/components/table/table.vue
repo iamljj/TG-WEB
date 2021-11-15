@@ -69,11 +69,9 @@ export default defineComponent({
     form: Object,
     url: String,
     id: String,
-    page: Number,
-    isshow: String,
-    url1: String
   },
   setup(props, context) {
+    
     // 选中
     const handleSelectionChange = (val) => {}
     // 是否确认删除

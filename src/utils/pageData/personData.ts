@@ -67,21 +67,20 @@ export const tabs: Array<labelValueType> = [
 // 组织架构
 export interface treeDataType {
   label: string
+  id: number
   children?: Array<treeDataType>
 }
 export const treeData: Array<treeDataType> = [
   {
+    id: 1,
     label: '营销总公司',
     children: [
       {
+        id: 4,
         label: '安徽销售片区',
         children: [
-          {
-            label: '淮北办事处'
-          },
-          {
-            label: '阜阳办事处'
-          }
+          { id: 2, label: '淮北办事处' },
+          { id: 3, label: '阜阳办事处' }
         ]
       }
     ]

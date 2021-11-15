@@ -16,7 +16,7 @@ components.forEach((component) => {
   app.component(component.name, component)
 })
 plugins.forEach((plugin) => {
-  app.use(plugin);
+  app.use(plugin)
 })
 
 if (dev) console.log('dev: ' + dateFormat(Date.now(), '0'))

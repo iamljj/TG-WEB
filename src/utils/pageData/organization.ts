@@ -1,67 +1,55 @@
 import { reactive, ref } from 'vue'
 import { tableType, tableDataType, rulesChange, formType, optionData } from './pageType'
 
-export const table: tableType[] = [
+//表格
+// 表格
+export const columns: Array<any> = [
+  { type: 'index', label: '序号' },
+  { label: '经销商', prop: 'name' },
+  { label: '节点', prop: 'node' }
+]
+export const tableData = [
   {
-    name: '经销商',
-    prop: 'roleName',
-    width: 450
-  },
-  {
-    name: '节点',
-    prop: 'state',
-    width: 450
+    name: '顺达',
+    node: '淮北办事处'
   }
 ]
-export const tableData = ref([
-  {
-    roleid: 1,
-    roleName: '经理',
-    state: '启用',
-    Permissions: [15, 6, 7, 8]
-  },
-  { roleid: 2, roleName: '经理', state: '停用', Permissions: [9, 6, 7, 8] },
-  { roleid: 3, roleName: '经理', state: '启用', Permissions: [15, 6, 7, 8] },
-  { roleid: 4, roleName: '经理', state: '启用', Permissions: [15, 6, 7] }
-])
 export const rules = { roleName: [{ required: true, message: '请填角色名称', trigger: 'blur' }] }
 
 export const formRules: any = ref(null)
 // 选中的id
 export const formId = ref(null)
 
-export const form = reactive({
-  roleName: '',
-  state: '',
-  roleid: ''
-})
-export const nodeitem = reactive({
-  path: null,
-  departmentName: '',
-  addname: '',
-  id: '',
-  label: ''
-})
+export const form = {
+  label: '',
+  name: '',
+  id: null,
+  business: ''
+}
+export const business = [
+  {
+    label: '团购',
+    value: '团购'
+  },
+  {
+    label: '直销',
+    value: '直销'
+  },
+  {
+    label: '配送',
+    value: '配送'
+  },
+  {
+    label: '费用',
+    value: '费用'
+  },
+  {
+    label: '全部',
+    value: '全部'
+  }
+]
 export const data = ref([])
-export const  dealers =ref([])
-export const Distribution = ref([])
-export const defaultProps = ref({
-  children: 'oaPeopleDepts',
-  label: 'departmentName'
-})
+export const dealers = ref([])
 export const totol = ref(1)
-export const tree = ref()
 export const page = ref(1)
 export const pagesize = ref(8)
-export const formLabelWidth = ref<string>('100px;')
-export const filterText = ref('')
-export const dialogFormVisible1 = ref<Boolean>(false)
-export const dialogFormVisible2 = ref<Boolean>(false)
-
-// 关闭dio时
-export const handleClose = (done: any) => {
-  for (const key in form) {
-    form[key] = ''
-  }
-  done()
-}
