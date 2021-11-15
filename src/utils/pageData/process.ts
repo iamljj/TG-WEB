@@ -1,13 +1,15 @@
 let Mock = require('mockjs')
 
-interface processType {
+export interface processType {
   label: string
   value: string
+  checked?:boolean
 }
 export const processData: Array<processType> = [
   {
     label: '全部',
-    value: 'all'
+    value: 'all',
+
   },
   {
     label: '团购',
@@ -108,27 +110,33 @@ export const selectTab: Array<processType> = [
 export const jobs: Array<processType> = [
   {
     label: '销售主管1',
-    value: '1'
+    value: '1',
+    checked: false
   },
   {
     label: '业务员1',
-    value: '2'
+    value: '2',
+    checked: false
   },
   {
     label: '团购经理1',
-    value: '3'
+    value: '3',
+    checked: false
   },
   {
     label: '团购总监1',
-    value: '4'
+    value: '4',
+    checked: false
   },
   {
     label: '业务员2',
-    value: '5'
+    value: '5',
+    checked: false
   },
   {
     label: '销售主管2',
-    value: '6'
+    value: '6',
+    checked: false
   }
 ]
 

@@ -106,19 +106,28 @@
                   v-model="nodeForm.jobCheckList"
                   @change="changeCheckbox"
                 >
-                  <el-checkbox v-for="(job, i) in jobs" :key="i" :label="job.value">{{
-                    job.label
-                  }}</el-checkbox>
+                  <el-checkbox
+                    class="checkboxTips"
+                    v-for="(job, i) in checkboxUnselectList"
+                    :key="i"
+                    :label="job.value"
+                    :checked="job.checked"
+                    >{{ job.label }}</el-checkbox
+                  >
                 </el-checkbox-group>
               </el-card>
             </template>
             <template v-slot:person>
               <el-card class="cardWidth">
-                <Table :columns="personTableCol" :tableData="tpersonTableDatad"></Table>
+                <Table
+                  ref="tableRef"
+                  :columns="personTableCol"
+                  :tableData="tpersonTableDatad"
+                  @select="changeRow"
+                ></Table>
                 <el-pagination
                   class="pagination"
                   :default-page-size="5"
-                  :pager-count="3"
                   :current-page="personCurrentPage"
                   :total="personTotal"
                   @current-change="personCurrentPageChange"
@@ -137,11 +146,12 @@
               class="selectedSort"
             >
               <el-checkbox
-                v-for="(check, i) in checkboxSelectedList"
+                v-for="(checkbox, i) in checkboxSelectedList"
                 :key="i"
-                :label="check"
-                :checked="true"
-              ></el-checkbox>
+                :label="checkbox.value"
+                :checked="checkbox.checked"
+                >{{ checkbox.label }}</el-checkbox
+              >
             </el-checkbox-group>
           </el-card>
         </div>
@@ -156,7 +166,17 @@
   </el-dialog>
 </template>
 <script lang="ts">
-import { defineComponent, reactive, ref, watch, Ref } from "vue";
+import {
+  defineComponent,
+  reactive,
+  ref,
+  watch,
+  Ref,
+  watchEffect,
+  onMounted,
+  onUpdated,
+  readonly,
+} from "vue";
 import {
   processData,
   formRules,
@@ -167,6 +187,7 @@ import {
   jobs,
   personTableCol,
   tpersonTableDatad,
+  processType,
 } from "@/utils/pageData/process";
 import Table from "@/components/table/primeryTable.vue";
 import Draggable from "@/components/table/draggableTable.vue";
@@ -178,7 +199,7 @@ export default defineComponent({
     Draggable,
     TabsButton,
   },
-  setup() {
+  setup(prop, ctx) {
     // 查询条件， 搜索
     let searchKey = ref("");
     let searchProcess = ref("");
@@ -227,21 +248,18 @@ export default defineComponent({
     });
 
     // 待选，已选，反选逻辑
+    let checkboxUnselectList = ref(jobs);
     let checkboxSelected = ref([]);
     let checkboxSelectedList = ref([]);
 
-    const changeCheckbox = (value) => {
-      // value.forEach((v) => {
-      //   let val = jobs.filter((job) => job.value == v);
-      //   // checkboxSelectedList.value.push();
-      //   console.log(val);
-      // });
-    };
-    const changeCheckboxSelected = (value) => {
-      // console.log(checkboxSelected.value);
-      // let index = value.findIndex((v) => v == checkboxSelected.value[0]);
-      // checkboxSelectedList.value.splice(index - 1, 1);
-    };
+    // 待选，已选框处理逻辑
+    // 表格选择
+    // onUpdated(() => {
+    //   console.log(tableRef.value);
+    //   if (tableRef.value) {
+    //     tableRef.value.toggleRowSelection(current, true);
+    //   }
+    // });
     return {
       searchKey,
       searchProcess,
@@ -256,12 +274,11 @@ export default defineComponent({
       processNodeTitle,
       selectTab,
       activeTab,
-      jobs,
+      checkboxUnselectList,
       nodeForm,
       personTableCol,
       tpersonTableDatad,
       personCurrentPage,
-
       personTotal,
       checkboxSelected,
       checkboxSelectedList,
@@ -270,8 +287,6 @@ export default defineComponent({
       putNewNode,
       dragEnd,
       personCurrentPageChange,
-      changeCheckbox,
-      changeCheckboxSelected,
     };
   },
   data() {
@@ -281,7 +296,43 @@ export default defineComponent({
         sort: [],
         status: "启用",
       },
+      current: null,
     };
+  },
+  methods: {
+    selectStatusChange(value, type?: string) {
+      this.checkboxSelectedList = value.reduce((list, curr) => {
+        let val = this.checkboxUnselectList.filter((job: processType) => {
+          if (job.value == curr) {
+            job.checked = true;
+            return job;
+          }
+        });
+        return list.concat(val);
+      }, []);
+      if (!type) {
+        this.checkboxUnselectList.forEach((job: processType) => {
+          job.checked = false;
+          value.forEach((v) => {
+            if (job.value == v) {
+              job.checked = true;
+            }
+          });
+        });
+      } else {
+      }
+    },
+    changeCheckbox(value) {
+      this.selectStatusChange(value);
+    },
+    changeCheckboxSelected(value) {
+      this.selectStatusChange(value);
+    },
+    changeRow(row) {
+      console.log(this.$refs.tableRef);
+      // (this.$refs.tableRef as any).toggleRowSelection(row, false);
+      // this.current = row;
+    },
   },
 });
 </script>
@@ -339,6 +390,12 @@ export default defineComponent({
     width: 50%;
     padding: 10px 20px;
   }
+}
+.checkboxTips {
+  text-overflow: ellipsis;
+  width: 115px;
+  text-align: left;
+  margin-right: 0;
 }
 .cardWidth {
   height: 300px;
