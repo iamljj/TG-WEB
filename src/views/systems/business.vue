@@ -1,5 +1,7 @@
 <template>
   <div class="business-Mcontainer">
+    <el-pagination layout="prev, pager, next" :total="999" :page-size="8" class="pageSelect">
+    </el-pagination>
     <el-card class="card">
       <template #header>
         <div class="header">
@@ -89,8 +91,15 @@ export default defineComponent({
 </script>
 <style lang="scss">
 .business-Mcontainer {
+  position: relative;
   display: flex;
   justify-content: center;
+  .pageSelect {
+    position: absolute;
+    bottom: 20px;
+    transform: translateX(-50%);
+    left: 50%;
+  }
   .card {
     width: 100%;
     height: 89vh;

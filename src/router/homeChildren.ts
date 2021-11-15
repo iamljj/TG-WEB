@@ -68,6 +68,16 @@ export const routers = [
         }
       },
       {
+        name: 'log',
+        path: '/home/system/log',
+        component: () => import(/* webpackChunkName: "system" */ '@/views/systems/log.vue'),
+        title: '操作日志',
+        icon: 'iconframework',
+        meta: {
+          keepAlive: false
+        }
+      },
+      {
         path: '/home/dealer',
         name: 'dealer',
         component: () => import(/* webpackChunkName: "home" */ '@/views/systems/dealer.vue'),

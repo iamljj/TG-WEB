@@ -26,6 +26,7 @@
               :index="router.path"
               v-for="router in routers.children"
               :key="router.name"
+              v-show="router.title"
             >
               <i class="iconfont" :class="router.icon"></i>
               <template #title>{{ router.title }}</template>
@@ -38,19 +39,19 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent } from 'vue'
 
 export default defineComponent({
   props: {
-    routers: Array,
+    routers: Array
   },
   setup(props) {
-    const sildeMenus = props.routers;
+    const sildeMenus = props.routers
     return {
-      sildeMenus,
-    };
-  },
-});
+      sildeMenus
+    }
+  }
+})
 </script>
 <style lang="scss" scoped>
 .left {
