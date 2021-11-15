@@ -3,6 +3,8 @@ import {
   ElButton,
   ElCard,
   ElCol,
+  ElCheckbox,
+  ElCheckboxGroup,
   ElForm,
   ElFormItem,
   ElInput,
@@ -22,6 +24,7 @@ import {
   ElDropdownItem,
   ElTable,
   ElTableColumn,
+
   ElDropdownMenu,
   ElPagination,
   ElDialog,
@@ -31,6 +34,8 @@ import {
   ElOption,
   ElTree,
   ElIcon,
+  ElRadio,
+  ElRadioGroup,
   ElConfigProvider
 } from 'element-plus'
 export const components: any[] = [
@@ -39,6 +44,8 @@ export const components: any[] = [
   ElButton,
   ElRow,
   ElCol,
+  ElCheckbox,
+  ElCheckboxGroup,
   ElTabPane,
   ElTabs,
   ElCard,
@@ -64,7 +71,9 @@ export const components: any[] = [
   ElAside,
   ElMain,
   ElHeader,
-  ElIcon
+  ElIcon,
+  ElRadio,
+  ElRadioGroup
 ]
 
 // 插件和指令
