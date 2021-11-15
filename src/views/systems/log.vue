@@ -124,10 +124,11 @@ export default defineComponent({
 <style lang="scss">
 .log-Mcontainer {
   .card {
+    position: relative;
     height: 89vh;
     .pageSelect {
       position: absolute;
-      bottom: 50px;
+      bottom: 30px;
       transform: translateX(-50%);
       left: 50%;
     }
