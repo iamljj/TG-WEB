@@ -14,6 +14,7 @@
       :prop="col.prop"
       :label="col.label"
       :width="col.width"
+      :key="i"
       show-overflow-tooltip
     >
     </el-table-column>
@@ -21,32 +22,29 @@
   </el-table>
 </template>
 <script lang="ts">
-import { defineComponent } from "vue";
-import Draggable from "vue3-draggable";
+import { defineComponent } from 'vue'
+
 export default defineComponent({
-  components: {
-    Draggable,
-  },
   props: {
     columns: {
       type: Array,
-      required: true,
+      required: true
     },
     tableData: {
       type: Array,
-      required: true,
+      required: true
     },
-    height: [Number, String],
+    height: [Number, String]
   },
   setup() {},
   methods: {
     selectAll(selection) {
-      this.$emit("selectAll", selection);
+      this.$emit('selectAll', selection)
     },
     select(selection, row) {
-      this.$emit("select", row);
-    },
-  },
-});
+      this.$emit('select', row)
+    }
+  }
+})
 </script>
 <style lang="scss" scoped></style>
