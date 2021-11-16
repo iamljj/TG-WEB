@@ -28,6 +28,19 @@
         >
       </div>
     </div>
+    <Table
+      :columns="processTableColumn"
+      :tableData="processTable"
+      @selectChange="selectChange"
+    >
+      <el-table-column label="操作">
+        <template #default="scope">
+          <el-button size="mini" type="text">编辑</el-button>
+          <el-button size="mini" type="text">启用</el-button>
+          <el-button size="mini" type="text">禁用</el-button>
+        </template>
+      </el-table-column>
+    </Table>
   </el-card>
   <el-dialog v-model="processVisible" :title="processTitle + '审批流程'" top="5vh">
     <el-card class="process-info">
@@ -99,29 +112,26 @@
       <div class="row-item transf">
         <div class="left">
           <label>待选</label>
-          <TabsButton :tabs="selectTab" :activeName="activeTab">
+          <TabsButton :tabs="selectTab" :activeName="activeTab" @handleClick="switchTab">
             <template v-slot:job>
               <el-card class="cardWidth">
-                <el-checkbox-group
-                  v-model="nodeForm.jobCheckList"
+                <el-checkbox
+                  class="checkboxTips"
+                  v-for="(job, i) in checkboxUnselectList"
+                  :key="i"
+                  :true-label="job.value"
+                  :false-label="job.value"
+                  :model-value="job.checked"
                   @change="changeCheckbox"
+                  >{{ job.label }}</el-checkbox
                 >
-                  <el-checkbox
-                    class="checkboxTips"
-                    v-for="(job, i) in checkboxUnselectList"
-                    :key="i"
-                    :label="job.value"
-                    :checked="job.checked"
-                    >{{ job.label }}</el-checkbox
-                  >
-                </el-checkbox-group>
               </el-card>
             </template>
             <template v-slot:person>
               <el-card class="cardWidth">
                 <Table
                   :columns="personTableCol"
-                  :tableData="tpersonTableDatad"
+                  :tableData="personTableDatad"
                   @selectChange="selectChange"
                 ></Table>
                 <el-pagination
@@ -139,19 +149,17 @@
         <div class="right">
           <label>已选</label>
           <el-card class="cardWidth selected" shadow="never">
-            <el-checkbox-group
-              v-model="checkboxSelected"
-              @change="changeCheckboxSelected"
-              class="selectedSort"
-            >
+            <div class="selectedSort">
               <el-checkbox
                 v-for="(checkbox, i) in checkboxSelectedList"
                 :key="i"
-                :label="checkbox.value"
-                :checked="checkbox.checked"
+                :true-label="checkbox.value"
+                :false-label="checkbox.value"
+                :model-value="checkbox.checked"
+                @change="changeCheckboxSelected"
                 >{{ checkbox.label }}</el-checkbox
               >
-            </el-checkbox-group>
+            </div>
           </el-card>
         </div>
       </div>
@@ -176,7 +184,8 @@ import {
   jobs,
   personTableCol,
   tpersonTableDatad,
-  processType,
+  processTableColumn,
+  processTable,
 } from "@/utils/pageData/process";
 import Table from "@/components/table/primeryTable.vue";
 import Draggable from "@/components/table/draggableTable.vue";
@@ -188,7 +197,7 @@ export default defineComponent({
     Draggable,
     TabsButton,
   },
-  setup(prop, ctx) {
+  setup() {
     // 查询条件， 搜索
     let searchKey = ref("");
     let searchProcess = ref("");
@@ -207,6 +216,9 @@ export default defineComponent({
     let processNodeVisible = ref(false);
     let processNodeTitle = ref("新增");
     let activeTab = ref("job");
+    const switchTab = (tab) => {
+      activeTab.value = tab.paneName;
+    };
     let personCurrentPage = ref(1);
     let personTotal = ref(26);
     const putNewNode = () => {
@@ -232,60 +244,79 @@ export default defineComponent({
     // form
     let nodeForm = reactive({
       condi: "一人通过",
-      jobCheckList: [],
-      personList: [],
     });
 
     // 待选，已选，反选逻辑
     let checkboxUnselectList = ref(jobs);
     let checkboxSelected = ref([]);
     let checkboxSelectedList = ref([]);
-    // 待选，已选框处理逻辑
-    const selectStatusChange = (value) => {
-      checkboxSelectedList.value = value.reduce((list, curr) => {
-        let val = checkboxUnselectList.value.filter((job: processType) => {
-          if (job.value == curr) {
-            job.checked = true;
-            return job;
-          }
-        });
-        return list.concat(val);
-      }, []);
-      checkboxUnselectList.value.forEach((job: processType) => {
-        job.checked = false;
-        value.forEach((v) => {
-          if (job.value == v) {
-            job.checked = true;
-          }
-        });
-      });
-    };
+    //TODO:checkboxSelectedList中的元素value对应table数据中的id和角色数组中的value
+    // 岗位待选
     const changeCheckbox = (value) => {
-      selectStatusChange(value);
+      let currentBox = checkboxUnselectList.value.find((box) => {
+        if (box.value == value) {
+          return box;
+        }
+      });
+      currentBox.checked = !currentBox.checked;
+      if (currentBox.checked) {
+        checkboxSelectedList.value.push(currentBox);
+      } else {
+        let index = checkboxSelectedList.value.findIndex(
+          (box) => box.value == currentBox.value
+        );
+        checkboxSelectedList.value.splice(index, 1);
+      }
     };
+    // 已选
     const changeCheckboxSelected = (value) => {
-      selectStatusChange(value);
-    };
-    // 表格选择
+      let index = checkboxSelectedList.value.findIndex((box) => box.value == value);
+      checkboxSelectedList.value.splice(index, 1);
 
-    // if (row && row.checked) {
-    //   checkboxSelectedList.value.push({
-    //     checked: row.checked,
-    //     label: row.name,
-    //     value: row.id,
-    //   });
-    // } else {
-    //   let rowIndex = checkboxSelectedList.value.findIndex((v) => v.value == row.id);
-    //   checkboxSelectedList.value.splice(rowIndex, 1);
-    // }
-    // console.log(checkboxSelectedList.value);
+      // 修改待选数据中的状态
+      let currentBox = checkboxUnselectList.value.find((box) => {
+        if (box.value == value) {
+          return box;
+        }
+      });
+      if (currentBox) currentBox.checked = false;
+
+      let tableRow = personTableDatad.find((box) => {
+        if (box.id == value) {
+          return box;
+        }
+      });
+
+      if (tableRow) {
+        tableRow.checked = false;
+        console.log(tableRow);
+      }
+    };
+    // 人员待选
     const selectChange = (row) => {
-      row.checked = !row.checked;
       console.log(row);
+
+      row.checked = !row.checked;
+      let currentBox = {
+        checked: row.checked,
+        label: row.name,
+        value: row.id,
+      };
+      if (row.checked) {
+        checkboxSelectedList.value.push(currentBox);
+      } else {
+        let index = checkboxSelectedList.value.findIndex(
+          (box) => box.value == currentBox.value
+        );
+        checkboxSelectedList.value.splice(index, 1);
+      }
     };
     const selectAll = (selection) => {
-      // console.log(selection);
+      // constrUnselectPersonList(selection);
+      // concatList();
     };
+    // 表格数据
+    let personTableDatad = reactive(tpersonTableDatad);
     return {
       searchKey,
       searchProcess,
@@ -300,10 +331,11 @@ export default defineComponent({
       processNodeTitle,
       selectTab,
       activeTab,
+      switchTab,
       checkboxUnselectList,
       nodeForm,
       personTableCol,
-      tpersonTableDatad,
+      personTableDatad,
       personCurrentPage,
       personTotal,
       checkboxSelected,
@@ -317,6 +349,8 @@ export default defineComponent({
       changeCheckboxSelected,
       selectChange,
       selectAll,
+      processTableColumn,
+      processTable,
     };
   },
   data() {

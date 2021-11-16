@@ -83,6 +83,42 @@ export const columns: Array<any> = [
     label: '通过条件'
   }
 ]
+export const processTableColumn: Array<any> = [
+  {
+    label: '流程名称',
+    props: 'name'
+  },
+  {
+    label: '流程分类',
+    props: 'sort'
+  },
+  {
+    label: '创建人',
+    props: 'creater'
+  },
+  {
+    label: '创建时间',
+    props: 'createDate'
+  },
+  {
+    label: '状态',
+    props: 'status'
+  }
+]
+const { processTableData } = Mock.mock({
+  'processTableData|1-7': [
+    {
+      'id|+1': 1,
+      name: '@name',
+      sort: /^(团购|直销|费用项)$/,
+      creater: '@first',
+      'createDate|date': '2020-10-10',
+      status: /^(启用|禁用)$/
+    }
+  ]
+})
+
+export const processTable: Array<any> = processTableData
 
 const { tableList } = Mock.mock({
   'tableList|1-7': [
@@ -163,3 +199,7 @@ const { list } = Mock.mock({
 })
 
 export const tpersonTableDatad: Array<any> = list;
+
+
+
+

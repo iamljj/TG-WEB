@@ -73,7 +73,7 @@ export const routers = [
         component: () => import(/* webpackChunkName: "home" */ '@/views/systems/dealer.vue'),
         icon: 'role',
         meta: {
-          keepAlive: 'false'
+          keepAlive: false
         }
       }
     ]
