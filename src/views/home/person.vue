@@ -65,7 +65,7 @@
             :columns="tableCol_"
             :tableData="tableData_"
             v-loading="loading"
-            @select="select"
+            @selectChange="selectChange"
             @selectAll="selectAll"
           >
             <el-table-column label="操作">
@@ -182,7 +182,7 @@ export default defineComponent({
     let tableData_ = tableData;
     let tableCol_ = reactive(columns);
 
-    const select = (row) => {
+    const selectChange = (row) => {
       console.log(row);
     };
     const selectAll = (selection) => {};
@@ -243,7 +243,7 @@ export default defineComponent({
       importTemp,
       addExternalPerson,
       deleteExteranlPerson,
-      select,
+      selectChange,
       selectAll,
     };
   },

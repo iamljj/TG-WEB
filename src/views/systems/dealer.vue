@@ -91,7 +91,7 @@ export default defineComponent({
       router.push('/home/system/organization')
     }
 
-    const fetchDealer = (selection) => {
+    const fetchDealer = (selection, row) => {
       getDealer.value = selection
     }
     //获取要删除的数据

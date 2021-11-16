@@ -110,32 +110,32 @@ export const selectTab: Array<processType> = [
 export const jobs: Array<processType> = [
   {
     label: '销售主管1',
-    value: '1',
+    value: '1001',
     checked: false
   },
   {
     label: '业务员1',
-    value: '2',
+    value: '123',
     checked: false
   },
   {
     label: '团购经理1',
-    value: '3',
+    value: '1456',
     checked: false
   },
   {
     label: '团购总监1',
-    value: '4',
+    value: '12',
     checked: false
   },
   {
     label: '业务员2',
-    value: '5',
+    value: '213',
     checked: false
   },
   {
     label: '销售主管2',
-    value: '6',
+    value: '156',
     checked: false
   }
 ]
@@ -155,8 +155,9 @@ const { list } = Mock.mock({
       'id|+1': 1,
       name: '@name',
       phone: /^1[3|5|7|8]\d{9}$/,
-      'role': '业务员',
-      node: '节点'
+      role: '业务员',
+      node: '节点',
+      checked: false
     }
   ]
 })

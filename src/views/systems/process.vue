@@ -120,10 +120,9 @@
             <template v-slot:person>
               <el-card class="cardWidth">
                 <Table
-                  ref="tableRef"
                   :columns="personTableCol"
                   :tableData="tpersonTableDatad"
-                  @select="changeRow"
+                  @selectChange="selectChange"
                 ></Table>
                 <el-pagination
                   class="pagination"
@@ -166,17 +165,7 @@
   </el-dialog>
 </template>
 <script lang="ts">
-import {
-  defineComponent,
-  reactive,
-  ref,
-  watch,
-  Ref,
-  watchEffect,
-  onMounted,
-  onUpdated,
-  readonly,
-} from "vue";
+import { defineComponent, reactive, ref, watch } from "vue";
 import {
   processData,
   formRules,
@@ -251,15 +240,52 @@ export default defineComponent({
     let checkboxUnselectList = ref(jobs);
     let checkboxSelected = ref([]);
     let checkboxSelectedList = ref([]);
-
     // 待选，已选框处理逻辑
+    const selectStatusChange = (value) => {
+      checkboxSelectedList.value = value.reduce((list, curr) => {
+        let val = checkboxUnselectList.value.filter((job: processType) => {
+          if (job.value == curr) {
+            job.checked = true;
+            return job;
+          }
+        });
+        return list.concat(val);
+      }, []);
+      checkboxUnselectList.value.forEach((job: processType) => {
+        job.checked = false;
+        value.forEach((v) => {
+          if (job.value == v) {
+            job.checked = true;
+          }
+        });
+      });
+    };
+    const changeCheckbox = (value) => {
+      selectStatusChange(value);
+    };
+    const changeCheckboxSelected = (value) => {
+      selectStatusChange(value);
+    };
     // 表格选择
-    // onUpdated(() => {
-    //   console.log(tableRef.value);
-    //   if (tableRef.value) {
-    //     tableRef.value.toggleRowSelection(current, true);
-    //   }
-    // });
+
+    // if (row && row.checked) {
+    //   checkboxSelectedList.value.push({
+    //     checked: row.checked,
+    //     label: row.name,
+    //     value: row.id,
+    //   });
+    // } else {
+    //   let rowIndex = checkboxSelectedList.value.findIndex((v) => v.value == row.id);
+    //   checkboxSelectedList.value.splice(rowIndex, 1);
+    // }
+    // console.log(checkboxSelectedList.value);
+    const selectChange = (row) => {
+      row.checked = !row.checked;
+      console.log(row);
+    };
+    const selectAll = (selection) => {
+      // console.log(selection);
+    };
     return {
       searchKey,
       searchProcess,
@@ -287,6 +313,10 @@ export default defineComponent({
       putNewNode,
       dragEnd,
       personCurrentPageChange,
+      changeCheckbox,
+      changeCheckboxSelected,
+      selectChange,
+      selectAll,
     };
   },
   data() {
@@ -296,44 +326,9 @@ export default defineComponent({
         sort: [],
         status: "启用",
       },
-      current: null,
     };
   },
-  methods: {
-    selectStatusChange(value, type?: string) {
-      this.checkboxSelectedList = value.reduce((list, curr) => {
-        let val = this.checkboxUnselectList.filter((job: processType) => {
-          if (job.value == curr) {
-            job.checked = true;
-            return job;
-          }
-        });
-        return list.concat(val);
-      }, []);
-      if (!type) {
-        this.checkboxUnselectList.forEach((job: processType) => {
-          job.checked = false;
-          value.forEach((v) => {
-            if (job.value == v) {
-              job.checked = true;
-            }
-          });
-        });
-      } else {
-      }
-    },
-    changeCheckbox(value) {
-      this.selectStatusChange(value);
-    },
-    changeCheckboxSelected(value) {
-      this.selectStatusChange(value);
-    },
-    changeRow(row) {
-      console.log(this.$refs.tableRef);
-      // (this.$refs.tableRef as any).toggleRowSelection(row, false);
-      // this.current = row;
-    },
-  },
+  methods: {},
 });
 </script>
 
