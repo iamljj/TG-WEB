@@ -58,13 +58,7 @@
             </div>
           </div>
           <div class="body">
-            <el-table
-              ref="multipleTable"
-              :data="tableData"
-              @selection-change="fetchDealer"
-              @select="fetchDealer"
-              @select-all="fetchDealer"
-            >
+            <el-table ref="multipleTable" :data="tableData" @selection-change="fetchDealer">
               <el-table-column type="selection" width="316" />
               <el-table-column type="index" width="316" label="序号" />
               <el-table-column label="经销商名称" width="316">
