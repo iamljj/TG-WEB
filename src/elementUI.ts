@@ -56,7 +56,7 @@ export const components: any[] = [
   ElDropdown,
   ElDropdownItem,
   ElSelect,
-  { ElDatePicker, locale: zhCn },
+  ElDatePicker,
   ElUpload,
   ElPagination,
   ElDropdownMenu,

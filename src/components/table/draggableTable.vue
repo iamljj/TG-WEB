@@ -12,7 +12,7 @@
       <template #item="{ element, index }">
         <tr class="draggableTable-row">
           <td>{{ index + 1 }}</td>
-          <template v-for="(value, key, i) in element" :key="key">
+          <template v-for="(value, key) in element" :key="key">
             <td>
               {{ value }}
             </td>
@@ -25,9 +25,8 @@
 </template>
 <script lang="ts">
 import { defineComponent } from "vue";
-import draggable from "vuedraggable";
+
 export default defineComponent({
-  components: { draggable },
   props: {
     columns: Array,
     list: Array,

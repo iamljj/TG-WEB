@@ -17,6 +17,7 @@
       :prop="col.prop"
       :label="col.label"
       :width="col.width"
+      :key="i"
       show-overflow-tooltip
       :reserve-selection="true"
     >
@@ -30,13 +31,13 @@ export default defineComponent({
   props: {
     columns: {
       type: Array,
-      required: true,
+      required: true
     },
     tableData: {
       type: Array,
-      required: true,
+      required: true
     },
-    height: [Number, String],
+    height: [Number, String]
   },
   setup() {},
   data() {
@@ -46,7 +47,7 @@ export default defineComponent({
   },
   methods: {
     selectAll(selection) {
-      this.$emit("selectAll", selection);
+      this.$emit('selectAll', selection)
     },
     select(selection, row) {
       this.currentRow = row;
