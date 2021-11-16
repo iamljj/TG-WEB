@@ -62,8 +62,6 @@
               ref="multipleTable"
               :data="tableData"
               @selection-change="fetchDealer"
-              @select="fetchDealer"
-              @select-all="fetchDealer"
             >
               <el-table-column type="selection" width="316" />
               <el-table-column type="index" width="316" label="序号" />
@@ -80,37 +78,37 @@
 </template>
 
 <script lang="ts">
-import { tableData, getDealer, daleteDealer } from '@/utils/pageData/dealer'
-import { defineComponent, ref, watch } from 'vue'
-import router from '@/router/index'
+import { tableData, getDealer, daleteDealer } from "@/utils/pageData/dealer";
+import { defineComponent, ref, watch } from "vue";
+import router from "@/router/index";
 
 export default defineComponent({
-  name: 'dealer',
+  name: "dealer",
   components: {},
   setup() {
-    let deletelist = ref(null)
-    const multipleTable = ref(null)
+    let deletelist = ref(null);
+    const multipleTable = ref(null);
     //获取选中数据
 
     //按确定
     const back = () => {
-      router.push('/home/system/organization')
-    }
+      router.push("/home/system/organization");
+    };
 
-    const fetchDealer = (selection) => {
-      getDealer.value = selection
-    }
+    const fetchDealer = (selection, row) => {
+      getDealer.value = selection;
+    };
     //获取要删除的数据
     const daletedealer = (selection) => {
-      deletelist = selection
-      console.log()
-    }
+      deletelist = selection;
+      console.log();
+    };
     //改变待选框中多选框的状态
     const deleteselected = () => {
       deletelist.forEach((item) => {
-        multipleTable.value.toggleRowSelection(item, false)
-      })
-    }
+        multipleTable.value.toggleRowSelection(item, false);
+      });
+    };
     return {
       tableData,
       fetchDealer,
@@ -120,10 +118,10 @@ export default defineComponent({
       multipleTable,
       deletelist,
       deleteselected,
-      back
-    }
-  }
-})
+      back,
+    };
+  },
+});
 </script>
 
 <style lang="scss">

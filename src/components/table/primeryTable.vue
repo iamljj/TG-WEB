@@ -1,12 +1,15 @@
 <template>
   <el-table
+    ref="tableRef"
     :data="tableData"
     stripe
     :height="height"
+    :row-key="(row) => row.id"
     style="width: 100%"
     empty-text="暂无数据"
     @select-all="selectAll"
     @select="select"
+    @selection-change="selectChange"
   >
     <el-table-column
       v-for="(col, i) in columns"
@@ -15,6 +18,7 @@
       :label="col.label"
       :width="col.width"
       show-overflow-tooltip
+      :reserve-selection="true"
     >
     </el-table-column>
     <slot />
@@ -22,11 +26,7 @@
 </template>
 <script lang="ts">
 import { defineComponent } from "vue";
-import Draggable from "vue3-draggable";
 export default defineComponent({
-  components: {
-    Draggable,
-  },
   props: {
     columns: {
       type: Array,
@@ -39,12 +39,20 @@ export default defineComponent({
     height: [Number, String],
   },
   setup() {},
+  data() {
+    return {
+      currentRow: null,
+    };
+  },
   methods: {
     selectAll(selection) {
       this.$emit("selectAll", selection);
     },
     select(selection, row) {
-      this.$emit("select", row);
+      this.currentRow = row;
+    },
+    selectChange() {
+      this.$emit("selectChange", this.currentRow);
     },
   },
 });
