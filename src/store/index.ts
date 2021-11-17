@@ -1,6 +1,7 @@
 import { createStore } from 'vuex'
-import { GlobalDataProps } from './types'
 import { storage } from '@/utils/storage'
+import {Node} from "./modules/index"
+
 
 export default createStore({
   state: {
@@ -38,5 +39,11 @@ export default createStore({
     }
   },
   actions: {},
-  modules: {}
+  modules: {
+    // 访问的时候多加上模块名称，比如 store.Node.xxx
+    Node: {
+      namespaced: true,
+      ...Node
+    }
+  }
 })
