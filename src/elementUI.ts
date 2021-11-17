@@ -24,7 +24,6 @@ import {
   ElDropdownItem,
   ElTable,
   ElTableColumn,
-
   ElDropdownMenu,
   ElPagination,
   ElDialog,
@@ -64,7 +63,6 @@ export const components: any[] = [
   ElDialog,
   ElTable,
   ElOption,
-  ElFormItem,
   ElTableColumn,
   ElMenuItemGroup,
   ElContainer,
@@ -72,6 +70,7 @@ export const components: any[] = [
   ElMain,
   ElHeader,
   ElIcon,
+  ElFormItem,
   ElRadio,
   ElRadioGroup
 ]
