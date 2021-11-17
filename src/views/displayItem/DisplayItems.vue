@@ -37,10 +37,18 @@
         style="display: flex; justify-between: center"
       >
         <div style="width: 80%; height: 100%">
-          <el-form-item label="费用项编号" :label-width="formLabelWidth" prop="dispalyNumber">
+          <el-form-item
+            label="费用项编号"
+            :label-width="formLabelWidth"
+            prop="dispalyNumber"
+          >
             <el-input v-model="form.dispalyNumber" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="费用项名称" :label-width="formLabelWidth" prop="displayName">
+          <el-form-item
+            label="费用项名称"
+            :label-width="formLabelWidth"
+            prop="displayName"
+          >
             <el-input v-model="form.displayName" autocomplete="off"></el-input>
           </el-form-item>
         </div>
@@ -55,8 +63,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref } from 'vue'
-import { displayall } from '@/utils/request'
+import { defineComponent, reactive, ref } from "vue";
 import {
   columns,
   tableData,
@@ -68,96 +75,77 @@ import {
   formRules,
   totol,
   pagesize,
-  page
-} from '@/utils/pageData/displayItem'
-import { title } from '@/utils/pageData/personData'
-import { dialogFormVisible } from '@/utils/pageData/publicData'
-import { tableChange, searchAxios, tablePost } from '@/utils/request'
-import { ElMessage } from 'element-plus'
-import Table from '@/components/table/primeryTable.vue'
-import Search from '@/components/search.vue'
+  page,
+} from "@/utils/pageData/displayItem";
+import { title } from "@/utils/pageData/personData";
+import { dialogFormVisible } from "@/utils/pageData/publicData";
+import { ElMessage } from "element-plus";
+import Table from "@/components/table/primeryTable.vue";
+import Search from "@/components/search.vue";
 export default defineComponent({
-  name: 'ShopName',
+  name: "ShopName",
   components: {
     Table,
-    Search
+    Search,
   },
   setup() {
     //表格列
-    let table = columns
+    let table = columns;
     // 数据加载中
-    let loading = ref(false)
-    const url = '/proxy/7003/service/admin/display/save'
-    var searchtext = ''
+    let loading = ref(false);
+    const url = "/proxy/7003/service/admin/display/save";
+    var searchtext = "";
 
     const change = (val, label) => {
-      console.log(val, label)
-    }
+      console.log(val, label);
+    };
     //首次进页面刷新数据
     const getlist = () => {
       const params = {
         page: page.value,
-        pageSize: pagesize.value
-      }
-      displayall(params).then((res) => {
-        tableData.value = res.data.data.records
-        totol.value = res.data.data.total
-      })
-    }
-    getlist()
+        pageSize: pagesize.value,
+      };
+    };
+    getlist();
     // 搜索
     const search = (searchText: string) => {
-      searchtext = searchText
+      searchtext = searchText;
       const params = {
         page: 1,
         pageSize: pagesize.value,
-        queryKey: searchText
-      }
-      displayall(params).then((res) => {
-        tableData.value = res.data.data.records
-        totol.value = res.data.data.total
-      })
-    }
+        queryKey: searchText,
+      };
+    };
     // 翻页
     const handleCurrentChange = (val: number) => {
-      page.value = val
+      page.value = val;
       const params = {
         page: val,
         pageSize: pagesize.value,
-        queryKey: searchtext
-      }
-      displayall(params).then((res) => {
-        tableData.value = res.data.data.records
-        totol.value = res.data.data.total
-      })
-    }
+        queryKey: searchtext,
+      };
+    };
     // 修改页面点击确认
     const submitForm = () => {
       formRules.value.validate((valid: any) => {
         if (valid) {
-          if (form.displayId != '') {
-            tableChange(url, form).then(() => {
-              handleCurrentChange(page.value)
-            })
+          if (form.displayId != "") {
           } else {
-            delete form.displayId
-            tablePost(url, form).then(() => {
-              handleCurrentChange(page.value)
-            })
+            delete form.displayId;
           }
           for (const key in form) {
-            form[key] = ''
+            form[key] = "";
           }
-          dialogFormVisible.value = false
+          dialogFormVisible.value = false;
         } else {
           ElMessage({
-            type: 'error',
-            iconClass: 'el-icon-circle-close',
-            message: '请检查输入的是否正确'
-          })
+            type: "error",
+            iconClass: "el-icon-circle-close",
+            message: "请检查输入的是否正确",
+          });
         }
-      })
-    }
+      });
+    };
     return {
       tableData,
       columns,
@@ -177,10 +165,10 @@ export default defineComponent({
       page,
       title,
       table,
-      loading
-    }
-  }
-})
+      loading,
+    };
+  },
+});
 </script>
 
 <style scoped lang="scss">

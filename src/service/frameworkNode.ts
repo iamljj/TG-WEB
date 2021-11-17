@@ -13,6 +13,9 @@ export const getFrameworkNode = (params) => {
   return axios.get(`/service/admin/framework`, {params})
 }
 
-
+// 根据节点查询子节点列表
+export const getFrameworkNodeChildList = (params) => {
+  return axios.post(`/service/admin/framework/query`, params)
+}
 
 

@@ -106,8 +106,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
-import { displayall } from '@/utils/request'
+import { defineComponent, ref } from "vue";
 import {
   table,
   tableData,
@@ -124,134 +123,92 @@ import {
   defaultProps,
   tree,
   category,
-  rolelist
-} from '@/utils/pageData/role'
-import { title } from '@/utils/pageData/personData'
-import { dialogFormVisible } from '@/utils/pageData/publicData'
-import { tableChange, searchAxios, tablePost, role } from '@/utils/request'
-import { ElMessage } from 'element-plus'
-import Table from '@/components/table/table.vue'
-import Search from '@/components/search.vue'
+  rolelist,
+} from "@/utils/pageData/role";
+import { title } from "@/utils/pageData/personData";
+import { dialogFormVisible } from "@/utils/pageData/publicData";
+import { ElMessage } from "element-plus";
+import Table from "@/components/table/table.vue";
+import Search from "@/components/search.vue";
 export default defineComponent({
-  name: 'ShopName',
+  name: "ShopName",
   components: {
     Table,
-    Search
+    Search,
   },
   setup() {
-    const url = '/proxy/7003/service/admin/addRole'
-    const url1 = '/proxy/7003/service/admin/updataRole'
-    var searchtext = ''
+    const url = "/proxy/7003/service/admin/addRole";
+    const url1 = "/proxy/7003/service/admin/updataRole";
+    var searchtext = "";
 
     const change = (val, label) => {
-      console.log(val, label)
-    }
+      console.log(val, label);
+    };
     //首次进页面刷新数据
     const getlist = () => {
-      console.log([1, 2, 3])
+      console.log([1, 2, 3]);
 
       const params = {
-        roleDesc: '',
-        page: '1',
-        pagesize: pagesize.value
-      }
-      role(params).then((res) => {
-        tableData.value = res.data.data.records
-        tableData.value.forEach((item) => {
-          if (item.status == 1) {
-            item.status = '启用'
-          } else {
-            item.status = '停用'
-          }
-        })
-        totol.value = res.data.data.total
-      })
-    }
-    getlist()
+        roleDesc: "",
+        page: "1",
+        pagesize: pagesize.value,
+      };
+    };
+    getlist();
     // 搜索
     const search = (searchText: string) => {
-      searchtext = searchText
+      searchtext = searchText;
       const params = {
         page: 1,
         pageSize: pagesize.value,
-        roleDesc: searchText
-      }
-      role(params).then((res) => {
-        tableData.value = res.data.data.records
-        tableData.value.forEach((item) => {
-          if (item.status == 1) {
-            item.status = '启用'
-          } else {
-            item.status = '停用'
-          }
-        })
-        totol.value = res.data.data.total
-      })
-    }
+        roleDesc: searchText,
+      };
+    };
     // 翻页
     const handleCurrentChange = (val: number) => {
-      page.value = val
+      page.value = val;
       const params = {
         page: val,
         pageSize: pagesize.value,
-        roleDesc: searchtext
-      }
-      role(params).then((res) => {
-        tableData.value = res.data.data.records
-        tableData.value.forEach((item) => {
-          if (item.status == 1) {
-            item.status = '启用'
-          } else {
-            item.status = '停用'
-          }
-        })
-        console.log(tableData.value)
-
-        totol.value = res.data.data.total
-      })
-    }
+        roleDesc: searchtext,
+      };
+    };
     // 修改页面点击确认
     const submitForm = () => {
       formRules.value.validate((valid: any) => {
         if (valid) {
-          const son = tree.value.getCheckedKeys()
-          const father = tree.value.getHalfCheckedKeys()
-          if (form.id != '') {
+          const son = tree.value.getCheckedKeys();
+          const father = tree.value.getHalfCheckedKeys();
+          if (form.id != "") {
             const params = {
               id: form.id,
               jurisdiction: son,
               fatherJurisdiction: father,
               structure: form.structure,
-              roleDesc: form.roleDesc
-            }
-            tableChange(url1, params).then(() => {
-              handleCurrentChange(page.value)
-            })
+              roleDesc: form.roleDesc,
+            };
           } else {
-            delete form.id
+            delete form.id;
             const params = {
               jurisdiction: son,
               fatherJurisdiction: father,
               structure: form.structure,
-              roleDesc: form.roleDesc
-            }
-            tablePost(url, params).then(() => {
-              handleCurrentChange(page.value)
-            })
+              roleDesc: form.roleDesc,
+            };
           }
           for (const key in form) {
-            form[key] = ''
+            form[key] = "";
           }
-          dialogFormVisible.value = false
+          dialogFormVisible.value = false;
         } else {
           ElMessage({
-            type: 'error',
-            iconClass: 'el-icon-circle-close',
-            message: '请检查输入的是否正确'
-          })
+            type: "error",
+            iconClass: "el-icon-circle-close",
+            message: "请检查输入的是否正确",
+          });
         }
-      })
-    }
+      });
+    };
     return {
       tableData,
       table,
@@ -274,10 +231,10 @@ export default defineComponent({
       defaultProps,
       tree,
       category,
-      rolelist
-    }
-  }
-})
+      rolelist,
+    };
+  },
+});
 </script>
 
 <style scoped lang="scss">
