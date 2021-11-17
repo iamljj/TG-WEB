@@ -263,13 +263,13 @@ export default defineComponent({
   align-items: center;
   &-left {
     width: 210px;
+    min-width: 210px;
     height: calc(100vh - 140px);
     padding: 20px;
   }
   &-right {
     margin-left: 10px;
     height: calc(100vh - 100px);
-    flex: 1;
   }
 }
 .tableBar {

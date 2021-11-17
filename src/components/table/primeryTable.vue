@@ -52,9 +52,12 @@ export default defineComponent({
     select(selection, row) {
       this.currentRow = row;
     },
-    selectChange() {
-      this.$emit("selectChange", this.currentRow);
+    selectChange(selection) {
+      this.$emit("selectChange", this.currentRow, selection);
     },
+  },
+  beforeDestroy() {
+    this.currentRow = null;
   },
 });
 </script>
