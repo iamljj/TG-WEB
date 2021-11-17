@@ -13,6 +13,7 @@ const CODE_VERIFICATION = true
 const LEGAL_CODES = {
   200: 'success',
   301: 'redirect',
-  304: 'redirect'
+  304: 'redirect',
+  500: 'error'
 }
 export { REQUEST_ADDRESS, TOKEN_FIELD, LEGAL_CODES, CODE_VERIFICATION, dev, LOGIN_ADDRESS }

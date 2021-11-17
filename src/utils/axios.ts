@@ -43,12 +43,8 @@ axios.interceptors.response.use(
           if (item == code) isLegal = true
         }
         if (!isLegal) return Promise.reject({ code, msg, data: response.data })
-      }
-      if (response.data) {
         return response
       }
-
-      return Promise.reject({ response })
     } catch ({ message }) {
       endLoading()
       return Promise.reject(message)
@@ -57,7 +53,7 @@ axios.interceptors.response.use(
   (error) => {
     endLoading()
     if (error.response)
-      return Promise.reject({ status: error.response.status, data: error.response.data })
+      return Promise.reject({ code: error.response.code, data: error.response.data })
     return Promise.reject(error.message)
   }
 )
