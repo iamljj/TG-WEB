@@ -28,7 +28,7 @@ export default defineComponent({
     isExpand: {
       type: Boolean,
       default() {
-        return true;
+        return false;
       },
     },
     isContextMenu: {
@@ -48,6 +48,7 @@ export default defineComponent({
     const defaultProps = {
       children: "children",
       label: "name",
+      isLeaf: "leaf",
     };
     let filterText = ref("");
     let options: any = reactive({});

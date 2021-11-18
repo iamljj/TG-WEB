@@ -1,6 +1,12 @@
 <template>
   <div class="person">
-    <TreeNode :treeData="tree_Data" class="person-left" />
+    <TreeNode
+      :treeData="tree_Data"
+      :isContextMenu="true"
+      :contextMenus="contextMenus"
+      @node-context="nodeContext"
+      class="person-left"
+    />
     <Tabs
       class="person-right"
       :tabs="tabs"
@@ -154,6 +160,7 @@ import Tabs from "@/components/tabsButton.vue";
 import TreeNode from "@/components/treeNode.vue";
 import ImportFile from "@/components/upload/uploadFile.vue";
 import { ElMessageBox } from "element-plus";
+import DeepClone from "loadsh/cloneDeep";
 export default defineComponent({
   name: "person",
   components: {
@@ -235,9 +242,21 @@ export default defineComponent({
     let tree_Data = ref([]);
 
     onBeforeMount(async () => {
-      let treedata = await treeData(2);
+      let treedata = await treeData(3);
       tree_Data.value = arrayToTree(treedata, "parentPath");
     });
+    const contextMenus = [
+      {
+        label: "迁移节点",
+        icon: "el-icon-connection",
+        onClick() {
+          console.log("迁移节点");
+        },
+      },
+    ];
+    const nodeContext = (e, data) => {
+      console.log(e, data);
+    };
     return {
       tabs,
       activeName,
@@ -256,6 +275,7 @@ export default defineComponent({
       formRules,
       importShow,
       uploadUrl,
+      contextMenus,
       tabChange,
       downloadTemp,
       importTemp,
@@ -263,6 +283,7 @@ export default defineComponent({
       deleteExteranlPerson,
       selectChange,
       selectAll,
+      nodeContext,
     };
   },
   methods: {
