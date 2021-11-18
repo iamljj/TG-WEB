@@ -1,9 +1,5 @@
 <template>
   <div class="person">
-<<<<<<< HEAD
-    <TreeNode :treeData="tree_Data" class="person-left" />
-    <Tabs class="person-right" :tabs="tabs" :activeName="activeName" @handleClick="tabChange">
-=======
     <TreeNode
       :treeData="tree_Data"
       :isContextMenu="true"
@@ -17,7 +13,6 @@
       :activeName="activeName"
       @handleClick="tabChange"
     >
->>>>>>> 4eb5ba61c8b5bc3b9c16c869aa24fed6601d8bb2
       <template v-slot:[activeName]>
         <el-card>
           <div class="tableBar">
@@ -64,7 +59,9 @@
                     </el-dropdown-menu>
                   </template>
                 </el-dropdown>
-                <el-button type="primary" @click="addExternalPerson">新增外部人员</el-button>
+                <el-button type="primary" @click="addExternalPerson"
+                  >新增外部人员</el-button
+                >
                 <el-button type="primary" @click="deleteExteranlPerson">删除</el-button>
               </template>
             </div>
@@ -102,7 +99,12 @@
           <el-input v-model="form.phone" placeholder="请输入人员电话" />
         </el-form-item>
         <el-form-item prop="roles" label="角色" style="width: 100%">
-          <el-select v-model="form.roles" multiple class="rowWidth" placeholder="请选择人员角色">
+          <el-select
+            v-model="form.roles"
+            multiple
+            class="rowWidth"
+            placeholder="请选择人员角色"
+          >
             <el-option
               v-for="(item, index) in jobs"
               :key="index"
@@ -141,8 +143,8 @@ import {
   reactive,
   ref,
   toRefs,
-  watch
-} from 'vue'
+  watch,
+} from "vue";
 import {
   tabs,
   treeData,
@@ -150,16 +152,6 @@ import {
   status,
   columns,
   tableData,
-<<<<<<< HEAD
-  formRules
-} from '@/utils/pageData/personData'
-import { arrayToTree } from '@/utils/arrayToTree'
-import Table from '@/components/table/primeryTable.vue'
-import Tabs from '@/components/tabsButton.vue'
-import TreeNode from '@/components/treeNode.vue'
-import ImportFile from '@/components/upload/uploadFile.vue'
-import { ElMessageBox } from 'element-plus'
-=======
   formRules,
 } from "@/utils/pageData/personData";
 import { arrayToTree } from "@/utils/arrayToTree";
@@ -168,87 +160,85 @@ import Tabs from "@/components/tabsButton.vue";
 import TreeNode from "@/components/treeNode.vue";
 import ImportFile from "@/components/upload/uploadFile.vue";
 import { ElMessageBox } from "element-plus";
-import DeepClone from "loadsh/cloneDeep";
->>>>>>> 4eb5ba61c8b5bc3b9c16c869aa24fed6601d8bb2
 export default defineComponent({
-  name: 'person',
+  name: "person",
   components: {
     Table,
     Tabs,
     TreeNode,
-    ImportFile
+    ImportFile,
   },
   data() {
     return {
       form: {
-        name: '',
-        phone: '',
-        roles: '',
-        node: ''
-      }
-    }
+        name: "",
+        phone: "",
+        roles: "",
+        node: "",
+      },
+    };
   },
   setup(props, ctx) {
     // 切换架构
-    let activeName = ref('内部架构')
+    let activeName = ref("内部架构");
     const tabChange = (tab) => {
-      activeName.value = tab.props.name
-    }
+      activeName.value = tab.props.name;
+    };
 
     // 查询条件
-    let searchKey = ref('')
-    let searchJob = ref('')
-    let searchStatu = ref('')
+    let searchKey = ref("");
+    let searchJob = ref("");
+    let searchStatu = ref("");
 
     // 数据加载中
-    let loading = ref(false)
+    let loading = ref(false);
     // 内外部架构判别
-    const isExternal = computed(() => (activeName.value == '内部架构' ? false : true))
+    const isExternal = computed(() => (activeName.value == "内部架构" ? false : true));
     // 表格列
-    let tableData_ = tableData
-    let tableCol_ = reactive(columns)
+    let tableData_ = tableData;
+    let tableCol_ = reactive(columns);
 
     const selectChange = (row) => {
-      console.log(row)
-    }
-    const selectAll = (selection) => {}
+      console.log(row);
+    };
+    const selectAll = (selection) => {};
     // 下载
-    const downloadTemp = () => {}
+    const downloadTemp = () => {};
     // 导入
     const importTemp = () => {
-      importShow.value = true
-    }
+      importShow.value = true;
+    };
     // 新增
     const addExternalPerson = () => {
-      dialogVisible.value = true
-    }
+      dialogVisible.value = true;
+    };
     // 删除
     const deleteExteranlPerson = () => {
-      ElMessageBox.confirm('是否确认删除', '提示', {
-        cancelButtonText: '取消',
-        confirmButtonText: '确定',
+      ElMessageBox.confirm("是否确认删除", "提示", {
+        cancelButtonText: "取消",
+        confirmButtonText: "确定",
         showClose: false,
         callback(actions, instace) {
-          console.log(actions)
-          if (actions == 'cancel') {
-            console.log('取消')
+          console.log(actions);
+          if (actions == "cancel") {
+            console.log("取消");
           } else {
-            console.log('确定')
+            console.log("确定");
           }
-        }
-      })
-    }
+        },
+      });
+    };
     // dialog标题
-    let dialogTitle = ref('新增账号')
-    let dialogVisible = ref(false)
+    let dialogTitle = ref("新增账号");
+    let dialogVisible = ref(false);
 
     // 导入文件
-    let importShow = ref(false)
-    let uploadUrl = ''
+    let importShow = ref(false);
+    let uploadUrl = "";
 
     // 架构数据
 
-    let tree_Data = ref([])
+    let tree_Data = ref([]);
 
     onBeforeMount(async () => {
       let treedata = await treeData(3);
@@ -297,11 +287,11 @@ export default defineComponent({
   },
   methods: {
     nodeClick(data) {
-      this.form.node = data.label
-      console.log(this.form)
-    }
-  }
-})
+      this.form.node = data.label;
+      console.log(this.form);
+    },
+  },
+});
 </script>
 
 <style scoped lang="scss">
