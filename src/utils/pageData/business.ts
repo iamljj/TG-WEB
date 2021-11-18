@@ -1,31 +1,13 @@
 export const columns: Array<any> = [
   { type: 'index', label: '序号' },
-  { label: '业务类型', prop: 'business' }
+  { label: '业务类型', prop: 'bsName' }
 ]
-export const tableData = [
-  {
-    business: '团购'
-  },
-  {
-    business: '团购'
-  },
-  {
-    business: '团购'
-  },
-  {
-    business: '团购'
-  },
-  {
-    business: '团购'
-  },
-  {
-    business: '团购'
-  },
-  {
-    business: '团购'
-  }
-]
+export const tableData = []
 export const form = {
-  name: '',
-  id: ''
+  bsName: '',
+  bsDescribe: '',
+  bsCode: ''
+}
+export const rules = {
+  bsName: [{ required: true, message: '此项不能为空', trigger: 'blur' }]
 }

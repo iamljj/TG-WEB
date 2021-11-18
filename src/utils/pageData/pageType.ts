@@ -2,6 +2,7 @@
 export interface User {
   phone: string
   code: string
+  sandbox: boolean
 }
 export interface Rules {
   phone: (

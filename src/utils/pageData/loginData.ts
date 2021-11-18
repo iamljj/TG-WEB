@@ -3,7 +3,8 @@ import { User, Rules } from './pageType'
 // password username
 export const loginUser = ref<User>({
   phone: null, // 手机号
-  code: null // 验证码
+  code: null, // 验证码
+  sandbox: true //是否沙盒
 })
 
 // input rules
