@@ -74,27 +74,25 @@ export interface treeDataType {
 
 // 查询次数
 let time = 0
-let res: any = [];
+let res: any = []
 // 通过deep控制嵌套层级
 export const treeData = async (deep: number, params?: any) => {
   let { data } = await getOAframework(params)
   time++
   if (data.code == 200) {
-    res = res.concat(data.data);
+    res = res.concat(data.data)
     for (let i = 0; i < data.data.length; i++) {
       let { path, leaf } = data.data[i]
-      if (deep == 0 || deep == time) {
-        time = 0;
-        break;
+      if (deep == time && deep > 1) {
+        time = 0
+        break
       } else {
         if (leaf == false) {
-          deep--
           await treeData(deep, { path })
         }
       }
       return res
     }
-
   }
 }
 

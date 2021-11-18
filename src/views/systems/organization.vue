@@ -3,7 +3,7 @@
     <el-card class="flex-left">
       <div class="search">
         <TreeNode
-          :treeData="treeData"
+          :treeData="tree_Data"
           :isContextMenu="true"
           :contextMenus="contextMenus"
           @node-context="nodeContext"
@@ -41,15 +41,15 @@
     </el-card>
   </div>
   <el-dialog v-model="dialogVisible" width="30%" title="新增节点">
-    <el-form ref="form" :model="form_" label-width="120px">
+    <el-form ref="form" :model="form_" label-width="120px" :rules="rules">
       <el-form-item label="上级节点">
-        <el-input v-model="form_.label" disabled></el-input>
+        <el-input v-model="form_.nodeName" disabled></el-input>
       </el-form-item>
-      <el-form-item label="节点名称">
-        <el-input v-model="form_.name"></el-input>
+      <el-form-item label="节点名称" prop="childNodeName">
+        <el-input v-model="form_.childNodeName"></el-input>
       </el-form-item>
       <el-form-item label="业务类型">
-        <el-select v-model="form_.business" placeholder="请选择业务类型">
+        <el-select v-model="form_.bsCode" placeholder="请选择业务类型" multiple>
           <el-option
             v-for="(item, i) in business_"
             :label="item.lable"
@@ -82,7 +82,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watch, reactive } from "vue";
+import { defineComponent, ref, watch, reactive, onBeforeMount } from 'vue'
 import {
   tableData,
   form,
@@ -91,89 +91,100 @@ import {
   page,
   data,
   columns,
-  business,
-} from "@/utils/pageData/organization";
-import { title, treeData } from "@/utils/pageData/personData";
-import { ElMessage, ElMessageBox } from "element-plus";
-import Table from "@/components/table/primeryTable.vue";
-import router from "@/router/index";
-import TreeNode from "@/components/treeNode.vue";
+  business
+} from '@/utils/pageData/organization'
+import { arrayToTree } from '@/utils/arrayToTree'
+import { title, treeData } from '@/utils/pageData/personData'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import Table from '@/components/table/primeryTable.vue'
+import router from '@/router/index'
+import TreeNode from '@/components/treeNode.vue'
 export default defineComponent({
-  name: "ShopName",
+  name: 'ShopName',
   components: {
     Table,
-    TreeNode,
+    TreeNode
   },
   setup() {
     //业务类型
-    const business_ = reactive(business);
-    const url = "";
+    const business_ = reactive(business)
+    const url = ''
     //搜索框的文本值
-    let searchKey = ref("");
+    let searchKey = ref('')
 
     //表格Table
-    let tableCol_ = reactive(columns);
-    let tableData_ = tableData;
+    let tableCol_ = reactive(columns)
+    let tableData_ = tableData
 
     //弹窗的model值
-    let dialogVisible = ref(false);
-    let EditNode = ref(false);
+    let dialogVisible = ref(false)
+    let EditNode = ref(false)
     //弹窗表单的值
-    let form_ = reactive(form);
+    let form_ = reactive(form)
 
     //跳转到经销商绑定
     const dealer = () => {
-      router.push("/home/dealer");
-    };
+      router.push('/home/dealer')
+    }
+
+    // 架构数据
+
+    let tree_Data = ref([])
+
+    onBeforeMount(async () => {
+      let treedata = await treeData(3)
+      tree_Data.value = arrayToTree(treedata, 'parentPath')
+    })
 
     //点击树节点获取数据
     const nodeContext = (e, data) => {
-      form_.label = data.label;
-      form_.id = data.id;
-    };
+      console.log(data)
+      form_.nodeName = data.name
+      form_.parentCode = data.path
+    }
 
     // 架构右键菜单
-    let isContextMenu = ref(true);
+    let isContextMenu = ref(true)
     const contextMenus: Array<any> = [
       {
-        label: "新增节点",
+        label: '新增节点',
 
-        icon: "el-icon-plus",
+        icon: 'el-icon-plus',
         onClick() {
-          dialogVisible.value = true;
-        },
+          dialogVisible.value = true
+        }
       },
       {
-        label: "删除节点",
-        icon: "el-icon-minus",
+        label: '删除节点',
+        icon: 'el-icon-minus',
         onClick() {
-          ElMessageBox.confirm(`确定要删除${form_.label}`, "删除", {
-            confirmButtonText: "确定",
-            cancelButtonText: "取消",
-            type: "warning",
+          ElMessageBox.confirm(`确定要删除${form_.nodeName}`, '删除', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
           })
             .then(() => {
               ElMessage({
-                type: "success",
-                message: "Delete completed",
-              });
+                type: 'success',
+                message: 'Delete completed'
+              })
             })
             .catch(() => {
               ElMessage({
-                type: "info",
-                message: "Delete canceled",
-              });
-            });
-        },
+                type: 'info',
+                message: 'Delete canceled'
+              })
+            })
+        }
       },
       {
-        label: "修改节点名称",
-        icon: "el-icon-edit",
+        label: '修改节点名称',
+        icon: 'el-icon-edit',
         onClick() {
-          EditNode.value = true;
-        },
-      },
-    ];
+          EditNode.value = true
+        }
+      }
+    ]
 
     //首次进入加载组织架构
 
@@ -182,25 +193,25 @@ export default defineComponent({
       const params = {
         page: 1,
         pageSize: pagesize.value,
-        queryKey: searchText,
-      };
+        queryKey: searchText
+      }
       // displayall(params).then((res) => {
       //   tableData_.value = res.data.data.records
       //   totol.value = res.data.data.total
       // })
-    };
+    }
     // 翻页
     const handleCurrentChange = (val: number) => {
-      page.value = val;
+      page.value = val
       const params = {
         page: val,
-        pageSize: pagesize.value,
-      };
+        pageSize: pagesize.value
+      }
       // displayall(params).then((res) => {
       //   tableData.value = res.data.data.records
       //   totol.value = res.data.data.total
       // })
-    };
+    }
     // 修改页面点击确认
 
     return {
@@ -223,9 +234,10 @@ export default defineComponent({
       form_,
       business_,
       EditNode,
-    };
-  },
-});
+      tree_Data
+    }
+  }
+})
 </script>
 
 <style scoped lang="scss">

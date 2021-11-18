@@ -16,3 +16,8 @@ export const QueryBusiness = (data) => {
 export const BusinessDal = (id) => {
   return axios.get(`/service/admin/business/del?bsCode=${id}`)
 }
+
+//查询所有业务
+export const BusinessAll = (code) => {
+  return axios.get(`/service/admin/business/queryAll?bsCode=${code}`)
+}
