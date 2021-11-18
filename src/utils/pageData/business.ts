@@ -1,3 +1,7 @@
+
+
+
+
 export const columns: Array<any> = [
   { type: 'index', label: '序号' },
   { label: '业务类型', prop: 'bsName' }
