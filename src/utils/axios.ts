@@ -53,7 +53,7 @@ axios.interceptors.response.use(
   (error) => {
     endLoading()
     if (error.response)
-      return Promise.reject({ code: error.response.code, data: error.response.data })
+      return Promise.reject({ status: error.response.status, data: error.response.data })
     return Promise.reject(error.message)
   }
 )

@@ -1,6 +1,6 @@
 <template>
   <div class="person">
-    <TreeNode :treeData="treeData" class="person-left" />
+    <TreeNode :treeData="tree_Data" class="person-left" />
     <Tabs
       class="person-right"
       :tabs="tabs"
@@ -110,7 +110,7 @@
         <el-form-item label="架构节点" prop="node">
           <el-input v-model="form.node" placeholder="请输入架构节点" />
           <TreeNode
-            :treeData="treeData"
+            :treeData="tree_Data"
             :isExpand="false"
             :isSearch="false"
             @nodeClick="nodeClick"
@@ -129,7 +129,16 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, reactive, ref, toRefs, watch } from "vue";
+import {
+  computed,
+  defineComponent,
+  onBeforeMount,
+  onMounted,
+  reactive,
+  ref,
+  toRefs,
+  watch,
+} from "vue";
 import {
   tabs,
   treeData,
@@ -139,6 +148,7 @@ import {
   tableData,
   formRules,
 } from "@/utils/pageData/personData";
+import { arrayToTree } from "@/utils/arrayToTree";
 import Table from "@/components/table/primeryTable.vue";
 import Tabs from "@/components/tabsButton.vue";
 import TreeNode from "@/components/treeNode.vue";
@@ -220,10 +230,18 @@ export default defineComponent({
     let importShow = ref(false);
     let uploadUrl = "";
 
+    // 架构数据
+
+    let tree_Data = ref([]);
+
+    onBeforeMount(async () => {
+      let treedata = await treeData(2);
+      tree_Data.value = arrayToTree(treedata, "parentPath");
+    });
     return {
       tabs,
       activeName,
-      treeData,
+      tree_Data,
       searchKey,
       searchJob,
       searchStatu,
@@ -268,6 +286,7 @@ export default defineComponent({
     padding: 20px;
   }
   &-right {
+    width: 100%;
     margin-left: 10px;
     height: calc(100vh - 100px);
   }

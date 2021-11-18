@@ -1,3 +1,22 @@
-export const arrayToTree = (array: Array<any>) => {
+// key为节点唯一属性值，类似id
+export const arrayToJson = (array: Array<any>, key) => {
+  return array.reduce((obj, curr) => {
+    obj[curr[key]] = curr
+    return obj
+  }, {})
+}
 
+// parentKey为所属父级关联值
+export const arrayToTree = (array: Array<any>, parentKey) => {
+  let json = arrayToJson(array, 'path')
+  return array.reduce((prev, curr) => {
+    let pKey = curr[parentKey]
+    let parent = json[pKey]
+    if (parent) {
+      parent.children ? parent.children.push(curr) : (parent.children = [curr])
+    } else {
+      prev.push(curr)
+    }
+    return prev
+  }, [])
 }

@@ -1,5 +1,6 @@
 import { ref, reactive } from 'vue'
-import { storage } from '../storage'
+import { getOAframework } from '@/service/frameworkNode'
+
 export const dioJobData = []
 export const selectSuperiorData = []
 export const selectSexData = [
@@ -70,22 +71,49 @@ export interface treeDataType {
   id: number
   children?: Array<treeDataType>
 }
-export const treeData: Array<treeDataType> = [
-  {
-    id: 1,
-    label: '营销总公司',
-    children: [
-      {
-        id: 4,
-        label: '安徽销售片区',
-        children: [
-          { id: 2, label: '淮北办事处' },
-          { id: 3, label: '阜阳办事处' }
-        ]
+
+// 查询次数
+let time = 0
+let res: any = [];
+// 通过deep控制嵌套层级
+export const treeData = async (deep: number, params?: any) => {
+  let { data } = await getOAframework(params)
+  time++
+  if (data.code == 200) {
+    res = res.concat(data.data);
+    for (let i = 0; i < data.data.length; i++) {
+      let { path, leaf } = data.data[i]
+      if (deep == 0 || deep == time) {
+        time = 0;
+        break;
+      } else {
+        if (leaf == false) {
+          deep--
+          await treeData(deep, { path })
+        }
       }
-    ]
+      return res
+    }
+
   }
-]
+}
+
+// export const treeData: Array<treeDataType> = [
+//   {
+//     id: 1,
+//     label: '营销总公司',
+//     children: [
+//       {
+//         id: 4,
+//         label: '安徽销售片区',
+//         children: [
+//           { id: 2, label: '淮北办事处' },
+//           { id: 3, label: '阜阳办事处' }
+//         ]
+//       }
+//     ]
+//   }
+// ]
 
 // 搜索条件
 export const jobs: Array<labelValueType> = [

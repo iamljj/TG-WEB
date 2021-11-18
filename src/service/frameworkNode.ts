@@ -3,6 +3,11 @@ import axios from '@/utils/axios'
 /**
  * 组织架构节点相关接口
  */
+// 查询OA组织架构
+export const getOAframework = (params?:any) => {
+  return axios.get(`/service/external/oa/framework`, {params})
+}
+
 // 新增内部节点
 export const putFrameworkNode = (params) => {
   return axios.post(`/service/admin/framework/save`, params)
