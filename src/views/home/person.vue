@@ -1,7 +1,23 @@
 <template>
   <div class="person">
+<<<<<<< HEAD
     <TreeNode :treeData="tree_Data" class="person-left" />
     <Tabs class="person-right" :tabs="tabs" :activeName="activeName" @handleClick="tabChange">
+=======
+    <TreeNode
+      :treeData="tree_Data"
+      :isContextMenu="true"
+      :contextMenus="contextMenus"
+      @node-context="nodeContext"
+      class="person-left"
+    />
+    <Tabs
+      class="person-right"
+      :tabs="tabs"
+      :activeName="activeName"
+      @handleClick="tabChange"
+    >
+>>>>>>> 4eb5ba61c8b5bc3b9c16c869aa24fed6601d8bb2
       <template v-slot:[activeName]>
         <el-card>
           <div class="tableBar">
@@ -134,6 +150,7 @@ import {
   status,
   columns,
   tableData,
+<<<<<<< HEAD
   formRules
 } from '@/utils/pageData/personData'
 import { arrayToTree } from '@/utils/arrayToTree'
@@ -142,6 +159,17 @@ import Tabs from '@/components/tabsButton.vue'
 import TreeNode from '@/components/treeNode.vue'
 import ImportFile from '@/components/upload/uploadFile.vue'
 import { ElMessageBox } from 'element-plus'
+=======
+  formRules,
+} from "@/utils/pageData/personData";
+import { arrayToTree } from "@/utils/arrayToTree";
+import Table from "@/components/table/primeryTable.vue";
+import Tabs from "@/components/tabsButton.vue";
+import TreeNode from "@/components/treeNode.vue";
+import ImportFile from "@/components/upload/uploadFile.vue";
+import { ElMessageBox } from "element-plus";
+import DeepClone from "loadsh/cloneDeep";
+>>>>>>> 4eb5ba61c8b5bc3b9c16c869aa24fed6601d8bb2
 export default defineComponent({
   name: 'person',
   components: {
@@ -223,9 +251,21 @@ export default defineComponent({
     let tree_Data = ref([])
 
     onBeforeMount(async () => {
-      let treedata = await treeData(3)
-      tree_Data.value = arrayToTree(treedata, 'parentPath')
-    })
+      let treedata = await treeData(3);
+      tree_Data.value = arrayToTree(treedata, "parentPath");
+    });
+    const contextMenus = [
+      {
+        label: "迁移节点",
+        icon: "el-icon-connection",
+        onClick() {
+          console.log("迁移节点");
+        },
+      },
+    ];
+    const nodeContext = (e, data) => {
+      console.log(e, data);
+    };
     return {
       tabs,
       activeName,
@@ -244,14 +284,16 @@ export default defineComponent({
       formRules,
       importShow,
       uploadUrl,
+      contextMenus,
       tabChange,
       downloadTemp,
       importTemp,
       addExternalPerson,
       deleteExteranlPerson,
       selectChange,
-      selectAll
-    }
+      selectAll,
+      nodeContext,
+    };
   },
   methods: {
     nodeClick(data) {
