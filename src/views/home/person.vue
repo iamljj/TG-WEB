@@ -12,6 +12,7 @@
       class="person-right"
       :activeName="activeName"
       @handleClick="tabChange"
+      :tabs="tabs"
     >
       <template v-slot:[activeName]>
         <el-card>

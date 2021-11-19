@@ -222,7 +222,8 @@ export default defineComponent({
             }
             putFrameworkNode(params)
               .then((res) => {
-                if (form_.bsCode) {
+                console.log(form_.bsCode)
+                if (form_.bsCode.length> 0) {
                   form_.bsCode.forEach((item) => {
                     if (item == '911191501726285824') {
                       form_.bsCode = []
@@ -251,6 +252,11 @@ export default defineComponent({
                         message: '新增节点成功但业务绑定失败'
                       })
                     })
+                } else {
+                  ElMessage({
+                    type: 'info',
+                    message: '新增节点成功'
+                  })
                 }
               })
               .catch(() => {

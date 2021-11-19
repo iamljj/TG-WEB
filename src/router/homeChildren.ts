@@ -30,7 +30,7 @@ export const routers = [
         path: '/home/system/role',
         name: 'role',
         component: () => import(/* webpackChunkName: "system" */ '@/views/systems/Role.vue'),
-        title: '岗位管理',
+        title: '角色管理',
         icon: 'iconframework',
         meta: {
           keepAlive: false

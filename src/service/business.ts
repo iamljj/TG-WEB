@@ -26,3 +26,5 @@ export const BusinessAll = (code, father) => {
 export const NodeBusiness = (data) => {
   return axios.post(`/service/admin/node/business/bind`, data)
 }
+
+//为角色邦定业务
