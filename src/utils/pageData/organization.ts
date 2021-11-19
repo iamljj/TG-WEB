@@ -1,5 +1,5 @@
 import { reactive, ref } from 'vue'
-import{BusinessAll} from '@/service/business'
+import { BusinessAll } from '@/service/business'
 //表格
 // 表格
 export const columns: Array<any> = [
@@ -14,8 +14,7 @@ export const tableData = [
   }
 ]
 export const rules = {
-  childNodeName: [{ required: true, message: '请填写节点名称', trigger: 'blur' }],
-  bsCode: [{ required: true, message: '请选择业务', ttrigger: 'blur' }]
+  childNodeName: [{ required: true, message: '请填写节点名称', trigger: 'blur' }]
 }
 
 export const formRules: any = ref(null)
@@ -25,32 +24,25 @@ export const formId = ref(null)
 export const form = {
   nodeName: '',
   parentCode: null,
-  bsCode: '',
-  childNodeName: ''
+  bsCode: null,
+  childNodeName: '',
+  id: ''
 }
 
-export const business = [
-  // {
-  //   label: '团购',
-  //   value: '团购'
-  // },
-  // {
-  //   label: '直销',
-  //   value: '直销'
-  // },
-  // {
-  //   label: '配送',
-  //   value: '配送'
-  // },
-  // {
-  //   label: '费用',
-  //   value: '费用'
-  // },
-  // {
-  //   label: '全部',
-  //   value: '全部'
-  // }
-]
+export let business = []
+
+//全部业务列表
+export const Businessall = async (code: string, father: string) => {
+  let res = await BusinessAll(code, father)
+  res.data.data.forEach((item) => {
+    let busines = {
+      bsCode: item.bsCode,
+      bsName: item.bsName
+    }
+    business.push(busines)
+  })
+}
+
 export const data = ref([])
 export const dealers = ref([])
 export const totol = ref(1)

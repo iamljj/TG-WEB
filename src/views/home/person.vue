@@ -1,9 +1,5 @@
 <template>
   <div class="person">
-<<<<<<< HEAD
-    <TreeNode :treeData="tree_Data" class="person-left" />
-    <Tabs class="person-right" :tabs="tabs" :activeName="activeName" @handleClick="tabChange">
-=======
     <TreeNode
       :treeData="tree_Data"
       :isContextMenu="true"
@@ -17,7 +13,6 @@
       :activeName="activeName"
       @handleClick="tabChange"
     >
->>>>>>> 4eb5ba61c8b5bc3b9c16c869aa24fed6601d8bb2
       <template v-slot:[activeName]>
         <el-card>
           <div class="tableBar">
@@ -150,16 +145,6 @@ import {
   status,
   columns,
   tableData,
-<<<<<<< HEAD
-  formRules
-} from '@/utils/pageData/personData'
-import { arrayToTree } from '@/utils/arrayToTree'
-import Table from '@/components/table/primeryTable.vue'
-import Tabs from '@/components/tabsButton.vue'
-import TreeNode from '@/components/treeNode.vue'
-import ImportFile from '@/components/upload/uploadFile.vue'
-import { ElMessageBox } from 'element-plus'
-=======
   formRules,
 } from "@/utils/pageData/personData";
 import { arrayToTree } from "@/utils/arrayToTree";
@@ -168,8 +153,6 @@ import Tabs from "@/components/tabsButton.vue";
 import TreeNode from "@/components/treeNode.vue";
 import ImportFile from "@/components/upload/uploadFile.vue";
 import { ElMessageBox } from "element-plus";
-import DeepClone from "loadsh/cloneDeep";
->>>>>>> 4eb5ba61c8b5bc3b9c16c869aa24fed6601d8bb2
 export default defineComponent({
   name: 'person',
   components: {

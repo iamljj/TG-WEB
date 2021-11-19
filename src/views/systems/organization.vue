@@ -41,19 +41,19 @@
     </el-card>
   </div>
   <el-dialog v-model="dialogVisible" width="30%" title="新增节点">
-    <el-form ref="form" :model="form_" label-width="120px" :rules="rules">
+    <el-form ref="formRules" :model="form_" label-width="120px" :rules="rules">
       <el-form-item label="上级节点">
         <el-input v-model="form_.nodeName" disabled></el-input>
       </el-form-item>
       <el-form-item label="节点名称" prop="childNodeName">
         <el-input v-model="form_.childNodeName"></el-input>
       </el-form-item>
-      <el-form-item label="业务类型">
-        <el-select v-model="form_.bsCode" placeholder="请选择业务类型" multiple>
+      <el-form-item label="业务类型" prop="bsCode">
+        <el-select v-model="form_.bsCode" placeholder="请选择业务类型" clearable multiple>
           <el-option
             v-for="(item, i) in business_"
-            :label="item.lable"
-            :value="item.label"
+            :label="item.bsName"
+            :value="item.bsCode"
             :key="i"
           ></el-option>
         </el-select>
@@ -62,12 +62,12 @@
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="dialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="dialogVisible = false">确认</el-button>
+        <el-button type="primary" @click="sendNode">确认</el-button>
       </span>
     </template>
   </el-dialog>
   <el-dialog title="修改节点名称" width="20%" v-model="EditNode">
-    <el-form ref="form" :model="form_" label-width="120px">
+    <el-form ref="formRlu" :model="form_" label-width="120px">
       <el-form-item label="节点名称">
         <el-input v-model="form_.label"></el-input>
       </el-form-item>
@@ -91,7 +91,9 @@ import {
   page,
   data,
   columns,
-  business
+  business,
+  Businessall,
+  rules
 } from '@/utils/pageData/organization'
 import { arrayToTree } from '@/utils/arrayToTree'
 import { title, treeData } from '@/utils/pageData/personData'
@@ -99,6 +101,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import Table from '@/components/table/primeryTable.vue'
 import router from '@/router/index'
 import TreeNode from '@/components/treeNode.vue'
+import { putFrameworkNode } from '@/service/frameworkNode'
 export default defineComponent({
   name: 'ShopName',
   components: {
@@ -106,9 +109,12 @@ export default defineComponent({
     TreeNode
   },
   setup() {
+    const formRules = ref(null)
+
     //业务类型
     const business_ = reactive(business)
     const url = ''
+
     //搜索框的文本值
     let searchKey = ref('')
 
@@ -119,6 +125,7 @@ export default defineComponent({
     //弹窗的model值
     let dialogVisible = ref(false)
     let EditNode = ref(false)
+
     //弹窗表单的值
     let form_ = reactive(form)
 
@@ -132,13 +139,15 @@ export default defineComponent({
     let tree_Data = ref([])
 
     onBeforeMount(async () => {
-      let treedata = await treeData(3)
+      let treedata = await treeData(4)
       tree_Data.value = arrayToTree(treedata, 'parentPath')
     })
 
     //点击树节点获取数据
+
     const nodeContext = (e, data) => {
       console.log(data)
+
       form_.nodeName = data.name
       form_.parentCode = data.path
     }
@@ -148,10 +157,10 @@ export default defineComponent({
     const contextMenus: Array<any> = [
       {
         label: '新增节点',
-
         icon: 'el-icon-plus',
         onClick() {
           dialogVisible.value = true
+          Businessall('', form_.parentCode)
         }
       },
       {
@@ -178,15 +187,49 @@ export default defineComponent({
         }
       },
       {
-        label: '修改节点名称',
+        label: '修改节点',
         icon: 'el-icon-edit',
         onClick() {
           EditNode.value = true
+          Businessall('', '')
         }
       }
     ]
 
     //首次进入加载组织架构
+
+    //发送新增修改节点请求
+    const sendNode = () => {
+      formRules.value.validate((valid: any) => {
+        if (valid) {
+          if (!form_.id) {
+            let params = {
+              nodeName: form_.childNodeName,
+              parentCode: form_.parentCode,
+              root: true
+            }
+            putFrameworkNode(params).then(() => {
+              if (form_.bsCode) {
+                form_.bsCode.forEach((item) => {
+                  if (item == '910854855222886400') {
+                    const list1 = []
+                    form_.bsCode = ''
+                    business_.forEach((item) => {
+                      let list = {
+                        bsCode: item.bsCode
+                      }
+                      list1.push(list)
+                    })
+                    form_.bsCode = list1
+
+                  }
+                })
+              }
+            })
+          }
+        }
+      })
+    }
 
     // 搜索
     const search = (searchText: string) => {
@@ -234,7 +277,10 @@ export default defineComponent({
       form_,
       business_,
       EditNode,
-      tree_Data
+      tree_Data,
+      rules,
+      sendNode,
+      formRules
     }
   }
 })
@@ -244,7 +290,7 @@ export default defineComponent({
 .flex {
   display: flex;
   &-left {
-    width: 15%;
+    width: 25%;
     margin-right: 50px;
     height: 85vh;
     border-radius: 10px;
