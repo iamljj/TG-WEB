@@ -20,3 +20,19 @@ export const arrayToTree = (array: Array<any>, parentKey) => {
     return prev
   }, [])
 }
+
+// 扁平化对象中的key属性
+let keyArr = []
+export const flatObjectKey = (obj: Object) => {
+  for (const key in obj) {
+    if (key == 'path') {
+      keyArr.push(obj[key])
+    }
+    if (key == 'children') {
+      obj[key].forEach((child) => {
+        flatObjectKey(child)
+      })
+    }
+  }
+  return keyArr
+}

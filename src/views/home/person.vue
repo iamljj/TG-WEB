@@ -1,11 +1,12 @@
 <template>
   <div class="person">
     <TreeNode
-      :treeData="tree_Data"
+      class="person-left"
+      :isSearch="true"
       :isContextMenu="true"
+      :treeData="tree_data"
       :contextMenus="contextMenus"
       @node-context="nodeContext"
-      class="person-left"
     />
     <Tabs
       class="person-right"
@@ -115,12 +116,6 @@
         </el-form-item>
         <el-form-item label="架构节点" prop="node">
           <el-input v-model="form.node" placeholder="请输入架构节点" />
-          <TreeNode
-            :treeData="tree_Data"
-            :isExpand="false"
-            :isSearch="false"
-            @nodeClick="nodeClick"
-          />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -135,26 +130,18 @@
 </template>
 
 <script lang="ts">
-import {
-  computed,
-  defineComponent,
-  onBeforeMount,
-  onMounted,
-  reactive,
-  ref,
-  toRefs,
-  watch,
-} from "vue";
+import { computed, defineComponent, onBeforeMount, reactive, ref } from "vue";
 import {
   tabs,
-  treeData,
   jobs,
+  treeData,
   status,
   columns,
   tableData,
   formRules,
+  contextMenuType,
 } from "@/utils/pageData/personData";
-import { arrayToTree } from "@/utils/arrayToTree";
+import { arrayToTree, flatObjectKey } from "@/utils/arrayToTree";
 import Table from "@/components/table/primeryTable.vue";
 import Tabs from "@/components/tabsButton.vue";
 import TreeNode from "@/components/treeNode.vue";
@@ -201,6 +188,7 @@ export default defineComponent({
     const selectChange = (row) => {
       console.log(row);
     };
+    // 全选
     const selectAll = (selection) => {};
     // 下载
     const downloadTemp = () => {};
@@ -236,15 +224,44 @@ export default defineComponent({
     let importShow = ref(false);
     let uploadUrl = "";
 
-    // 架构数据
-
-    let tree_Data = ref([]);
-
-    onBeforeMount(async () => {
-      let treedata = await treeData(3);
-      tree_Data.value = arrayToTree(treedata, "parentPath");
+    // 选择节点
+    const tree_data = ref([]);
+    treeData(10).then((res) => {
+      tree_data.value = arrayToTree(res, "parentPath");
     });
-    const contextMenus = [
+
+    const nodeSelect = (node) => {
+      console.log(node);
+    };
+    const contextMenus: Array<contextMenuType> = [
+      {
+        label: "新增节点",
+        icon: "el-icon-plus",
+        onClick() {
+          currentHoverItem.leaf = false;
+          if (!currentHoverItem.children) {
+            let data = {
+              name: "test",
+              leaf: true,
+              isGroup: false,
+              id: "21",
+              parentPath: currentHoverItem.path,
+            };
+            currentHoverItem.children = [];
+            currentHoverItem.children.push(data);
+          }
+        },
+      },
+      {
+        label: "删除节点",
+        icon: "el-icon-minus",
+        onClick() {
+          let nodeIndex = parentNode.childNodes.findIndex(
+            (node) => node.label == currentHoverItem.name
+          );
+          parentNode.childNodes.splice(nodeIndex, 1);
+        },
+      },
       {
         label: "迁移节点",
         icon: "el-icon-connection",
@@ -253,13 +270,15 @@ export default defineComponent({
         },
       },
     ];
-    const nodeContext = (e, data) => {
-      console.log(e, data);
+    let currentHoverItem = reactive<any>({});
+    let parentNode = reactive<any>({});
+    const nodeContext = (e, data, node) => {
+      currentHoverItem = data;
+      parentNode = node.parent;
     };
     return {
       tabs,
       activeName,
-      tree_Data,
       searchKey,
       searchJob,
       searchStatu,
@@ -275,6 +294,9 @@ export default defineComponent({
       importShow,
       uploadUrl,
       contextMenus,
+      currentHoverItem,
+      tree_data,
+      parentNode,
       tabChange,
       downloadTemp,
       importTemp,
@@ -283,6 +305,7 @@ export default defineComponent({
       selectChange,
       selectAll,
       nodeContext,
+      nodeSelect,
     };
   },
   methods: {
@@ -324,6 +347,10 @@ export default defineComponent({
   &-condition {
     display: inherit;
   }
+}
+.nodeTree {
+  max-height: 300px;
+  overflow: auto;
 }
 .spanRow {
   margin-right: 10px !important;
