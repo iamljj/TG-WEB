@@ -1,5 +1,6 @@
 import { reactive, ref } from 'vue'
 import { BusinessAll } from '@/service/business'
+import {putFrameworkNode} from "@/service/frameworkNode"
 //表格
 // 表格
 export const columns: Array<any> = [
@@ -29,21 +30,25 @@ export const form = {
   id: ''
 }
 
-export let business = []
-
 //全部业务列表
-export const Businessall = async (code: string, father: string) => {
-  if (business.length > 0) {
+export const Businessall = async (params?:any) => {
+  let business = []
+  let { data } = await BusinessAll(params)
+  if (data.code == 200) {
+    business = data.data;
+  } else {
     business = []
   }
-  let res = await BusinessAll(code, father)
-  res.data.data.forEach((item) => {
-    let busines = {
-      bsCode: item.bsCode,
-      bsName: item.bsName
-    }
-    business.push(busines)
-  })
+  return business
+}
+// 新增内部节点
+export const put_framework_node =async (params) => {
+  let { data } =await putFrameworkNode(params);
+  if (data.code == 200) {
+    return data;
+  } else {
+    return data
+  }
 }
 
 export const data = ref([])

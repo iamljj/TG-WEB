@@ -8,11 +8,7 @@
       :contextMenus="contextMenus"
       @node-context="nodeContext"
     />
-    <Tabs
-      class="person-right"
-      :activeName="activeName"
-      @handleClick="tabChange"
-    >
+    <Tabs class="person-right" :activeName="activeName" @handleClick="tabChange">
       <template v-slot:[activeName]>
         <el-card>
           <div class="tableBar">
@@ -146,6 +142,7 @@ import Tabs from "@/components/tabsButton.vue";
 import TreeNode from "@/components/treeNode.vue";
 import ImportFile from "@/components/upload/uploadFile.vue";
 import { ElMessageBox } from "element-plus";
+import { useStore } from "vuex";
 export default defineComponent({
   name: "person",
   components: {
@@ -165,6 +162,7 @@ export default defineComponent({
     };
   },
   setup(props, ctx) {
+    const store = useStore();
     // 切换架构
     let activeName = ref("内部架构");
     const tabChange = (tab) => {
@@ -225,9 +223,14 @@ export default defineComponent({
 
     // 选择节点
     const tree_data = ref([]);
-    treeData(10).then((res) => {
-      tree_data.value = arrayToTree(res, "parentPath");
-    });
+    if (store.state.Node.frameworkNode.length == 0) {
+      treeData(10).then((res) => {
+        tree_data.value = arrayToTree(res, "parentCode");
+        // store.commit("SET_FRAMEWORK_NODE", tree_data.value);
+      });
+    } else {
+      tree_data.value = ref(store.state.Node.frameworkNode);
+    }
 
     const nodeSelect = (node) => {
       console.log(node);
@@ -240,11 +243,12 @@ export default defineComponent({
           currentHoverItem.leaf = false;
           if (!currentHoverItem.children) {
             let data = {
-              name: "test",
-              leaf: true,
-              isGroup: false,
-              id: "21",
-              parentPath: currentHoverItem.path,
+              disable: currentHoverItem.disable,
+              nodeName: currentHoverItem.nodeName,
+              leaf: currentHoverItem.leaf,
+              nodeCode: currentHoverItem.nodeCode,
+              parentCode: currentHoverItem.nodeCode,
+              root: currentHoverItem.root,
             };
             currentHoverItem.children = [];
             currentHoverItem.children.push(data);
@@ -256,16 +260,9 @@ export default defineComponent({
         icon: "el-icon-minus",
         onClick() {
           let nodeIndex = parentNode.childNodes.findIndex(
-            (node) => node.label == currentHoverItem.name
+            (node) => node.label == currentHoverItem.nodeName
           );
           parentNode.childNodes.splice(nodeIndex, 1);
-        },
-      },
-      {
-        label: "迁移节点",
-        icon: "el-icon-connection",
-        onClick() {
-          console.log("迁移节点");
         },
       },
     ];
