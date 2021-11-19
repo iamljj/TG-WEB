@@ -209,6 +209,11 @@ export default defineComponent({
         icon: "el-icon-edit",
         onClick() {
           EditNode.value = true;
+
+          // let node = parentNode.childNodes.find(
+          //       (node) => node.label == currentHoverItem.nodeName
+          //     );
+          //     node.nodeName = form.nodeName
           // Businessall("", "");
         },
       },
@@ -251,25 +256,27 @@ export default defineComponent({
               };
               if (!currentHoverItem.children) {
                 currentHoverItem.children = [];
-                currentHoverItem.children.push(d);
               }
+              currentHoverItem.children.push(d);
             }
             dialogVisible.value = false;
-            let res = await NodeBusiness({
-              nodeCode: data,
-              bsCodeList: form_.bsCode,
-            });
-            if (res.data.code == 200) {
-              ElMessage({
-                type: "info",
-                message: "新增节点成功且业务绑定成功",
-              });
-            } else {
-              ElMessage({
-                type: "info",
-                message: "新增节点成功但业务绑定失败",
-              });
-            }
+            //TODO:树节点更新
+
+            // let res = await NodeBusiness({
+            //   nodeCode: data,
+            //   bsCodeList: form_.bsCode,
+            // });
+            // if (res.data.code == 200) {
+            //   ElMessage({
+            //     type: "info",
+            //     message: "新增节点成功且业务绑定成功",
+            //   });
+            // } else {
+            //   ElMessage({
+            //     type: "info",
+            //     message: "新增节点成功但业务绑定失败",
+            //   });
+            // }
           } else {
           }
         }
