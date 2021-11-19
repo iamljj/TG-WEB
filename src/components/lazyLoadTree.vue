@@ -4,19 +4,20 @@
     <el-tree
       ref="tree"
       class="filter-tree"
-      :data="treeData"
       :props="defaultProps"
-      :default-expand-all="isExpand"
       :filter-node-method="filterNode"
+      :lazy="isLazy"
+      :load="loadData"
       @node-click="nodeClick"
       @node-contextmenu="contextmenu"
+      @node-collapse="nodeCollapse"
     />
   </div>
 </template>
 <script lang="ts">
 import { defineComponent, onMounted, reactive, ref, PropType, onBeforeMount } from "vue";
 import { treeDataType } from "@/utils/pageData/personData";
-
+import { getOAframework } from "@/service/frameworkNode";
 export default defineComponent({
   props: {
     treeData: {
@@ -54,9 +55,12 @@ export default defineComponent({
       isLeaf: "leaf",
     };
     let filterText = ref("");
+    let isLazy = ref(true);
+
     return {
       defaultProps,
       filterText,
+      isLazy,
     };
   },
   watch: {
@@ -67,13 +71,38 @@ export default defineComponent({
   methods: {
     filterNode(value, data) {
       if (!value) return true;
-      return data.label.indexOf(value) !== -1;
+      return data.name.indexOf(value) !== -1;
     },
     nodeClick(node) {
       this.$emit("nodeClick", node);
+      // console.log(this.$refs.tree);
+    },
+    nodeCollapse(obj, node) {
+      console.log(node);
+    },
+    async loadData(node, resolve) {
+      if (node.level == 0) {
+        let res = await this.getNextNodeData();
+        return resolve(res);
+      }
+      if (node.level > 0) {
+        let res = await this.getNextNodeData({ path: node.data.path });
+        resolve(res);
+        // return resolve([res]);
+      }
+    },
+    async getNextNodeData(params?: any) {
+      let { data } = await getOAframework(params);
+      if (data.code == 200) {
+        let res = data.data;
+        return res;
+      } else {
+        return [];
+      }
     },
     contextmenu(e, data, node) {
-      this.$emit("node-context", e, data, node);
+      let dom = this.$refs.tree;
+      this.$emit("node-context", e, data, node, dom);
       if (this.isContextMenu) {
         let options: any = {
           x: e.x,

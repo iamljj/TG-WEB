@@ -57,9 +57,12 @@ import {
   loginUser,
   rules,
   formRules,
+  countDown,
   isVercode,
   time,
   vercodeText,
+  get_ver_code,
+  log_in,
 } from "@/utils/pageData/loginData";
 import { ElMessage } from "element-plus";
 import router from "@/router/index";
@@ -72,68 +75,35 @@ export default defineComponent({
   name: "login",
   setup() {
     const store = useStore<GlobalDataProps>();
-    // 倒计时方法
-    const countDown = () => {
-      if (time.value == 0) {
-        vercodeText.value = "重新获取验证码";
-        isVercode.value = true;
-        time.value = 60;
-      } else {
-        time.value--;
-        setTimeout(() => {
-          countDown();
-        }, 1000);
-      }
-    };
-    const getVercode = () => {
-      if (loginUser.value.phone && loginUser.value.phone.toString().length == 11) {
-        axios
-          .get(`/service/sms/LoginCode/${loginUser.value.phone}`)
-          .then((res) => {
-            isVercode.value = false;
-            countDown();
-          })
-          .catch(() => {
-            ElMessage({
-              type: "error",
-              iconClass: "el-icon-circle-close",
-              message: "请输入正确的手机号",
-            });
-          });
-      } else {
+
+    const getVercode = async () => {
+      isVercode.value = false;
+      countDown();
+      let res = await get_ver_code({
+        phone: loginUser.value.phone,
+      });
+      if (typeof res == "string") {
         ElMessage({
           type: "error",
           iconClass: "el-icon-circle-close",
-          message: "请输入正确的手机号",
+          message: res,
         });
       }
     };
     const submitForm = () => {
-      formRules.value.validate((valid) => {
+      formRules.value.validate(async (valid) => {
         if (valid) {
-          axios
-            .post(`/service/auth/login`, loginUser.value)
-            .then((res) => {
-              store.commit("user", res.data.data.userInfo);
-              store.commit("login", res.data.data.token);
-              router.push("/home/person");
-            })
-            .catch((err) => {
-              console.log(err);
-
-              ElMessage({
-                type: "error",
-                iconClass: "el-icon-circle-close",
-                message: "请输入正确的手机号或验证码",
-              });
+          let res = await log_in(loginUser.value);
+          if (typeof res == "string") {
+            return ElMessage({
+              type: "error",
+              iconClass: "el-icon-circle-close",
+              message: res,
             });
-          // 获取token并传入vuex中 通过vuex中方法存储在localstorage
-        } else {
-          ElMessage({
-            type: "error",
-            iconClass: "el-icon-circle-close",
-            message: "请输入正确的手机号或验证码",
-          });
+          }
+          store.commit("user", res.data.userInfo);
+          store.commit("login", res.data.token);
+          router.push("/home/person");
         }
       });
     };
@@ -142,10 +112,10 @@ export default defineComponent({
       rules,
       getVercode,
       submitForm,
-      time,
       formRules,
-      isVercode,
+      time,
       vercodeText,
+      isVercode,
     };
   },
 });
