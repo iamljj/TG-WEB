@@ -40,7 +40,7 @@
       </el-pagination>
     </el-card>
   </div>
-  <el-dialog v-model="dialogVisible" width="30%" title="新增节点">
+  <el-dialog v-model="dialogVisible" width="30%" title="新增节点" @closed="clearform">
     <el-form ref="formRules" :model="form_" label-width="120px" :rules="rules">
       <el-form-item label="上级节点">
         <el-input v-model="form_.nodeName" disabled></el-input>
@@ -66,7 +66,7 @@
       </span>
     </template>
   </el-dialog>
-  <el-dialog title="修改节点名称" width="20%" v-model="EditNode">
+  <el-dialog title="修改节点名称" width="20%" v-model="EditNode" destroy-on-close>
     <el-form ref="formRlu" :model="form_" label-width="120px">
       <el-form-item label="节点名称">
         <el-input v-model="form_.label"></el-input>
@@ -102,6 +102,7 @@ import Table from '@/components/table/primeryTable.vue'
 import router from '@/router/index'
 import TreeNode from '@/components/treeNode.vue'
 import { putFrameworkNode } from '@/service/frameworkNode'
+import { NodeBusiness } from '@/service/business'
 export default defineComponent({
   name: 'ShopName',
   components: {
@@ -144,10 +145,13 @@ export default defineComponent({
     })
 
     //点击树节点获取数据
-
+    const rootIstrue: any = ref(false)
     const nodeContext = (e, data) => {
-      console.log(data)
-
+      if (data.path) {
+        rootIstrue.value = true
+      } else {
+        rootIstrue.value = false
+      }
       form_.nodeName = data.name
       form_.parentCode = data.path
     }
@@ -195,7 +199,10 @@ export default defineComponent({
         }
       }
     ]
-
+    //弹窗关闭，表单清空
+    const clearform = () => {
+      formRules.value.resetFields()
+    }
     //首次进入加载组织架构
 
     //发送新增修改节点请求
@@ -206,26 +213,49 @@ export default defineComponent({
             let params = {
               nodeName: form_.childNodeName,
               parentCode: form_.parentCode,
-              root: true
+              root: rootIstrue.value
             }
-            putFrameworkNode(params).then(() => {
-              if (form_.bsCode) {
-                form_.bsCode.forEach((item) => {
-                  if (item == '910854855222886400') {
-                    const list1 = []
-                    form_.bsCode = ''
-                    business_.forEach((item) => {
-                      let list = {
-                        bsCode: item.bsCode
-                      }
-                      list1.push(list)
-                    })
-                    form_.bsCode = list1
-
+            putFrameworkNode(params)
+              .then((res) => {
+                if (form_.bsCode) {
+                  form_.bsCode.forEach((item) => {
+                    if (item == '911191501726285824') {
+                      form_.bsCode = []
+                      business_.forEach((item) => {
+                        if (item.bsCode != '911191501726285824') {
+                          let list = item.bsCode
+                          form_.bsCode.push(list)
+                        }
+                      })
+                    }
+                  })
+                  const params = {
+                    nodeCode: res.data.data,
+                    bsCodeList: form_.bsCode
                   }
+                  NodeBusiness(params)
+                    .then(() => {
+                      ElMessage({
+                        type: 'info',
+                        message: '新增节点成功且业务绑定成功'
+                      })
+                    })
+                    .catch(() => {
+                      ElMessage({
+                        type: 'info',
+                        message: '新增节点成功但业务绑定失败'
+                      })
+                    })
+                }
+              })
+              .catch(() => {
+                ElMessage({
+                  type: 'info',
+                  message: '新增节点失败'
                 })
-              }
-            })
+              })
+            dialogVisible.value = false
+          } else {
           }
         }
       })
@@ -280,7 +310,8 @@ export default defineComponent({
       tree_Data,
       rules,
       sendNode,
-      formRules
+      formRules,
+      clearform
     }
   }
 })

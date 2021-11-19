@@ -21,3 +21,8 @@ export const BusinessDal = (id) => {
 export const BusinessAll = (code, father) => {
   return axios.get(`/service/admin/business/queryAll?nodeCode=${code}&fatherCode=${father}`)
 }
+
+//为组织架构中的节点绑定业务
+export const NodeBusiness = (data) => {
+  return axios.post(`/service/admin/node/business/bind`, data)
+}
