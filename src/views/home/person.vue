@@ -9,7 +9,6 @@
     />
     <Tabs
       class="person-right"
-      :tabs="tabs"
       :activeName="activeName"
       @handleClick="tabChange"
     >

@@ -7,6 +7,7 @@
           :isContextMenu="true"
           :contextMenus="contextMenus"
           @node-context="nodeContext"
+          @node-click="nodeContext"
           class="person-left"
         />
       </div>
@@ -20,7 +21,9 @@
               <el-button class="input-button">搜索</el-button>
             </template></el-input
           >
-          <el-button class="button" type="primary" @click="dealer">绑定经销商</el-button>
+          <el-button class="button" type="primary" @click="dealer" v-if="rootIstrue"
+            >绑定经销商</el-button
+          >
         </div>
       </div>
       <Table ref="table" :columns="tableCol_" :tableData="tableData_">
@@ -168,6 +171,7 @@ export default defineComponent({
         }
       },
       {
+        disabled: rootIstrue,
         label: '删除节点',
         icon: 'el-icon-minus',
         onClick() {
@@ -191,6 +195,7 @@ export default defineComponent({
         }
       },
       {
+        disabled: rootIstrue,
         label: '修改节点',
         icon: 'el-icon-edit',
         onClick() {
