@@ -42,11 +42,11 @@ export let form = {
 export let business = []
 
 //全部业务列表
-export const Businessall = async (code: string, father: string) => {
+export const Businessall = async (code: string) => {
   if (business.length > 0) {
     business = []
   }
-  let res = await BusinessAll(code, father)
+  let res = await BusinessAll(code)
   res.data.data.forEach((item) => {
     let busines = {
       bsCode: item.bsCode,
