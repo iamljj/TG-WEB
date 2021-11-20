@@ -2,8 +2,7 @@ import { createStore } from 'vuex'
 import { storage } from '@/utils/storage'
 import {Node} from "./modules/index"
 
-
-export default createStore({
+const store = createStore({
   state: {
     token: storage.get('token') || '',
     header: '@/assets/header.png',
@@ -40,10 +39,15 @@ export default createStore({
   },
   actions: {},
   modules: {
-    // 访问的时候多加上模块名称，比如 store.Node.xxx
     Node: {
-      namespaced: true,
-      ...Node
+      ...Node.default
     }
   }
 })
+
+// store.registerModule('Node', Node.default)
+
+
+
+export default store
+

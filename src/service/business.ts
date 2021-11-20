@@ -18,8 +18,8 @@ export const BusinessDal = (id) => {
 }
 
 //查询所有业务
-export const BusinessAll = (code, father) => {
-  return axios.get(`/service/admin/business/queryAll?nodeCode=${code}&fatherCode=${father}`)
+export const BusinessAll = (params?:any) => {
+  return axios.get(`/service/admin/business/queryAll`,{params})
 }
 
 //为组织架构中的节点绑定业务

@@ -50,7 +50,7 @@ export default defineComponent({
   setup() {
     const defaultProps = {
       children: "children",
-      label: "name",
+      label: "nodeName",
       isLeaf: "leaf",
     };
     let filterText = ref("");

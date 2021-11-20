@@ -82,13 +82,13 @@ export const treeData = async (deep: number, params?: any) => {
   if (data.code == 200) {
     res = res.concat(data.data)
     for (let i = 0; i < data.data.length; i++) {
-      let { path, leaf } = data.data[i]
+      let { nodeCode, leaf } = data.data[i]
       if (deep == time) {
         time = 0
         break
       } else {
         if (leaf == false) {
-          await treeData(deep, { path })
+          await treeData(deep, { path:nodeCode })
         }
       }
     }

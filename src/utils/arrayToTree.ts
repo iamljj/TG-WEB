@@ -8,7 +8,7 @@ export const arrayToJson = (array: Array<any>, key) => {
 
 // parentKey为所属父级关联值
 export const arrayToTree = (array: Array<any>, parentKey) => {
-  let json = arrayToJson(array, 'path')
+  let json = arrayToJson(array, 'nodeCode')
   return array.reduce((prev, curr) => {
     let pKey = curr[parentKey]
     let parent = json[pKey]
@@ -25,7 +25,7 @@ export const arrayToTree = (array: Array<any>, parentKey) => {
 let keyArr = []
 export const flatObjectKey = (obj: Object) => {
   for (const key in obj) {
-    if (key == 'path') {
+    if (key == 'nodeCode') {
       keyArr.push(obj[key])
     }
     if (key == 'children') {

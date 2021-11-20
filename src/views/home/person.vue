@@ -7,12 +7,7 @@
       @node-context="nodeContext"
       class="person-left"
     />
-    <Tabs
-      class="person-right"
-      :tabs="tabs"
-      :activeName="activeName"
-      @handleClick="tabChange"
-    >
+    <Tabs class="person-right" :activeName="activeName" @handleClick="tabChange">
       <template v-slot:[activeName]>
         <el-card>
           <div class="tableBar">
@@ -145,14 +140,15 @@ import {
   status,
   columns,
   tableData,
-  formRules,
-} from "@/utils/pageData/personData";
-import { arrayToTree } from "@/utils/arrayToTree";
-import Table from "@/components/table/primeryTable.vue";
-import Tabs from "@/components/tabsButton.vue";
-import TreeNode from "@/components/treeNode.vue";
-import ImportFile from "@/components/upload/uploadFile.vue";
-import { ElMessageBox } from "element-plus";
+  formRules
+} from '@/utils/pageData/personData'
+import { arrayToTree } from '@/utils/arrayToTree'
+import Table from '@/components/table/primeryTable.vue'
+import Tabs from '@/components/tabsButton.vue'
+import TreeNode from '@/components/treeNode.vue'
+import ImportFile from '@/components/upload/uploadFile.vue'
+import { ElMessageBox } from 'element-plus'
+import { useStore } from 'vuex'
 export default defineComponent({
   name: 'person',
   components: {
@@ -172,6 +168,7 @@ export default defineComponent({
     }
   },
   setup(props, ctx) {
+    const store = useStore()
     // 切换架构
     let activeName = ref('内部架构')
     const tabChange = (tab) => {
@@ -229,30 +226,58 @@ export default defineComponent({
     let importShow = ref(false)
     let uploadUrl = ''
 
-    // 架构数据
-
-    let tree_Data = ref([])
-
-    onBeforeMount(async () => {
-      let treedata = await treeData(3);
-      tree_Data.value = arrayToTree(treedata, "parentPath");
-    });
-    const contextMenus = [
+    // 选择节点
+    const tree_data = ref([])
+    if (store.state.Node.frameworkNode.length == 0) {
+      treeData(10).then((res) => {
+        tree_data.value = arrayToTree(res, 'parentCode')
+        // store.commit("SET_FRAMEWORK_NODE", tree_data.value);
+      })
+    } else {
+      tree_data.value = ref(store.state.Node.frameworkNode)
+    }
+    let currentHoverItem = reactive<any>({})
+    let parentNode = reactive<any>({})
+    const nodeSelect = (node) => {
+      console.log(node)
+    }
+    const contextMenus: Array<any> = [
       {
-        label: "迁移节点",
-        icon: "el-icon-connection",
+        label: '新增节点',
+        icon: 'el-icon-plus',
         onClick() {
-          console.log("迁移节点");
-        },
+          currentHoverItem.leaf = false
+          if (!currentHoverItem.children) {
+            let data = {
+              disable: currentHoverItem.disable,
+              nodeName: currentHoverItem.nodeName,
+              leaf: currentHoverItem.leaf,
+              nodeCode: currentHoverItem.nodeCode,
+              parentCode: currentHoverItem.nodeCode,
+              root: currentHoverItem.root
+            }
+            currentHoverItem.children = []
+            currentHoverItem.children.push(data)
+          }
+        }
       },
-    ];
+      {
+        label: '删除节点',
+        icon: 'el-icon-minus',
+        onClick() {
+          let nodeIndex = parentNode.childNodes.findIndex(
+            (node) => node.label == currentHoverItem.nodeName
+          )
+          parentNode.childNodes.splice(nodeIndex, 1)
+        }
+      }
+    ]
     const nodeContext = (e, data) => {
-      console.log(e, data);
-    };
+      console.log(e, data)
+    }
     return {
       tabs,
       activeName,
-      tree_Data,
       searchKey,
       searchJob,
       searchStatu,
@@ -275,8 +300,8 @@ export default defineComponent({
       deleteExteranlPerson,
       selectChange,
       selectAll,
-      nodeContext,
-    };
+      nodeContext
+    }
   },
   methods: {
     nodeClick(data) {
