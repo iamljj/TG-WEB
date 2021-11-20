@@ -1,6 +1,6 @@
 import { reactive, ref } from 'vue'
-import { BusinessAll } from '@/service/business'
-import {putFrameworkNode} from "@/service/frameworkNode"
+import { BusinessAll, NodeBusiness, getNodeBusiness } from '@/service/business'
+import { putFrameworkNode, delFrameworkNode } from '@/service/frameworkNode'
 //表格
 // 表格
 export const columns: Array<any> = [
@@ -27,25 +27,55 @@ export const form = {
   parentCode: null,
   bsCode: null,
   childNodeName: '',
+  bsCodeList: null,
   id: ''
 }
 
 //全部业务列表
-export const Businessall = async (params?:any) => {
+export const Businessall = async (params) => {
   let business = []
   let { data } = await BusinessAll(params)
   if (data.code == 200) {
-    business = data.data;
+    business = data.data
   } else {
     business = []
   }
   return business
 }
 // 新增内部节点
-export const put_framework_node =async (params) => {
-  let { data } =await putFrameworkNode(params);
+export const put_framework_node = async (params) => {
+  let { data } = await putFrameworkNode(params)
   if (data.code == 200) {
-    return data;
+    return data
+  } else {
+    return data
+  }
+}
+
+//给节点绑定业务
+export const node_business = async (params) => {
+  let { data } = await NodeBusiness(params)
+  if (data.code == 200) {
+    return data
+  } else {
+    return data
+  }
+}
+
+//删除内部节点
+export const delet_framework_node = async (params) => {
+  let { data } = await delFrameworkNode(params)
+  if (data.code == 200) {
+    return data
+  } else {
+    return data
+  }
+}
+//查询节点已绑定的业务
+export const get_framework_node_business = async (params) => {
+  let { data } = await getNodeBusiness(params)
+  if (data.code == 200) {
+    return data
   } else {
     return data
   }

@@ -6,16 +6,16 @@
         <div class="tabs-size">
           <el-pagination
             layout="prev, pager, next"
-            :total="1000"
+            :total="total"
             :pager-count="11"
-            :page-size="8"
+            :page-size="pageSize"
             @current-change="handleCurrentChange"
             class="pageSelect"
           >
           </el-pagination>
           <div class="buttons">
-            <el-button type="primary" @click="back">取消</el-button>
-            <el-button type="primary" @click="back">确定</el-button>
+            <el-button type="primary" @click="back">返回</el-button>
+            <el-button type="primary" @click="bind">确定</el-button>
           </div>
           <div class="header">
             <div class="text">
@@ -58,14 +58,14 @@
             </div>
           </div>
           <div class="body">
-            <el-table ref="multipleTable" :data="tableData" @selection-change="fetchDealer">
+            <el-table ref="multipleTable" :data="tableData" @selection-change="fetchDealer" stripe>
               <el-table-column type="selection" width="316" />
               <el-table-column type="index" width="316" label="序号" />
               <el-table-column label="经销商名称" width="316">
-                <template #default="scope">{{ scope.row.date }}</template>
+                <template #default="scope">{{ scope.row.name }}</template>
               </el-table-column>
-              <el-table-column property="name" label="地区" width="316" />
-              <el-table-column property="address" label="联系方式" width="316" />
+              <el-table-column property="address" label="地区" width="316" />
+              <el-table-column property="phone" label="联系方式" width="316" />
             </el-table>
           </div>
         </div>
@@ -74,25 +74,75 @@
 </template>
 
 <script lang="ts">
-import { tableData, getDealer, daleteDealer } from '@/utils/pageData/dealer'
+import { getDealer, daleteDealer, getdealer, BindDealer } from '@/utils/pageData/dealer'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import { defineComponent, ref, watch } from 'vue'
+import { storage } from '@/utils/storage'
 import router from '@/router/index'
 
 export default defineComponent({
   name: 'dealer',
   components: {},
   setup() {
+    //翻页
+    let pageNum = ref(1)
+    let pageSize = ref(11)
+    let total = ref(null)
+    const handleCurrentChange = (val) => {
+      pageNum.value = val
+      getlist()
+    }
+
+    //获取经销商数据
+    let tableData = ref(null)
+    const node = storage.get('node')
+    const getlist = async () => {
+      const params = {
+        nodeCode: node.nodeCode,
+        page: {
+          pageNum: pageNum.value,
+          pageSize: pageSize.value
+        }
+      }
+      let data = await getdealer(params)
+      tableData.value = data.records
+      total.value = data.total
+    }
+    getlist()
+
     let deletelist = ref(null)
     const multipleTable = ref(null)
     //获取选中数据
 
     //按确定
+    const bind = async () => {
+      const params = {
+        nodeCode: node.nodeCode,
+        storeNoList: getDealer.value
+      }
+      let { data, code } = await BindDealer(params)
+      if (code !== 200) {
+        ElMessage({
+          type: 'warning',
+          message: '绑定失败'
+        })
+      } else {
+        ElMessage({
+          type: 'warning',
+          message: '绑定成功'
+        })
+      }
+    }
     const back = () => {
       router.push('/home/system/organization')
     }
 
-    const fetchDealer = (selection, row) => {
-      getDealer.value = selection
+    const fetchDealer = (selection) => {
+      let list = []
+      selection.forEach((item) => {
+        list.push(item.storeNo)
+      })
+      getDealer.value = list
     }
     //获取要删除的数据
     const daletedealer = (selection) => {
@@ -114,7 +164,12 @@ export default defineComponent({
       multipleTable,
       deletelist,
       deleteselected,
-      back
+      back,
+      bind,
+      pageNum,
+      total,
+      pageSize,
+      handleCurrentChange
     }
   }
 })
