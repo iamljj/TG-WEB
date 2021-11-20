@@ -50,7 +50,7 @@ export const rules = {
 }
 
 // tabPane数据
-type labelValueType = {
+interface labelValueType {
   label: string
   value: string
 }
@@ -66,22 +66,12 @@ export const tabs: Array<labelValueType> = [
 ]
 
 // 组织架构
-export type treeDataType = {
+export interface treeDataType {
   label: string
   id: number
   children?: Array<treeDataType>
 }
-// 自定义右键菜单类型
-export type contextMenuType  = {
-  label: string
-  icon?: string
-  onClick: Function
-}
 
-
-/**
- *
- */
 // 查询次数
 let time = 0
 let res: any = []
@@ -93,7 +83,6 @@ export const treeData = async (deep: number, params?: any) => {
     res = res.concat(data.data)
     for (let i = 0; i < data.data.length; i++) {
       let { path, leaf } = data.data[i]
-      data.data[i].key = data.data[i].path;
       if (deep == time) {
         time = 0
         break

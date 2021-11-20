@@ -1,18 +1,17 @@
 <template>
   <div class="person">
     <TreeNode
-      class="person-left"
-      :isSearch="true"
+      :treeData="tree_Data"
       :isContextMenu="true"
-      :treeData="tree_data"
       :contextMenus="contextMenus"
       @node-context="nodeContext"
+      class="person-left"
     />
     <Tabs
       class="person-right"
+      :tabs="tabs"
       :activeName="activeName"
       @handleClick="tabChange"
-      :tabs="tabs"
     >
       <template v-slot:[activeName]>
         <el-card>
@@ -60,9 +59,7 @@
                     </el-dropdown-menu>
                   </template>
                 </el-dropdown>
-                <el-button type="primary" @click="addExternalPerson"
-                  >新增外部人员</el-button
-                >
+                <el-button type="primary" @click="addExternalPerson">新增外部人员</el-button>
                 <el-button type="primary" @click="deleteExteranlPerson">删除</el-button>
               </template>
             </div>
@@ -100,12 +97,7 @@
           <el-input v-model="form.phone" placeholder="请输入人员电话" />
         </el-form-item>
         <el-form-item prop="roles" label="角色" style="width: 100%">
-          <el-select
-            v-model="form.roles"
-            multiple
-            class="rowWidth"
-            placeholder="请选择人员角色"
-          >
+          <el-select v-model="form.roles" multiple class="rowWidth" placeholder="请选择人员角色">
             <el-option
               v-for="(item, index) in jobs"
               :key="index"
@@ -116,6 +108,12 @@
         </el-form-item>
         <el-form-item label="架构节点" prop="node">
           <el-input v-model="form.node" placeholder="请输入架构节点" />
+          <TreeNode
+            :treeData="tree_Data"
+            :isExpand="false"
+            :isSearch="false"
+            @nodeClick="nodeClick"
+          />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -130,138 +128,116 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onBeforeMount, reactive, ref } from "vue";
+import {
+  computed,
+  defineComponent,
+  onBeforeMount,
+  onMounted,
+  reactive,
+  ref,
+  toRefs,
+  watch
+} from 'vue'
 import {
   tabs,
-  jobs,
   treeData,
+  jobs,
   status,
   columns,
   tableData,
   formRules,
-  contextMenuType,
 } from "@/utils/pageData/personData";
-import { arrayToTree, flatObjectKey } from "@/utils/arrayToTree";
+import { arrayToTree } from "@/utils/arrayToTree";
 import Table from "@/components/table/primeryTable.vue";
 import Tabs from "@/components/tabsButton.vue";
 import TreeNode from "@/components/treeNode.vue";
 import ImportFile from "@/components/upload/uploadFile.vue";
 import { ElMessageBox } from "element-plus";
 export default defineComponent({
-  name: "person",
+  name: 'person',
   components: {
     Table,
     Tabs,
     TreeNode,
-    ImportFile,
+    ImportFile
   },
   data() {
     return {
       form: {
-        name: "",
-        phone: "",
-        roles: "",
-        node: "",
-      },
-    };
+        name: '',
+        phone: '',
+        roles: '',
+        node: ''
+      }
+    }
   },
   setup(props, ctx) {
     // 切换架构
-    let activeName = ref("内部架构");
+    let activeName = ref('内部架构')
     const tabChange = (tab) => {
-      activeName.value = tab.props.name;
-    };
+      activeName.value = tab.props.name
+    }
 
     // 查询条件
-    let searchKey = ref("");
-    let searchJob = ref("");
-    let searchStatu = ref("");
+    let searchKey = ref('')
+    let searchJob = ref('')
+    let searchStatu = ref('')
 
     // 数据加载中
-    let loading = ref(false);
+    let loading = ref(false)
     // 内外部架构判别
-    const isExternal = computed(() => (activeName.value == "内部架构" ? false : true));
+    const isExternal = computed(() => (activeName.value == '内部架构' ? false : true))
     // 表格列
-    let tableData_ = tableData;
-    let tableCol_ = reactive(columns);
+    let tableData_ = tableData
+    let tableCol_ = reactive(columns)
 
     const selectChange = (row) => {
-      console.log(row);
-    };
-    // 全选
-    const selectAll = (selection) => {};
+      console.log(row)
+    }
+    const selectAll = (selection) => {}
     // 下载
-    const downloadTemp = () => {};
+    const downloadTemp = () => {}
     // 导入
     const importTemp = () => {
-      importShow.value = true;
-    };
+      importShow.value = true
+    }
     // 新增
     const addExternalPerson = () => {
-      dialogVisible.value = true;
-    };
+      dialogVisible.value = true
+    }
     // 删除
     const deleteExteranlPerson = () => {
-      ElMessageBox.confirm("是否确认删除", "提示", {
-        cancelButtonText: "取消",
-        confirmButtonText: "确定",
+      ElMessageBox.confirm('是否确认删除', '提示', {
+        cancelButtonText: '取消',
+        confirmButtonText: '确定',
         showClose: false,
         callback(actions, instace) {
-          console.log(actions);
-          if (actions == "cancel") {
-            console.log("取消");
+          console.log(actions)
+          if (actions == 'cancel') {
+            console.log('取消')
           } else {
-            console.log("确定");
+            console.log('确定')
           }
-        },
-      });
-    };
+        }
+      })
+    }
     // dialog标题
-    let dialogTitle = ref("新增账号");
-    let dialogVisible = ref(false);
+    let dialogTitle = ref('新增账号')
+    let dialogVisible = ref(false)
 
     // 导入文件
-    let importShow = ref(false);
-    let uploadUrl = "";
+    let importShow = ref(false)
+    let uploadUrl = ''
 
-    // 选择节点
-    const tree_data = ref([]);
-    treeData(10).then((res) => {
-      tree_data.value = arrayToTree(res, "parentPath");
+    // 架构数据
+
+    let tree_Data = ref([])
+
+    onBeforeMount(async () => {
+      let treedata = await treeData(3);
+      tree_Data.value = arrayToTree(treedata, "parentPath");
     });
-
-    const nodeSelect = (node) => {
-      console.log(node);
-    };
-    const contextMenus: Array<contextMenuType> = [
-      {
-        label: "新增节点",
-        icon: "el-icon-plus",
-        onClick() {
-          currentHoverItem.leaf = false;
-          if (!currentHoverItem.children) {
-            let data = {
-              name: "test",
-              leaf: true,
-              isGroup: false,
-              id: "21",
-              parentPath: currentHoverItem.path,
-            };
-            currentHoverItem.children = [];
-            currentHoverItem.children.push(data);
-          }
-        },
-      },
-      {
-        label: "删除节点",
-        icon: "el-icon-minus",
-        onClick() {
-          let nodeIndex = parentNode.childNodes.findIndex(
-            (node) => node.label == currentHoverItem.name
-          );
-          parentNode.childNodes.splice(nodeIndex, 1);
-        },
-      },
+    const contextMenus = [
       {
         label: "迁移节点",
         icon: "el-icon-connection",
@@ -270,15 +246,13 @@ export default defineComponent({
         },
       },
     ];
-    let currentHoverItem = reactive<any>({});
-    let parentNode = reactive<any>({});
-    const nodeContext = (e, data, node) => {
-      currentHoverItem = data;
-      parentNode = node.parent;
+    const nodeContext = (e, data) => {
+      console.log(e, data);
     };
     return {
       tabs,
       activeName,
+      tree_Data,
       searchKey,
       searchJob,
       searchStatu,
@@ -294,9 +268,6 @@ export default defineComponent({
       importShow,
       uploadUrl,
       contextMenus,
-      currentHoverItem,
-      tree_data,
-      parentNode,
       tabChange,
       downloadTemp,
       importTemp,
@@ -305,16 +276,15 @@ export default defineComponent({
       selectChange,
       selectAll,
       nodeContext,
-      nodeSelect,
     };
   },
   methods: {
     nodeClick(data) {
-      this.form.node = data.label;
-      console.log(this.form);
-    },
-  },
-});
+      this.form.node = data.label
+      console.log(this.form)
+    }
+  }
+})
 </script>
 
 <style scoped lang="scss">
@@ -347,10 +317,6 @@ export default defineComponent({
   &-condition {
     display: inherit;
   }
-}
-.nodeTree {
-  max-height: 300px;
-  overflow: auto;
 }
 .spanRow {
   margin-right: 10px !important;

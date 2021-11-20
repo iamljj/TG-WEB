@@ -17,20 +17,21 @@ interface labelValueType {
 export const columns: Array<any> = [
   { type: 'index', label: '序号' },
   { label: '角色名称', prop: 'bsrName' },
-  { label: '业务类型', prop: 'node' }
+  { label: '业务类型', prop: 'businessList' }
 ]
-export let tableData = []
-export const getrole = async (data?) => {
-  if (!data) {
+
+export let list = []
+export const getrole = async (date?) => {
+  if (!date) {
     const params = {
       bsrName: '',
       bsCode: ''
     }
-    let res = await queryRole(params)
-    tableData = res.data.data
+    let { data } = await queryRole(params)
+    list = data.data
   } else {
-    let res = await queryRole(data)
-    tableData = res.data.data
+    let { data } = await queryRole(date)
+    list = data.data
   }
 }
 export let form = {

@@ -9,7 +9,7 @@
             <el-button type="primary">搜索</el-button>
             <el-button type="primary" @click="addrole">新增</el-button>
           </div>
-          <Table :columns="columns" :data="tableData_">
+          <Table :columns="columns" :data="tableData">
             <el-table-column label="操作">
               <template #default="scope">
                 <el-button size="medium" type="text">编辑</el-button>
@@ -46,10 +46,11 @@
   </el-dialog>
 </template>
 <script lang="ts">
-import { tabs, columns, tableData, getrole, form, business } from '@/utils/pageData/role'
+import { tabs, columns, form, business, list } from '@/utils/pageData/role'
 import { defineComponent, ref } from 'vue'
 import Table from '@/components/table/primeryTable.vue'
 import Tabs from '@/components/tabsButton.vue'
+import { queryRole } from '@/service/role'
 export default defineComponent({
   name: 'Role',
   components: {
@@ -66,7 +67,6 @@ export default defineComponent({
     //表格
     let editadd = ref(false)
     let form_ = ref(form)
-    let tableData_ = ref(tableData)
 
     //打开弹窗
     let title = ref('')
@@ -74,7 +74,6 @@ export default defineComponent({
       title.value = '新增'
       editadd.value = true
     }
-    getrole()
     return {
       tabs,
       tabChange,
@@ -83,7 +82,6 @@ export default defineComponent({
       form_,
       business,
       editadd,
-      tableData_,
       addrole,
       title
     }
