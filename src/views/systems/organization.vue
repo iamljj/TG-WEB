@@ -67,7 +67,7 @@
     </template>
   </el-dialog>
   <el-dialog title="修改节点" width="20%" v-model="EditNode" ref="formRules1">
-    <el-form ref="formRlu" :model="form_" label-width="120px">
+    <el-form ref="formRules1 " :model="form_" label-width="120px" @close="clearform1">
       <el-form-item label="节点名称">
         <el-input v-model="form_.nodeName"></el-input>
       </el-form-item>
@@ -85,14 +85,14 @@
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="EditNode = false">取消</el-button>
-        <el-button type="primary" @click="sendNode">确认</el-button>
+        <el-button type="primary" @click="editNode">确认</el-button>
       </span>
     </template>
   </el-dialog>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watch, reactive, onBeforeMount } from 'vue'
+import { defineComponent, ref, watch, reactive, onBeforeMount, computed } from 'vue'
 import {
   tableData,
   form,
@@ -106,7 +106,8 @@ import {
   put_framework_node,
   node_business,
   delet_framework_node,
-  get_framework_node_business
+  get_framework_node_business,
+  bindedagency
 } from '@/utils/pageData/organization'
 import { title, treeData } from '@/utils/pageData/personData'
 import { storage } from '@/utils/storage'
@@ -132,7 +133,18 @@ export default defineComponent({
 
     //左键点击节点
     const nodeClick = async (node) => {
-      
+      const params = {
+        nodeCode: node.nodeCode,
+        page: {
+          pageNum: page.value,
+          pageSize: pagesize.value
+        }
+      }
+      if (node.root == true) {
+        let { data } = await bindedagency(params)
+        console.log(data)
+      } else {
+      }
     }
 
     //业务类型
@@ -283,96 +295,115 @@ export default defineComponent({
     //首次进入加载组织架构
 
     //发送新增修改节点请求
-    const sendNode = async () => {
-      if (statu == '新增') {
-        let params = {
-          nodeName: form_.childNodeName,
-          parentCode: form_.parentCode,
-          root: rootIstrue.value
-        }
-        let { code, data } = await put_framework_node(params)
-        if (code !== 200) {
-          ElMessage({
-            type: 'warning',
-            message: '新增失败'
-          })
-        } else {
-          ElMessage({
-            type: 'warning',
-            message: '新增成功'
-          })
-          if (form_.bsCode.length > 0) {
-            const params = {
-              nodeCode: data,
-              bsCodeList: form_.bsCode
-            }
-            let { code } = await node_business(params)
-            if (code !== 200) {
-              ElMessage({
-                type: 'warning',
-                message: '绑定业务失败'
-              })
-            } else {
-              ElMessage({
-                type: 'warning',
-                message: '绑定业务成功'
-              })
-            }
-          }
-          currentHoverItem.leaf = false
-          let d = {
-            disable: true,
+    const sendNode = () => {
+      formRules.value.validate(async (valid: any) => {
+        if (valid) {
+          let params = {
             nodeName: form_.childNodeName,
-            leaf: data.leaf,
-            nodeCode: data,
-            parentCode: parentNode.nodeCode,
+            parentCode: form_.parentCode,
             root: rootIstrue.value
           }
-          if (!currentHoverItem.children) {
-            currentHoverItem.children = []
+          let { code, data } = await put_framework_node(params)
+          console.log('000000')
+
+          if (code !== 200) {
+            ElMessage({
+              type: 'warning',
+              message: '新增失败'
+            })
+          } else {
+            ElMessage({
+              type: 'warning',
+              message: '新增成功'
+            })
+            if (form_.bsCode.length > 0) {
+              const params = {
+                nodeCode: data,
+                bsCodeList: form_.bsCode
+              }
+              let { code } = await node_business(params)
+              if (code !== 200) {
+                ElMessage({
+                  type: 'warning',
+                  message: '绑定业务失败'
+                })
+              } else {
+                ElMessage({
+                  type: 'warning',
+                  message: '绑定业务成功'
+                })
+              }
+            }
+            currentHoverItem.leaf = false
+            let d = {
+              disable: true,
+              nodeName: form_.childNodeName,
+              leaf: data.leaf,
+              nodeCode: data,
+              parentCode: parentNode.nodeCode,
+              root: rootIstrue.value
+            }
+            if (!currentHoverItem.children) {
+              currentHoverItem.children = []
+            }
+            currentHoverItem.children.push(d)
           }
-          currentHoverItem.children.push(d)
-        }
-        dialogVisible.value = false
-      } else {
-        const params = {
-          id: form_.id,
-          nodeName: form_.nodeName,
-          nodeCode: form_.parentCode
-        }
-        let { code, data } = await put_framework_node(params)
-        if (code !== 200) {
-          ElMessage({
-            type: 'warning',
-            message: '修改失败'
-          })
+          dialogVisible.value = false
         } else {
           ElMessage({
             type: 'warning',
-            message: '修改成功'
+            message: '请检查输入的是否正确'
           })
-          if (form_.bsCodeList.length > 0) {
-            const params = {
-              nodeCode: form_.parentCode,
-              bsCodeList: form_.bsCodeList
-            }
-            let { code } = await node_business(params)
-            if (code !== 200) {
-              ElMessage({
-                type: 'warning',
-                message: '绑定业务失败'
-              })
-            } else {
-              ElMessage({
-                type: 'warning',
-                message: '绑定业务成功'
-              })
-            }
-          }
-          currentHoverItem.nodeName = form_.nodeName
-          EditNode.value = false
         }
-      }
+      })
+    }
+    const editNode = () => {
+      formRules1.value.validate(async (valid: any) => {
+        if (valid) {
+          const params = {
+            id: form_.id,
+            nodeName: form_.nodeName,
+            nodeCode: form_.parentCode
+          }
+          let { code, data } = await put_framework_node(params)
+          if (code !== 200) {
+            ElMessage({
+              type: 'warning',
+              message: '修改失败'
+            })
+          } else {
+            ElMessage({
+              type: 'warning',
+              message: '修改成功'
+            })
+            if (form_.bsCodeList.length > 0) {
+              const params = {
+                nodeCode: form_.parentCode,
+                bsCodeList: form_.bsCodeList
+              }
+              let { code } = await node_business(params)
+              if (code !== 200) {
+                ElMessage({
+                  type: 'warning',
+                  message: '绑定业务失败'
+                })
+              } else {
+                ElMessage({
+                  type: 'warning',
+                  message: '绑定业务成功'
+                })
+              }
+            }
+            currentHoverItem.nodeName = form_.nodeName
+            EditNode.value = false
+          }
+        } else {
+          ElMessage({
+            type: 'warning',
+            message: '请检查输入的是否正确'
+          })
+        }
+      })
     }
 
     // 搜索
@@ -394,10 +425,6 @@ export default defineComponent({
         page: val,
         pageSize: pagesize.value
       }
-      // displayall(params).then((res) => {
-      //   tableData.value = res.data.data.records
-      //   totol.value = res.data.data.total
-      // })
     }
     // 修改页面点击确认
 
@@ -426,7 +453,8 @@ export default defineComponent({
       formRules1,
       clearform,
       clearform1,
-      nodeClick
+      nodeClick,
+      editNode
     }
   }
 })
