@@ -1,5 +1,5 @@
-import { queryRole } from '@/service/role'
-import { BusinessAll } from '@/service/business'
+import { queryRole, putRole, deleteRole } from '@/service/role'
+import { getBusinessAll } from '@/service/business'
 export const tabs: Array<labelValueType> = [
   {
     label: '酒业',
@@ -21,17 +21,18 @@ export const columns: Array<any> = [
 ]
 
 export let list = []
-export const getrole = async (date?) => {
-  if (!date) {
-    const params = {
-      bsrName: '',
-      bsCode: ''
-    }
-    let { data } = await queryRole(params)
-    list = data.data
+interface getRoleType {
+  bsrName?: string
+  bsCode?: string
+  belong:string
+}
+export const get_role = async (params: getRoleType) => {
+
+  let { data } = await queryRole(params);
+  if (data.code == 200) {
+    return data
   } else {
-    let { data } = await queryRole(date)
-    list = data.data
+    return false;
   }
 }
 export let form = {
@@ -41,17 +42,36 @@ export let form = {
 
 export let business = []
 
-//全部业务列表
-export const Businessall = async (code: string) => {
-  if (business.length > 0) {
-    business = []
+//全部业务类型列表
+interface getAllBusinessType {
+  pageNum: string
+  pageSize:string
+}
+export const get_all_business =async (params: getAllBusinessType) => {
+  let { data } = await getBusinessAll(params);
+  if (data.code == 200) {
+    return data.data;
+  } else {
+    return []
   }
-  let res = await BusinessAll(code)
-  res.data.data.forEach((item) => {
-    let busines = {
-      bsCode: item.bsCode,
-      bsName: item.bsName
-    }
-    business.push(busines)
-  })
+}
+
+// 新增，修改角色
+export const put_update_role = async (params) => {
+  let { data } = await putRole(params)
+  if (data.code == 200) {
+    return data
+  } else {
+    return false
+  }
+}
+
+// 删除角色
+export const delete_role = async (params) => {
+  let { data } = await deleteRole(params)
+  if (data.code == 200) {
+    return data
+  } else {
+    return false
+  }
 }

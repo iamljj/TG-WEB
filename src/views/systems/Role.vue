@@ -1,6 +1,11 @@
 <template>
   <div class="Role-Mcontainer">
-    <Tabs class="person-right" :tabs="tabs" :activeName="activeName" @handleClick="tabChange">
+    <Tabs
+      class="person-right"
+      :tabs="tabs"
+      :activeName="activeName"
+      @handleClick="tabChange"
+    >
       <template v-slot:[activeName]>
         <el-card>
           <div class="tableBar">
@@ -46,36 +51,73 @@
   </el-dialog>
 </template>
 <script lang="ts">
-import { tabs, columns, form, business, list } from '@/utils/pageData/role'
-import { defineComponent, ref } from 'vue'
-import Table from '@/components/table/primeryTable.vue'
-import Tabs from '@/components/tabsButton.vue'
-import { queryRole } from '@/service/role'
+import { tabs, columns, form, list } from "@/utils/pageData/role";
+import { defineComponent, ref } from "vue";
+import Table from "@/components/table/primeryTable.vue";
+import Tabs from "@/components/tabsButton.vue";
+import {
+  get_role,
+  put_update_role,
+  delete_role,
+  get_all_business,
+} from "@/utils/pageData/role";
+import { ElMessage } from "element-plus";
 export default defineComponent({
-  name: 'Role',
+  name: "Role",
   components: {
     Table,
-    Tabs
+    Tabs,
   },
   setup(props, context) {
     //切换框架
-    let activeName = ref('酒业')
+    let activeName = ref("酒业");
     const tabChange = (tab) => {
-      activeName.value = tab.props.name
-    }
+      activeName.value = tab.props.name;
+    };
 
     //表格
-    let editadd = ref(false)
-    let form_ = ref(form)
-
+    let editadd = ref(false);
+    let form_ = ref(form);
+    let tableData = ref([]);
     //打开弹窗
-    let title = ref('')
+    let title = ref("");
     const addrole = () => {
-      title.value = '新增'
-      editadd.value = true
-    }
+      title.value = "新增";
+      editadd.value = true;
+    };
+    // 业务类型
+    const getBusiness = async () => {
+      let params = {
+        pageNum: "1",
+        pageSize: "100",
+      };
+      let res = await get_all_business(params);
+      return res;
+    };
+    const business = ref(getBusiness());
+    // 新增、修改角色
+    const sendNode = async () => {
+      // bsrCode: "",
+      let res = await put_update_role({
+        bsrName: form.bsrName,
+        belong: activeName.value,
+        nameCode: {
+          bsCode: "",
+          bsName: "",
+        },
+      });
+      if (res == false) {
+        return ElMessage({
+          message: title.value + "错误",
+          type: "warning",
+        });
+      }
+      console.log(res);
+    };
+
     return {
       tabs,
+      tableData,
       tabChange,
       activeName,
       columns,
@@ -83,10 +125,11 @@ export default defineComponent({
       business,
       editadd,
       addrole,
-      title
-    }
-  }
-})
+      title,
+      sendNode,
+    };
+  },
+});
 </script>
 <style lang="scss">
 .Role-Mcontainer {

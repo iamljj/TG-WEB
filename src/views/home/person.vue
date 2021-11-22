@@ -1,13 +1,19 @@
 <template>
   <div class="person">
     <TreeNode
-      :treeData="tree_Data"
+      :treeData="tree_data"
       :isContextMenu="true"
       :contextMenus="contextMenus"
       @node-context="nodeContext"
       class="person-left"
+      v-loading="treeLoad"
     />
-    <Tabs class="person-right" :activeName="activeName" @handleClick="tabChange">
+    <Tabs
+      class="person-right"
+      :tabs="tabs"
+      :activeName="activeName"
+      @handleClick="tabChange"
+    >
       <template v-slot:[activeName]>
         <el-card>
           <div class="tableBar">
@@ -54,7 +60,9 @@
                     </el-dropdown-menu>
                   </template>
                 </el-dropdown>
-                <el-button type="primary" @click="addExternalPerson">新增外部人员</el-button>
+                <el-button type="primary" @click="addExternalPerson"
+                  >新增外部人员</el-button
+                >
                 <el-button type="primary" @click="deleteExteranlPerson">删除</el-button>
               </template>
             </div>
@@ -92,7 +100,12 @@
           <el-input v-model="form.phone" placeholder="请输入人员电话" />
         </el-form-item>
         <el-form-item prop="roles" label="角色" style="width: 100%">
-          <el-select v-model="form.roles" multiple class="rowWidth" placeholder="请选择人员角色">
+          <el-select
+            v-model="form.roles"
+            multiple
+            class="rowWidth"
+            placeholder="请选择人员角色"
+          >
             <el-option
               v-for="(item, index) in jobs"
               :key="index"
@@ -104,7 +117,7 @@
         <el-form-item label="架构节点" prop="node">
           <el-input v-model="form.node" placeholder="请输入架构节点" />
           <TreeNode
-            :treeData="tree_Data"
+            :treeData="tree_data"
             :isExpand="false"
             :isSearch="false"
             @nodeClick="nodeClick"
@@ -131,8 +144,9 @@ import {
   reactive,
   ref,
   toRefs,
-  watch
-} from 'vue'
+  watch,
+  watchEffect,
+} from "vue";
 import {
   tabs,
   treeData,
@@ -140,141 +154,133 @@ import {
   status,
   columns,
   tableData,
-  formRules
-} from '@/utils/pageData/personData'
-import { arrayToTree } from '@/utils/arrayToTree'
-import Table from '@/components/table/primeryTable.vue'
-import Tabs from '@/components/tabsButton.vue'
-import TreeNode from '@/components/treeNode.vue'
-import ImportFile from '@/components/upload/uploadFile.vue'
-import { ElMessageBox } from 'element-plus'
-import { useStore } from 'vuex'
+  formRules,
+} from "@/utils/pageData/personData";
+import { arrayToTree } from "@/utils/arrayToTree";
+import Table from "@/components/table/primeryTable.vue";
+import Tabs from "@/components/tabsButton.vue";
+import TreeNode from "@/components/treeNode.vue";
+import ImportFile from "@/components/upload/uploadFile.vue";
+import { ElMessageBox } from "element-plus";
+import { useStore } from "vuex";
 export default defineComponent({
-  name: 'person',
+  name: "person",
   components: {
     Table,
     Tabs,
     TreeNode,
-    ImportFile
+    ImportFile,
   },
   data() {
     return {
       form: {
-        name: '',
-        phone: '',
-        roles: '',
-        node: ''
-      }
-    }
+        name: "",
+        phone: "",
+        roles: "",
+        node: "",
+      },
+    };
   },
   setup(props, ctx) {
-    const store = useStore()
+    const store = useStore();
     // 切换架构
-    let activeName = ref('内部架构')
+    let activeName = ref("内部架构");
     const tabChange = (tab) => {
-      activeName.value = tab.props.name
-    }
+      activeName.value = tab.props.name;
+    };
 
     // 查询条件
-    let searchKey = ref('')
-    let searchJob = ref('')
-    let searchStatu = ref('')
+    let searchKey = ref("");
+    let searchJob = ref("");
+    let searchStatu = ref("");
 
     // 数据加载中
-    let loading = ref(false)
+    let loading = ref(false);
     // 内外部架构判别
-    const isExternal = computed(() => (activeName.value == '内部架构' ? false : true))
+    const isExternal = computed(() => (activeName.value == "内部架构" ? false : true));
+
     // 表格列
-    let tableData_ = tableData
-    let tableCol_ = reactive(columns)
+    let tableData_ = tableData;
+    let tableCol_ = reactive(columns);
 
     const selectChange = (row) => {
-      console.log(row)
-    }
-    const selectAll = (selection) => {}
+      console.log(row);
+    };
+    const selectAll = (selection) => {};
     // 下载
-    const downloadTemp = () => {}
+    const downloadTemp = () => {};
     // 导入
     const importTemp = () => {
-      importShow.value = true
-    }
+      importShow.value = true;
+    };
     // 新增
     const addExternalPerson = () => {
-      dialogVisible.value = true
-    }
+      dialogVisible.value = true;
+    };
     // 删除
     const deleteExteranlPerson = () => {
-      ElMessageBox.confirm('是否确认删除', '提示', {
-        cancelButtonText: '取消',
-        confirmButtonText: '确定',
+      ElMessageBox.confirm("是否确认删除", "提示", {
+        cancelButtonText: "取消",
+        confirmButtonText: "确定",
         showClose: false,
         callback(actions, instace) {
-          console.log(actions)
-          if (actions == 'cancel') {
-            console.log('取消')
+          console.log(actions);
+          if (actions == "cancel") {
+            console.log("取消");
           } else {
-            console.log('确定')
+            console.log("确定");
           }
-        }
-      })
-    }
+        },
+      });
+    };
     // dialog标题
-    let dialogTitle = ref('新增账号')
-    let dialogVisible = ref(false)
+    let dialogTitle = ref("新增账号");
+    let dialogVisible = ref(false);
 
     // 导入文件
-    let importShow = ref(false)
-    let uploadUrl = ''
+    let importShow = ref(false);
+    let uploadUrl = "";
 
     // 选择节点
-    const tree_data = ref([])
+    let tree_data = ref([]);
+    let treeLoad = ref(true);
+
     if (store.state.Node.frameworkNode.length == 0) {
-      treeData(10).then((res) => {
-        tree_data.value = arrayToTree(res, 'parentCode')
-        // store.commit("SET_FRAMEWORK_NODE", tree_data.value);
-      })
+      treeData(20).then((res) => {
+        tree_data.value = arrayToTree(res, "parentCode");
+        treeLoad.value = false;
+        store.commit("SET_FRAMEWORK_NODE", tree_data.value);
+      });
     } else {
-      tree_data.value = ref(store.state.Node.frameworkNode)
+      tree_data.value = ref(store.state.Node.frameworkNode);
+      treeLoad.value = false;
     }
-    let currentHoverItem = reactive<any>({})
-    let parentNode = reactive<any>({})
+    let currentHoverItem = reactive<any>({});
+    let parentNode = reactive<any>({});
     const nodeSelect = (node) => {
-      console.log(node)
-    }
-    const contextMenus: Array<any> = [
+      console.log("节点选择", node);
+    };
+    // 查询是否是内部节点
+    let contextMenus = [
       {
-        label: '新增节点',
-        icon: 'el-icon-plus',
+        label: "迁移节点",
+        icon: "el-icon-minus",
         onClick() {
-          currentHoverItem.leaf = false
-          if (!currentHoverItem.children) {
-            let data = {
-              disable: currentHoverItem.disable,
-              nodeName: currentHoverItem.nodeName,
-              leaf: currentHoverItem.leaf,
-              nodeCode: currentHoverItem.nodeCode,
-              parentCode: currentHoverItem.nodeCode,
-              root: currentHoverItem.root
-            }
-            currentHoverItem.children = []
-            currentHoverItem.children.push(data)
-          }
-        }
+          // let nodeIndex = parentNode.childNodes.findIndex(
+          //   (node) => node.label == currentHoverItem.nodeName
+          // )
+          // parentNode.childNodes.splice(nodeIndex, 1)
+          console.log("迁移");
+          store.commit("SET_FRAMEWORK_NODE", tree_data.value);
+        },
       },
-      {
-        label: '删除节点',
-        icon: 'el-icon-minus',
-        onClick() {
-          let nodeIndex = parentNode.childNodes.findIndex(
-            (node) => node.label == currentHoverItem.nodeName
-          )
-          parentNode.childNodes.splice(nodeIndex, 1)
-        }
-      }
-    ]
+    ];
+    // 点解右键获取实例
+    let contextMenuIns = ref<any>({});
     const nodeContext = (e, data) => {
-      console.log(e, data)
-    }
+      contextMenuIns.value = data;
+    };
+
     return {
       tabs,
       activeName,
@@ -285,6 +291,7 @@ export default defineComponent({
       status,
       tableData_,
       loading,
+      treeLoad,
       isExternal,
       tableCol_,
       dialogTitle,
@@ -293,6 +300,7 @@ export default defineComponent({
       importShow,
       uploadUrl,
       contextMenus,
+      tree_data,
       tabChange,
       downloadTemp,
       importTemp,
@@ -300,16 +308,16 @@ export default defineComponent({
       deleteExteranlPerson,
       selectChange,
       selectAll,
-      nodeContext
-    }
+      nodeContext,
+    };
   },
   methods: {
     nodeClick(data) {
-      this.form.node = data.label
-      console.log(this.form)
-    }
-  }
-})
+      this.form.node = data.label;
+      console.log(this.form);
+    },
+  },
+});
 </script>
 
 <style scoped lang="scss">
