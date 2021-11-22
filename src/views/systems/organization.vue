@@ -74,7 +74,7 @@
       @closed="clearform1"
       :rules="rules"
     >
-      <el-form-item label="节点名称" prop="nodeName">
+      <el-form-item label="节点名称" prop="NodeName">
         <el-input v-model="form_.nodeName"></el-input>
       </el-form-item>
       <el-form-item label="业务类型" prop="bsCode">
@@ -360,7 +360,7 @@ export default defineComponent({
 
     //修改节点
     const editnode = () => {
-      formRules1.value.validate(async (valid: any) => {
+      formRules.value.validate(async (valid: any) => {
         if (valid) {
           const params = {
             id: form_.id,
