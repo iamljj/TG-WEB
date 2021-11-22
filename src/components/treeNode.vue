@@ -67,7 +67,7 @@ export default defineComponent({
   methods: {
     filterNode(value, data) {
       if (!value) return true;
-      return data.nodeName.indexOf(value) !== -1;
+      return data.label.indexOf(value) !== -1;
     },
     nodeClick(node) {
       this.$emit("nodeClick", node);
