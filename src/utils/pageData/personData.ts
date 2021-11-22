@@ -81,7 +81,6 @@ export const get_tree_data = async (deep: number, params?: any) => {
   let { data } = await getOAframework(params)
   if (data.code == 200) {
     res = res.concat(data.data)
-    console.log(data.data.length)
     for (let i = 0; i < data.data.length; i++) {
       let { nodeCode, leaf, root } = data.data[i]
       if (deep == time) {

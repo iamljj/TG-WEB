@@ -1,17 +1,13 @@
 <template>
   <div class="flex">
-    <el-card class="flex-left">
-      <div class="search">
-        <TreeNode
-          :treeData="tree_Data"
-          :isContextMenu="true"
-          :contextMenus="contextMenus"
-          @node-context="nodeContext"
-          @nodeClick="nodeClick"
-          class="person-left"
-        />
-      </div>
-    </el-card>
+    <TreeNode
+      :treeData="tree_Data"
+      :isContextMenu="true"
+      :contextMenus="contextMenus"
+      @node-context="nodeContext"
+      @nodeClick="nodeClick"
+      class="flex-left"
+    />
     <el-card class="flex-right">
       <div class="top">
         <div class="top-name">经销商管理</div>
@@ -482,22 +478,18 @@ export default defineComponent({
 <style scoped lang="scss">
 .flex {
   display: flex;
+  justify-content: flex-start;
+  align-items: center;
   &-left {
-    width: 25%;
-    margin-right: 50px;
-    height: 85vh;
-    border-radius: 10px;
-    overflow: auto;
+    width: 210px;
+    min-width: 210px;
+    height: calc(100vh - 140px);
+    padding: 20px;
   }
   &-right {
-    height: 79vh;
-    position: relative;
-    margin-top: 6vh;
     width: 100%;
-  }
-  .search {
-    height: 20px;
-    border-radius: 10px;
+    margin-left: 10px;
+    height: calc(100vh - 110px);
   }
   .top {
     display: flex;
@@ -545,10 +537,7 @@ export default defineComponent({
     }
   }
   .pageSelect {
-    position: absolute;
-    bottom: 20px;
-    transform: translateX(-50%);
-    left: 50%;
+    text-align: center;
   }
   .custom-tree-node {
     flex: 1;

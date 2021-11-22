@@ -1,14 +1,19 @@
 <template>
   <div class="person">
     <TreeNode
-      :treeData="tree_Data"
+      :treeData="tree_data"
       :isContextMenu="true"
       :contextMenus="contextMenus"
       @node-context="nodeContext"
       v-loading="treeLoad"
       class="person-left"
     />
-    <Tabs class="person-right" :activeName="activeName" @handleClick="tabChange">
+    <Tabs
+      class="person-right"
+      :tabs="tabs"
+      :activeName="activeName"
+      @handleClick="tabChange"
+    >
       <template v-slot:[activeName]>
         <el-card>
           <div class="tableBar">
@@ -112,7 +117,7 @@
         <el-form-item label="架构节点" prop="node">
           <el-input v-model="form.node" placeholder="请输入架构节点" />
           <TreeNode
-            :treeData="tree_Data"
+            :treeData="tree_data"
             :isExpand="false"
             :isSearch="false"
             @nodeClick="nodeClick"
@@ -197,7 +202,7 @@ export default defineComponent({
     let tableCol_ = reactive(columns);
 
     const selectChange = (row) => {
-      console.log(row);
+      console.log("row", row);
     };
     const selectAll = (selection) => {};
     // 下载
@@ -217,7 +222,6 @@ export default defineComponent({
         confirmButtonText: "确定",
         showClose: false,
         callback(actions, instace) {
-          console.log(actions);
           if (actions == "cancel") {
             console.log("取消");
           } else {
@@ -236,7 +240,7 @@ export default defineComponent({
 
     // 选择节点
     const tree_data = ref([]);
-    let treeLoad = ref(false);
+    let treeLoad = ref(true);
     if (store.state.Node.frameworkNode.length == 0) {
       get_tree_data(20).then((res) => {
         tree_data.value = arrayToTree(res, "parentCode");
@@ -249,9 +253,6 @@ export default defineComponent({
     }
     let currentHoverItem = reactive<any>({});
     let parentNode = reactive<any>({});
-    const nodeSelect = (node) => {
-      console.log(node);
-    };
     const contextMenus: Array<any> = [
       {
         label: "新增节点",
@@ -296,6 +297,8 @@ export default defineComponent({
       status,
       tableData_,
       loading,
+      tree_data,
+      treeLoad,
       isExternal,
       tableCol_,
       dialogTitle,
