@@ -110,7 +110,7 @@ import {
   delet_framework_node,
   get_framework_node_business,
 } from "@/utils/pageData/organization";
-import { title, treeData } from "@/utils/pageData/personData";
+import { title, get_tree_data } from "@/utils/pageData/personData";
 import { storage } from "@/utils/storage";
 import { ElMessage, ElMessageBox } from "element-plus";
 import Table from "@/components/table/primeryTable.vue";
@@ -162,7 +162,7 @@ export default defineComponent({
     let tree_Data = ref([]);
     let treeLoad = ref(true);
     if (store.state.Node.frameworkNode.length == 0) {
-      treeData(20).then((res) => {
+      get_tree_data(20).then((res) => {
         tree_Data.value = arrayToTree(res, "parentCode");
         store.commit("SET_FRAMEWORK_NODE", tree_Data.value);
         treeLoad.value = false;

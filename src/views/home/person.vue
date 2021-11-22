@@ -149,7 +149,7 @@ import {
 } from "vue";
 import {
   tabs,
-  treeData,
+  get_tree_data,
   jobs,
   status,
   columns,
@@ -246,13 +246,13 @@ export default defineComponent({
     let treeLoad = ref(true);
 
     if (store.state.Node.frameworkNode.length == 0) {
-      treeData(20).then((res) => {
+      get_tree_data(20).then((res) => {
         tree_data.value = arrayToTree(res, "parentCode");
         treeLoad.value = false;
         store.commit("SET_FRAMEWORK_NODE", tree_data.value);
       });
     } else {
-      tree_data.value = ref(store.state.Node.frameworkNode);
+      tree_data.value = store.state.Node.frameworkNode;
       treeLoad.value = false;
     }
     let currentHoverItem = reactive<any>({});
@@ -276,9 +276,8 @@ export default defineComponent({
       },
     ];
     // 点解右键获取实例
-    let contextMenuIns = ref<any>({});
     const nodeContext = (e, data) => {
-      contextMenuIns.value = data;
+      console.log("右键", data);
     };
 
     return {
@@ -314,7 +313,7 @@ export default defineComponent({
   methods: {
     nodeClick(data) {
       this.form.node = data.label;
-      console.log(this.form);
+      console.log("data", data);
     },
   },
 });
