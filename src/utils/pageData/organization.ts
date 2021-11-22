@@ -1,7 +1,6 @@
 import { reactive, ref } from 'vue'
 import { BusinessAll, NodeBusiness, getNodeBusiness } from '@/service/business'
 import { putFrameworkNode, delFrameworkNode } from '@/service/frameworkNode'
-import { bindedAgency } from '@/service/dealer'
 //表格
 // 表格
 export const columns: Array<any> = [
@@ -75,16 +74,6 @@ export const delet_framework_node = async (params) => {
 //查询节点已绑定的业务
 export const get_framework_node_business = async (params) => {
   let { data } = await getNodeBusiness(params)
-  if (data.code == 200) {
-    return data
-  } else {
-    return data
-  }
-}
-
-//查询节点已绑定的经销商
-export const bindedagency = async (params) => {
-  let { data } = await bindedAgency(params)
   if (data.code == 200) {
     return data
   } else {
