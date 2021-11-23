@@ -9,15 +9,19 @@
       :default-expand-all="isExpand"
       :filter-node-method="filterNode"
       @node-click="nodeClick"
+      @node-contextmenu="contextmenu"
     />
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent, onMounted, reactive, ref, PropType, onBeforeMount } from "vue";
 import { treeDataType } from "@/utils/pageData/personData";
+
 export default defineComponent({
   props: {
-    treeData: Array,
+    treeData: {
+      type: Array,
+    },
     isSearch: {
       type: Boolean,
       default() {
@@ -27,14 +31,27 @@ export default defineComponent({
     isExpand: {
       type: Boolean,
       default() {
-        return true;
+        return false;
+      },
+    },
+    isContextMenu: {
+      type: Boolean,
+      default() {
+        return false;
+      },
+    },
+    contextMenus: {
+      type: Array,
+      default() {
+        return [];
       },
     },
   },
   setup() {
     const defaultProps = {
       children: "children",
-      label: "label",
+      label: "nodeName",
+      isLeaf: "leaf",
     };
     let filterText = ref("");
     return {
@@ -50,10 +67,23 @@ export default defineComponent({
   methods: {
     filterNode(value, data) {
       if (!value) return true;
-      return data.label.indexOf(value) !== -1;
+      return data.nodeName.indexOf(value) !== -1;
     },
-    nodeClick(node, data) {
-      this.$emit("nodeClick", data);
+    nodeClick(node) {
+      this.$emit("nodeClick", node);
+    },
+    contextmenu(e, data, node) {
+      this.$emit("node-context", e, data, node);
+      if (this.isContextMenu) {
+        let options: any = {
+          x: e.x,
+          y: e.y,
+          items: [],
+        };
+        e.preventDefault();
+        options.items = this.contextMenus;
+        (this as any).$contextmenu(options);
+      }
     },
   },
 });

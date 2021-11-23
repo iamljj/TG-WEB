@@ -43,121 +43,86 @@
             </div>
           </div>
         </el-form>
-        <el-button type="primary" class="loginButton" @click="submitForm">登 录</el-button>
+        <el-button type="primary" class="loginButton" @click="submitForm"
+          >登 录</el-button
+        >
       </el-card>
     </el-col>
   </el-row>
 </template>
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent } from "vue";
 // data
 import {
   loginUser,
   rules,
   formRules,
+  countDown,
   isVercode,
   time,
-  vercodeText
-} from '@/utils/pageData/loginData'
-import { ElMessage } from 'element-plus'
-import router from '@/router/index'
-import axios from 'axios'
-import { GlobalDataProps } from '@/store/types'
-import { buildRoute } from '@/utils/premission'
-import { useStore } from 'vuex'
-import { storage } from '@/utils/storage'
+  vercodeText,
+  get_ver_code,
+  log_in,
+} from "@/utils/pageData/loginData";
+import { ElMessage } from "element-plus";
+import router from "@/router/index";
+import axios from "axios";
+import { GlobalDataProps } from "@/store/types";
+import { useStore } from "vuex";
+import { storage } from "@/utils/storage";
 
 export default defineComponent({
-  name: 'login',
+  name: "login",
   setup() {
-    const store = useStore<GlobalDataProps>()
-    // 倒计时方法
-    const countDown = () => {
-      if (time.value == 0) {
-        vercodeText.value = '重新获取验证码'
-        isVercode.value = true
-        time.value = 60
-      } else {
-        time.value--
-        setTimeout(() => {
-          countDown()
-        }, 1000)
-      }
-    }
-    const getVercode = () => {
-      if (loginUser.value.phone && loginUser.value.phone.toString().length == 11) {
-        axios
-          .get(`/service/sms/LoginCode/${loginUser.value.phone}`)
-          .then((res) => {
-            isVercode.value = false
-            countDown()
-          })
-          .catch(() => {
-            ElMessage({
-              type: 'error',
-              iconClass: 'el-icon-circle-close',
-              message: '请输入正确的手机号'
-            })
-          })
-      } else {
-        ElMessage({
-          type: 'error',
-          iconClass: 'el-icon-circle-close',
-          message: '请输入正确的手机号'
-        })
-      }
-    }
-    const submitForm = () => {
-      formRules.value.validate((valid) => {
-        if (valid) {
-          axios
-            .post(`/service/auth/login`, loginUser.value)
-            .then((res) => {
-              store.commit('user', res.data.data.userInfo)
-              store.commit('login', res.data.data.token)
-              const { asyncRoutes } = buildRoute(res.data.data.role)
-              const getMeta = router.options.routes[3].children.filter(
-                (item) => item.meta.path !== undefined
-              )
-              store.commit('pathRouter', getMeta)
-              router.addRoute(asyncRoutes as any)
-              router.push('/home/person')
-            })
-            .catch((err) => {
-              console.log(err);
+    const store = useStore<GlobalDataProps>();
 
-              ElMessage({
-                type: 'error',
-                iconClass: 'el-icon-circle-close',
-                message: '请输入正确的手机号或验证码'
-              })
-            })
-          // 获取token并传入vuex中 通过vuex中方法存储在localstorage
-        } else {
-          ElMessage({
-            type: 'error',
-            iconClass: 'el-icon-circle-close',
-            message: '请输入正确的手机号或验证码'
-          })
+    const getVercode = async () => {
+      isVercode.value = false;
+      countDown();
+      let res = await get_ver_code({
+        phone: loginUser.value.phone,
+      });
+      if (typeof res == "string") {
+        ElMessage({
+          type: "error",
+          iconClass: "el-icon-circle-close",
+          message: res,
+        });
+      }
+    };
+    const submitForm = () => {
+      formRules.value.validate(async (valid) => {
+        if (valid) {
+          let res = await log_in(loginUser.value);
+          if (typeof res == "string") {
+            return ElMessage({
+              type: "error",
+              iconClass: "el-icon-circle-close",
+              message: res,
+            });
+          }
+          store.commit("user", res.data.userInfo);
+          store.commit("login", res.data.token);
+          router.push("/home/person");
         }
-      })
-    }
+      });
+    };
     return {
       loginUser,
       rules,
       getVercode,
       submitForm,
-      time,
       formRules,
+      time,
+      vercodeText,
       isVercode,
-      vercodeText
-    }
-  }
-})
+    };
+  },
+});
 </script>
 <style lang="scss" scoped>
 .all {
-  background-image: url('~@/assets/bgImg.png');
+  background-image: url("~@/assets/bgImg.png");
   background-size: 100% 100%;
   background-repeat: no-repeat;
   height: 100vh;
@@ -187,7 +152,7 @@ export default defineComponent({
       }
     }
   }
-  .icon{
+  .icon {
     text-align: right;
   }
   .userNameDiv {

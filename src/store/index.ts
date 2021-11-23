@@ -1,15 +1,15 @@
 import { createStore } from 'vuex'
-import { GlobalDataProps } from './types'
 import { storage } from '@/utils/storage'
+import {Node} from "./modules/index"
 
-export default createStore({
+const store = createStore({
   state: {
     token: storage.get('token') || '',
     header: '@/assets/header.png',
     nickName: '',
     dialogFormVisible: false,
-    meta: [],
-    scopedId: ''
+    scopedId: '',
+    keepAliveRouter: []
   },
   mutations: {
     login(state, rawData) {
@@ -29,15 +29,25 @@ export default createStore({
     changeStorage(state, rawData) {
       state.dialogFormVisible = rawData
     },
-    pathRouter(state, meta) {
-      state.meta = meta.map((item) => {
-        return item.meta
-      })
-    },
+
     changeScopedId(state, scopedId) {
       state.scopedId = scopedId
+    },
+    SET_KEEP_ALIVE_ROUTER(state, payload = []) {
+      state.keepAliveRouter = payload
     }
   },
   actions: {},
-  modules: {}
+  modules: {
+    Node: {
+      ...Node.default
+    }
+  }
 })
+
+// store.registerModule('Node', Node.default)
+
+
+
+export default store
+

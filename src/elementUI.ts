@@ -1,13 +1,14 @@
-import locale from 'element-plus/lib/locale/lang/zh-cn'
+import zhCn from 'element-plus/lib/locale/lang/zh-cn'
 import {
   ElButton,
   ElCard,
   ElCol,
+  ElCheckbox,
+  ElCheckboxGroup,
   ElForm,
   ElFormItem,
   ElInput,
   ElLoading,
-  ElMessage,
   ElRow,
   ElContainer,
   ElAside,
@@ -31,13 +32,19 @@ import {
   ElUpload,
   ElOption,
   ElTree,
-  ElIcon
+  ElIcon,
+  ElRadio,
+  ElRadioGroup,
+  ElConfigProvider
 } from 'element-plus'
 export const components: any[] = [
+  ElConfigProvider,
   ElTree,
   ElButton,
   ElRow,
   ElCol,
+  ElCheckbox,
+  ElCheckboxGroup,
   ElTabPane,
   ElTabs,
   ElCard,
@@ -51,19 +58,23 @@ export const components: any[] = [
   ElDatePicker,
   ElUpload,
   ElPagination,
-  ElLoading,
   ElDropdownMenu,
   ElMenuItem,
   ElDialog,
   ElTable,
   ElOption,
-  ElFormItem,
   ElTableColumn,
   ElMenuItemGroup,
   ElContainer,
   ElAside,
   ElMain,
   ElHeader,
-  ElIcon
+  ElIcon,
+  ElFormItem,
+  ElRadio,
+  ElRadioGroup
 ]
-export const plugins: any[] = [ElLoading, ElMessage]
+
+// 插件和指令
+import ContextMenu from '@imengyu/vue3-context-menu'
+export const plugins: any[] = [ElLoading, ContextMenu]

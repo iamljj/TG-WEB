@@ -1,329 +1,152 @@
 <template>
-  <div>
-    <el-card style="height: 87vh; position: relative">
-      <div class="top">
-        <div class="top-name">岗位管理</div>
-        <Search @search="search" searchtext="角色名字 " name="新增"></Search>
-      </div>
-      <el-tabs type="border-card">
-        <el-tab-pane label="内部"
-          ><Table
-            :isshow="true"
-            :table="table"
-            :tableData="tableData"
-            id="displayId"
-            :form="form"
-            :buttonShow="true"
-            @delete:gitlist="handleCurrentChange"
-            :page="page"
-            url="/proxy/7003/service/admin/deleteRole/"
-            url1="/proxy/7003/service/admin/updateStatus/"
-          ></Table
-        ></el-tab-pane>
-        <el-tab-pane label="外部"
-          ><Table
-            :isshow="true"
-            :table="table"
-            :tableData="tableData"
-            id="displayId"
-            :form="form"
-            :buttonShow="true"
-            @delete:gitlist="handleCurrentChange"
-            :page="page"
-            url="/proxy/7003/service/admin/deleteRole/"
-            url1="/proxy/7003/service/admin/updateStatus/"
-          ></Table
-        ></el-tab-pane>
-      </el-tabs>
-      <!-- <Table
-        :isshow="true"
-        :table="table"
-        :tableData="tableData"
-        id="displayId"
-        :form="form"
-        :buttonShow="true"
-        @delete:gitlist="handleCurrentChange"
-        :page="page"
-        url="/proxy/7003/service/admin/deleteRole/"
-        url1="/proxy/7003/service/admin/updateStatus/"
-      ></Table> -->
-      <el-pagination
-        layout="prev, pager, next"
-        :total="totol"
-        :page-size="pagesize"
-        @current-change="handleCurrentChange"
-        class="pageSelect"
-      >
-      </el-pagination>
-    </el-card>
-    <!-- 修改弹出框 -->
-    <el-dialog
-      :title="title"
-      width="25%"
-      :before-close="handleClose"
-      destroy-on-close
-      v-model="dialogFormVisible"
+  <div class="Role-Mcontainer">
+    <Tabs
+      class="person-right"
+      :tabs="tabs"
+      :activeName="activeName"
+      @handleClick="tabChange"
     >
-      <el-form
-        :model="form"
-        :rules="rules"
-        ref="formRules"
-        style="display: flex; justify-between: center"
-      >
-        <div style="width: 80%; height: 100%">
-          <el-form-item label="岗位名字" :label-width="formLabelWidth" prop="roleName">
-            <el-input v-model="form.roleDesc" autocomplete="off"></el-input>
-          </el-form-item>
-        </div>
-      </el-form>
-      <h1>权限</h1>
-      <el-select v-model="form.structure" placeholder="Select">
-        <el-option
-          v-for="item in category"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
-        >
-        </el-option>
-      </el-select>
-      <el-tree
-        :data="data"
-        ref="tree"
-        show-checkbox
-        node-key="id"
-        :default-expanded-keys="[2, 7]"
-        :default-checked-keys="rolelist"
-        :props="defaultProps"
-      >
-      </el-tree>
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button type="primary" @click="submitForm">确 定</el-button>
-        </span>
+      <template v-slot:[activeName]>
+        <el-card>
+          <div class="tableBar">
+            <p class="p">{{ activeName }}列表</p>
+            <el-input class="input"></el-input>
+            <el-button type="primary">搜索</el-button>
+            <el-button type="primary" @click="addrole">新增</el-button>
+          </div>
+          <Table :columns="columns" :data="tableData">
+            <el-table-column label="操作">
+              <template #default="scope">
+                <el-button size="medium" type="text">编辑</el-button>
+                <el-button size="medium" type="text">删除</el-button>
+              </template>
+            </el-table-column>
+          </Table>
+        </el-card>
       </template>
-    </el-dialog>
+    </Tabs>
   </div>
+  <el-dialog :title="title" v-model="editadd" width="30%">
+    <el-form :model="form_">
+      <el-form-item label="角色名称">
+        <el-input v-model="form_.bsrName" placeholder="请输入角色名称"></el-input>
+      </el-form-item>
+      <el-form-item label="业务类型">
+        <el-select v-model="form_.bsCode" placeholder="请选择业务类型" clearable multiple>
+          <el-option
+            v-for="(item, i) in business"
+            :label="item.bsName"
+            :value="item.bsCode"
+            :key="i"
+          ></el-option>
+        </el-select>
+      </el-form-item>
+    </el-form>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="editadd = false">取消</el-button>
+        <el-button type="primary" @click="sendNode">确认</el-button>
+      </span>
+    </template>
+  </el-dialog>
 </template>
-
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
-import { displayall } from '@/utils/request'
+import { tabs, columns, form, list } from "@/utils/pageData/role";
+import { defineComponent, ref } from "vue";
+import Table from "@/components/table/primeryTable.vue";
+import Tabs from "@/components/tabsButton.vue";
 import {
-  table,
-  tableData,
-  formLabelWidth,
-  formId,
-  form,
-  handleClose,
-  rules,
-  formRules,
-  totol,
-  pagesize,
-  page,
-  data,
-  defaultProps,
-  tree,
-  category,
-  rolelist
-} from '@/utils/pageData/role'
-import { title } from '@/utils/pageData/personData'
-import { dialogFormVisible } from '@/utils/pageData/publicData'
-import { tableChange, searchAxios, tablePost, role } from '@/utils/request'
-import { ElMessage } from 'element-plus'
-import Table from '@/components/table/table.vue'
-import Search from '@/components/search.vue'
+  get_role,
+  put_update_role,
+  delete_role,
+  get_all_business,
+} from "@/utils/pageData/role";
+import { ElMessage } from "element-plus";
 export default defineComponent({
-  name: 'ShopName',
+  name: "Role",
   components: {
     Table,
-    Search
+    Tabs,
   },
-  setup() {
-    const url = '/proxy/7003/service/admin/addRole'
-    const url1 = '/proxy/7003/service/admin/updataRole'
-    var searchtext = ''
+  setup(props, context) {
+    //切换框架
+    let activeName = ref("酒业");
+    const tabChange = (tab) => {
+      activeName.value = tab.props.name;
+    };
 
-    const change = (val, label) => {
-      console.log(val, label)
-    }
-    //首次进页面刷新数据
-    const getlist = () => {
-      console.log([1, 2, 3])
+    //表格
+    let editadd = ref(false);
+    let form_ = ref(form);
+    let tableData = ref([]);
+    //打开弹窗
+    let title = ref("");
+    const addrole = () => {
+      title.value = "新增";
+      editadd.value = true;
+    };
+    // 业务类型
+    const getBusiness = async () => {
+      let params = {
+        pageNum: "1",
+        pageSize: "100",
+      };
+      let res = await get_all_business(params);
+      return res;
+    };
+    const business = ref(getBusiness());
+    // 新增、修改角色
+    const sendNode = async () => {
+      // bsrCode: "",
+      let res = await put_update_role({
+        bsrName: form.bsrName,
+        belong: activeName.value,
+        nameCode: {
+          bsCode: "",
+          bsName: "",
+        },
+      });
+      if (res == false) {
+        return ElMessage({
+          message: title.value + "错误",
+          type: "warning",
+        });
+      }
+      console.log(res);
+    };
 
-      const params = {
-        roleDesc: '',
-        page: '1',
-        pagesize: pagesize.value
-      }
-      role(params).then((res) => {
-        tableData.value = res.data.data.records
-        tableData.value.forEach((item) => {
-          if (item.status == 1) {
-            item.status = '启用'
-          } else {
-            item.status = '停用'
-          }
-        })
-        totol.value = res.data.data.total
-      })
-    }
-    getlist()
-    // 搜索
-    const search = (searchText: string) => {
-      searchtext = searchText
-      const params = {
-        page: 1,
-        pageSize: pagesize.value,
-        roleDesc: searchText
-      }
-      role(params).then((res) => {
-        tableData.value = res.data.data.records
-        tableData.value.forEach((item) => {
-          if (item.status == 1) {
-            item.status = '启用'
-          } else {
-            item.status = '停用'
-          }
-        })
-        totol.value = res.data.data.total
-      })
-    }
-    // 翻页
-    const handleCurrentChange = (val: number) => {
-      page.value = val
-      const params = {
-        page: val,
-        pageSize: pagesize.value,
-        roleDesc: searchtext
-      }
-      role(params).then((res) => {
-        tableData.value = res.data.data.records
-        tableData.value.forEach((item) => {
-          if (item.status == 1) {
-            item.status = '启用'
-          } else {
-            item.status = '停用'
-          }
-        })
-        console.log(tableData.value)
-
-        totol.value = res.data.data.total
-      })
-    }
-    // 修改页面点击确认
-    const submitForm = () => {
-      formRules.value.validate((valid: any) => {
-        if (valid) {
-          const son = tree.value.getCheckedKeys()
-          const father = tree.value.getHalfCheckedKeys()
-          if (form.id != '') {
-            const params = {
-              id: form.id,
-              jurisdiction: son,
-              fatherJurisdiction: father,
-              structure: form.structure,
-              roleDesc: form.roleDesc
-            }
-            tableChange(url1, params).then(() => {
-              handleCurrentChange(page.value)
-            })
-          } else {
-            delete form.id
-            const params = {
-              jurisdiction: son,
-              fatherJurisdiction: father,
-              structure: form.structure,
-              roleDesc: form.roleDesc
-            }
-            tablePost(url, params).then(() => {
-              handleCurrentChange(page.value)
-            })
-          }
-          for (const key in form) {
-            form[key] = ''
-          }
-          dialogFormVisible.value = false
-        } else {
-          ElMessage({
-            type: 'error',
-            iconClass: 'el-icon-circle-close',
-            message: '请检查输入的是否正确'
-          })
-        }
-      })
-    }
     return {
+      tabs,
       tableData,
-      table,
-      handleCurrentChange,
-      form,
-      formId,
-      dialogFormVisible,
-      search,
-      formLabelWidth,
-      rules,
-      change,
-      formRules,
-      submitForm,
-      handleClose,
-      totol,
-      pagesize,
-      page,
+      tabChange,
+      activeName,
+      columns,
+      form_,
+      business,
+      editadd,
+      addrole,
       title,
-      data,
-      defaultProps,
-      tree,
-      category,
-      rolelist
+      sendNode,
+    };
+  },
+});
+</script>
+<style lang="scss">
+.Role-Mcontainer {
+  .tableBar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .p {
+      width: 30%;
+      flex: 1;
+      font-size: 1.6rem;
+      font-family: PingFangSC, PingFangSC-Medium;
+      color: #333333;
+    }
+    .input {
+      width: 200px;
     }
   }
-})
-</script>
-
-<style scoped lang="scss">
-.top {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  &-name {
-    min-width: 7%;
-    height: 5vh;
-    line-height: 5vh;
-    color: #333333;
-    font-size: 20px;
-    font-family: PingFangSC, PingFangSC-Medium;
-    font-weight: 700;
-  }
-}
-.pageSelect {
-  position: absolute;
-  bottom: 20px;
-  transform: translateX(-50%);
-  left: 50%;
-}
-.avatar-uploader {
-  border: 1px dashed #d9d9d9;
-  border-radius: 6px;
-  width: 178px;
-  height: 178px;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-}
-.avatar-uploader:hover {
-  border-color: #409eff;
-}
-.avatar-uploader-icon {
-  font-size: 28px;
-  color: #8c939d;
-  width: 178px;
-  height: 178px;
-  line-height: 178px;
-  text-align: center;
-}
-.avatar {
-  width: 178px;
-  height: 178px;
-  display: block;
 }
 </style>

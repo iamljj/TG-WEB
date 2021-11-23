@@ -1,165 +1,76 @@
-import { reactive, ref } from 'vue'
-import { options } from './activityData'
-import { tableType, tableDataType, rulesChange, formType, optionData } from './pageType'
-
-export const table: tableType[] = [
+import { queryRole, putRole, deleteRole } from '@/service/role'
+import { getBusinessAll } from '@/service/business'
+export const tabs: Array<labelValueType> = [
   {
-    name: '岗位名称',
-    prop: 'roleDesc',
-    width: 400
+    label: '酒业',
+    value: '酒业'
   },
   {
-    name: '关联人数',
-    prop: 'status',
-    width: 400
+    label: '经销商',
+    value: '经销商'
   }
 ]
-export const tableData = ref()
-export const rules = { roleDesc: [{ required: true, message: '请填角色名称', trigger: 'blur' }] }
+interface labelValueType {
+  label: string
+  value: string
+}
+export const columns: Array<any> = [
+  { type: 'index', label: '序号' },
+  { label: '角色名称', prop: 'bsrName' },
+  { label: '业务类型', prop: 'businessList' }
+]
 
-export const formRules: any = ref(null)
-// 选中的id
-export const formId = ref(null)
+export let list = []
+interface getRoleType {
+  bsrName?: string
+  bsCode?: string
+  belong: string
+}
+export const get_role = async (params: getRoleType) => {
+  let { data } = await queryRole(params)
+  if (data.code == 200) {
+    return data
+  } else {
+    return false
+  }
+}
+export let form = {
+  bsrName: '',
+  bsCode: ''
+}
 
-export const form = reactive({
-  roleDesc: '',
-  state: '',
-  id: '',
-  structure: '',
-  jurisdiction: []
-})
-export const data = ref([
-  {
-    id: 1,
-    label: '小程序',
-    children: [
-      {
-        id: 3,
-        label: '首页',
-        children: [
-          {
-            id: 7,
-            label: '客户管理',
-            children: [
-              {
-                id: 8,
-                label: '终端客户',
-                children: [
-                  {
-                    id: 20,
-                    label: '查看'
-                  },
-                  {
-                    id: 21,
-                    label: '操作'
-                  }
-                ]
-              },
-              {
-                id: 9,
-                label: '合伙人'
-              },
-              {
-                id: 10,
-                label: '关怀'
-              },
-              {
-                id: 11,
-                label: '影响人'
-              },
-              {
-                id: 12,
-                label: '客户检核'
-              }
-            ]
-          }
-        ]
-      },
-      {
-        id: 4,
-        label: '待办'
-      },
-      {
-        id: 5,
-        label: '通讯录'
-      },
-      {
-        id: 6,
-        label: '我的'
-      }
-    ]
-  },
-  {
-    id: 2,
-    label: '后台',
-    children: [
-      {
-        id: 13,
-        label: '人员管理',
-        children: [
-          {
-            id: 22,
-            label: '查看架构图'
-          },
-          {
-            id: 23,
-            label: '查看人员'
-          }
-        ]
-      },
-      {
-        id: 14,
-        label: '系统设置',
-        children: [
-          { id: 15, label: '角色管理' },
-          {
-            id: 16,
-            label: '组织框架'
-          }
-        ]
-      },
-      {
-        id: 17,
-        label: '陈列项管理',
-        children: [
-          {
-            id: 18,
-            label: '查看列表'
-          },
-          {
-            id: 19,
-            label: '操作列表'
-          }
-        ]
-      }
-    ]
-  }
-])
-export const defaultProps = ref({
-  children: 'children',
-  label: 'label'
-})
-export const category = ref([
-  {
-    value: '内部框架',
-    label: '内部框架'
-  },
-  {
-    value: '外部框架',
-    label: '外部框架'
-  }
-])
-export const totol = ref(1)
-export const tree = ref()
-export const page = ref(1)
-export const pagesize = ref(8)
-export const rolelist = ref([])
-export const formLabelWidth = ref<string>('100px;')
+export let business = []
 
-// 关闭dio时
-export const handleClose = (done: any) => {
-  for (const key in form) {
-    form[key] = ''
+//全部业务类型列表
+interface getAllBusinessType {
+  pageNum: string
+  pageSize: string
+}
+export const get_all_business = async (params: getAllBusinessType) => {
+  let { data } = await getBusinessAll(params)
+  if (data.code == 200) {
+    return data.data
+  } else {
+    return []
   }
-  done()
+}
+
+// 新增，修改角色
+export const put_update_role = async (params) => {
+  let { data } = await putRole(params)
+  if (data.code == 200) {
+    return data
+  } else {
+    return false
+  }
+}
+
+// 删除角色
+export const delete_role = async (params) => {
+  let { data } = await deleteRole(params)
+  if (data.code == 200) {
+    return data
+  } else {
+    return false
+  }
 }

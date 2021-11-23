@@ -1,18 +1,15 @@
 import { reactive, ref } from 'vue'
 import { tableType, tableDataType, rulesChange, formType, optionData } from './pageType'
 
-export const table: tableType[] = [
-  {
-    name: '费用项编码',
-    prop: 'dispalyNumber',
-    width: 620
-  },
-  {
-    name: '费用项名称',
-    prop: 'displayName',
-    width: 620
-  }
+export const columns: Array<any> = [
+  { type: 'index', label: '序号' },
+  { label: '陈列项编码', porp: '' },
+  { label: '陈列项名称', porp: '' }
 ]
+interface tablevalue {
+  displayName: string
+  displayNumber: string
+}
 export const tableData = ref()
 export const rules = {
   dispalyNumber: [{ required: true, message: '请填写费用项编码', trigger: 'blur' }],

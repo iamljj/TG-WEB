@@ -1,12 +1,15 @@
 <template>
   <el-table
+    ref="tableRef"
     :data="tableData"
     stripe
     :height="height"
+    :row-key="(row) => row.id"
     style="width: 100%"
     empty-text="暂无数据"
     @select-all="selectAll"
     @select="select"
+    @selection-change="selectChange"
   >
     <el-table-column
       v-for="(col, i) in columns"
@@ -14,6 +17,9 @@
       :prop="col.prop"
       :label="col.label"
       :width="col.width"
+      :key="i"
+      show-overflow-tooltip
+      :reserve-selection="true"
     >
     </el-table-column>
     <slot />
@@ -21,27 +27,37 @@
 </template>
 <script lang="ts">
 import { defineComponent } from "vue";
-
 export default defineComponent({
   props: {
     columns: {
       type: Array,
-      required: true,
+      required: true
     },
     tableData: {
       type: Array,
-      required: true,
+      required: true
     },
-    height: [Number, String],
+    height: [Number, String]
   },
   setup() {},
+  data() {
+    return {
+      currentRow: null,
+    };
+  },
   methods: {
     selectAll(selection) {
-      console.log(selection);
+      this.$emit('selectAll', selection)
     },
     select(selection, row) {
-      console.log(selection, row);
+      this.currentRow = row;
     },
+    selectChange(selection) {
+      this.$emit("selectChange", this.currentRow, selection);
+    },
+  },
+  beforeDestroy() {
+    this.currentRow = null;
   },
 });
 </script>

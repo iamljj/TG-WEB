@@ -1,5 +1,6 @@
 import { ref, reactive } from 'vue'
-import { storage } from '../storage'
+import { getOAframework } from '@/service/frameworkNode'
+
 export const dioJobData = []
 export const selectSuperiorData = []
 export const selectSexData = [
@@ -67,26 +68,33 @@ export const tabs: Array<labelValueType> = [
 // 组织架构
 export interface treeDataType {
   label: string
+  id: number
   children?: Array<treeDataType>
 }
-export const treeData: Array<treeDataType> = [
-  {
-    label: '营销总公司',
-    children: [
-      {
-        label: '安徽销售片区',
-        children: [
-          {
-            label: '淮北办事处'
-          },
-          {
-            label: '阜阳办事处'
-          }
-        ]
+
+// 查询次数
+let time = 0
+let res: any = []
+// 通过deep控制嵌套层级
+export const get_tree_data = async (deep: number, params?: any) => {
+  time++
+  let { data } = await getOAframework(params)
+  if (data.code == 200) {
+    res = res.concat(data.data)
+    for (let i = 0; i < data.data.length; i++) {
+      let { nodeCode, leaf, root } = data.data[i]
+      if (deep == time) {
+        time = 0
+        break
+      } else {
+        if (leaf == false || (leaf == true && root == null)) {
+          await get_tree_data(deep, { path: nodeCode })
+        }
       }
-    ]
+    }
+    return res
   }
-]
+}
 
 // 搜索条件
 export const jobs: Array<labelValueType> = [
@@ -141,7 +149,7 @@ export const tableData = [
 export const formRules: Object = {
   name: [{ required: true, message: '人员姓名不能为空', trigger: 'blur' }],
   phone: [{ required: true, message: '人员电话不能为空', trigger: 'blur' }],
-  job: [{ required: true, message: '人员岗位不能为空', trigger: 'change' }],
+  roles: [{ required: true, message: '人员角色不能为空', trigger: 'change' }],
   node: [{ required: true, message: '架构节点不能为空', trigger: 'blur' }]
 }
 
