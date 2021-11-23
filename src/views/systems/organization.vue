@@ -7,7 +7,6 @@
       @node-context="nodeContext"
       @nodeClick="nodeClick"
       class="flex-left"
-      v-loading="treeLoad"
     />
     <el-card class="flex-right">
       <div class="top">
@@ -59,13 +58,19 @@
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="dialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="sendNode">确认</el-button>
+        <el-button type="primary" @click="addnode">确认</el-button>
       </span>
     </template>
   </el-dialog>
-  <el-dialog title="修改节点" width="20%" v-model="EditNode" ref="formRules1">
-    <el-form ref="formRlu" :model="form_" label-width="120px">
-      <el-form-item label="节点名称">
+  <el-dialog title="修改节点" width="20%" v-model="EditNode">
+    <el-form
+      ref="formRules1"
+      :model="form_"
+      label-width="120px"
+      @closed="clearform1"
+      :rules="rules"
+    >
+      <el-form-item label="节点名称" prop="NodeName">
         <el-input v-model="form_.nodeName"></el-input>
       </el-form-item>
       <el-form-item label="业务类型" prop="bsCode">
@@ -87,7 +92,7 @@
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="EditNode = false">取消</el-button>
-        <el-button type="primary" @click="sendNode">确认</el-button>
+        <el-button type="primary" @click="editnode">确认</el-button>
       </span>
     </template>
   </el-dialog>
@@ -109,8 +114,9 @@ import {
   node_business,
   delet_framework_node,
   get_framework_node_business,
+  bindedagency,
 } from "@/utils/pageData/organization";
-import { title, treeData } from "@/utils/pageData/personData";
+import { title, get_tree_data } from "@/utils/pageData/personData";
 import { storage } from "@/utils/storage";
 import { ElMessage, ElMessageBox } from "element-plus";
 import Table from "@/components/table/primeryTable.vue";
@@ -133,7 +139,16 @@ export default defineComponent({
     onBeforeMount(async () => {});
 
     //左键点击节点
-    const nodeClick = async (node) => {};
+    const nodeClick = async (node) => {
+      const params = {
+        nodeCode: node.nodeCode,
+        page: {
+          pageNum: page.value,
+          pageSize: pagesize.value,
+        },
+      };
+      // let { data } = await bindedagency(params)
+    };
 
     //业务类型
 
@@ -162,7 +177,7 @@ export default defineComponent({
     let tree_Data = ref([]);
     let treeLoad = ref(true);
     if (store.state.Node.frameworkNode.length == 0) {
-      treeData(20).then((res) => {
+      get_tree_data(20).then((res) => {
         tree_Data.value = arrayToTree(res, "parentCode");
         store.commit("SET_FRAMEWORK_NODE", tree_Data.value);
         treeLoad.value = false;
@@ -171,7 +186,6 @@ export default defineComponent({
       tree_Data.value = store.state.Node.frameworkNode;
       treeLoad.value = false;
     }
-
     //点击树节点获取数据
     const rootIstrue: any = ref();
     let currentHoverItem = reactive<any>({});
@@ -212,7 +226,6 @@ export default defineComponent({
         onClick() {
           dialogVisible.value = true;
           get();
-          store.commit("SET_FRAMEWORK_NODE", tree_Data.value);
         },
       },
       {
@@ -241,7 +254,7 @@ export default defineComponent({
                 );
                 parentNode.childNodes.splice(nodeIndex, 1);
               }
-              store.commit("SET_FRAMEWORK_NODE", tree_Data.value);
+              //TODO:先调用接口，数据删除成功之后执行下面代码
             })
             .catch(() => {
               ElMessage({
@@ -273,7 +286,7 @@ export default defineComponent({
             (node) => node.label == currentHoverItem.nodeName
           );
           node.nodeName = form.nodeName;
-          store.commit("SET_FRAMEWORK_NODE", tree_Data.value);
+          // Businessall("", "");
         },
       },
       {
@@ -293,99 +306,117 @@ export default defineComponent({
     };
     //首次进入加载组织架构
 
-    //发送新增修改节点请求
-    const sendNode = async () => {
-      if (statu == "新增") {
-        let params = {
-          nodeName: form_.childNodeName,
-          parentCode: form_.parentCode,
-          root: rootIstrue.value,
-        };
-        let { code, data } = await put_framework_node(params);
-        if (code !== 200) {
-          ElMessage({
-            type: "warning",
-            message: "新增失败",
-          });
-        } else {
-          ElMessage({
-            type: "warning",
-            message: "新增成功",
-          });
-          if (form_.bsCode.length > 0) {
-            const params = {
-              nodeCode: data,
-              bsCodeList: form_.bsCode,
-            };
-            let { code } = await node_business(params);
-            if (code !== 200) {
-              ElMessage({
-                type: "warning",
-                message: "绑定业务失败",
-              });
-            } else {
-              ElMessage({
-                type: "warning",
-                message: "绑定业务成功",
-              });
-            }
-          }
-          currentHoverItem.leaf = false;
-          let d = {
-            disable: true,
+    //新增节点
+    const addnode = () => {
+      formRules.value.validate(async (valid: any) => {
+        if (valid) {
+          let params = {
             nodeName: form_.childNodeName,
-            leaf: data.leaf,
-            nodeCode: data,
-            parentCode: parentNode.nodeCode,
+            parentCode: form_.parentCode,
             root: rootIstrue.value,
           };
-          if (!currentHoverItem.children) {
-            currentHoverItem.children = [];
+          let { code, data } = await put_framework_node(params);
+          if (code !== 200) {
+            ElMessage({
+              type: "warning",
+              message: "新增失败",
+            });
+          } else {
+            ElMessage({
+              type: "warning",
+              message: "新增成功",
+            });
+            if (form_.bsCode.length > 0) {
+              const params = {
+                nodeCode: data,
+                bsCodeList: form_.bsCode,
+              };
+              let { code } = await node_business(params);
+              if (code !== 200) {
+                ElMessage({
+                  type: "warning",
+                  message: "绑定业务失败",
+                });
+              } else {
+                ElMessage({
+                  type: "warning",
+                  message: "绑定业务成功",
+                });
+              }
+            }
+            currentHoverItem.leaf = false;
+            let d = {
+              disable: true,
+              nodeName: form_.childNodeName,
+              leaf: data.leaf,
+              nodeCode: data,
+              parentCode: parentNode.nodeCode,
+              root: rootIstrue.value,
+            };
+            if (!currentHoverItem.children) {
+              currentHoverItem.children = [];
+            }
+            currentHoverItem.children.push(d);
           }
-          currentHoverItem.children.push(d);
-        }
-        dialogVisible.value = false;
-      } else {
-        const params = {
-          id: form_.id,
-          nodeName: form_.nodeName,
-          nodeCode: form_.parentCode,
-        };
-        let { code, data } = await put_framework_node(params);
-        if (code !== 200) {
-          ElMessage({
-            type: "warning",
-            message: "修改失败",
-          });
+          dialogVisible.value = false;
         } else {
           ElMessage({
             type: "warning",
-            message: "修改成功",
+            message: "请检查输入是否正确",
           });
-          if (form_.bsCodeList.length > 0) {
-            const params = {
-              nodeCode: form_.parentCode,
-              bsCodeList: form_.bsCodeList,
-            };
-            let { code } = await node_business(params);
-            if (code !== 200) {
-              ElMessage({
-                type: "warning",
-                message: "绑定业务失败",
-              });
-            } else {
-              ElMessage({
-                type: "warning",
-                message: "绑定业务成功",
-              });
-            }
-          }
-          currentHoverItem.nodeName = form_.nodeName;
-          EditNode.value = false;
         }
-      }
+      });
     };
 
+    //修改节点
+    const editnode = () => {
+      formRules.value.validate(async (valid: any) => {
+        if (valid) {
+          const params = {
+            id: form_.id,
+            nodeName: form_.nodeName,
+            nodeCode: form_.parentCode,
+          };
+          let { code, data } = await put_framework_node(params);
+          if (code !== 200) {
+            ElMessage({
+              type: "warning",
+              message: "修改失败",
+            });
+          } else {
+            ElMessage({
+              type: "warning",
+              message: "修改成功",
+            });
+            if (form_.bsCodeList.length > 0) {
+              const params = {
+                nodeCode: form_.parentCode,
+                bsCodeList: form_.bsCodeList,
+              };
+              let { code } = await node_business(params);
+              if (code !== 200) {
+                ElMessage({
+                  type: "warning",
+                  message: "绑定业务失败",
+                });
+              } else {
+                ElMessage({
+                  type: "warning",
+                  message: "绑定业务成功",
+                });
+              }
+            }
+            currentHoverItem.nodeName = form_.nodeName;
+            EditNode.value = false;
+          }
+        } else {
+          ElMessage({
+            type: "warning",
+            message: "请检查输入是否正确",
+          });
+        }
+      });
+    };
     // 搜索
     const search = (searchText: string) => {
       const params = {
@@ -430,15 +461,15 @@ export default defineComponent({
       form_,
       business,
       EditNode,
-      treeLoad,
       tree_Data,
       rules,
-      sendNode,
       formRules,
       formRules1,
       clearform,
       clearform1,
       nodeClick,
+      addnode,
+      editnode,
     };
   },
 });
@@ -458,7 +489,7 @@ export default defineComponent({
   &-right {
     width: 100%;
     margin-left: 10px;
-    height: calc(100vh - 100px);
+    height: calc(100vh - 110px);
   }
   .top {
     display: flex;
@@ -506,10 +537,7 @@ export default defineComponent({
     }
   }
   .pageSelect {
-    position: absolute;
-    bottom: 20px;
-    transform: translateX(-50%);
-    left: 50%;
+    text-align: center;
   }
   .custom-tree-node {
     flex: 1;

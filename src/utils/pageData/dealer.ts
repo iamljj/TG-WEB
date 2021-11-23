@@ -1,6 +1,5 @@
 import { reactive, ref } from 'vue'
 import { options } from './activityData'
-import { tableType, tableDataType, rulesChange, formType, optionData } from './pageType'
 import { binddealer, bind } from '@/service/dealer'
 
 export const tableData = ref([])
@@ -24,3 +23,5 @@ export const BindDealer = async (params) => {
     return data
   }
 }
+
+
