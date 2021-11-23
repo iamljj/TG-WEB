@@ -226,6 +226,7 @@ export default defineComponent({
         onClick() {
           dialogVisible.value = true;
           get();
+          store.commit("SET_FRAMEWORK_NODE", tree_Data.value);
         },
       },
       {
@@ -254,7 +255,7 @@ export default defineComponent({
                 );
                 parentNode.childNodes.splice(nodeIndex, 1);
               }
-              //TODO:先调用接口，数据删除成功之后执行下面代码
+              store.commit("SET_FRAMEWORK_NODE", tree_Data.value);
             })
             .catch(() => {
               ElMessage({
@@ -286,7 +287,7 @@ export default defineComponent({
             (node) => node.label == currentHoverItem.nodeName
           );
           node.nodeName = form.nodeName;
-          // Businessall("", "");
+          store.commit("SET_FRAMEWORK_NODE", tree_Data.value);
         },
       },
       {

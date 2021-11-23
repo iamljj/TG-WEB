@@ -5,8 +5,8 @@
       :isContextMenu="true"
       :contextMenus="contextMenus"
       @node-context="nodeContext"
-      v-loading="treeLoad"
       class="person-left"
+      v-loading="treeLoad"
     />
     <Tabs
       class="person-right"
@@ -145,6 +145,7 @@ import {
   ref,
   toRefs,
   watch,
+  watchEffect,
 } from "vue";
 import {
   tabs,
@@ -197,12 +198,13 @@ export default defineComponent({
     let loading = ref(false);
     // 内外部架构判别
     const isExternal = computed(() => (activeName.value == "内部架构" ? false : true));
+
     // 表格列
     let tableData_ = tableData;
     let tableCol_ = reactive(columns);
 
     const selectChange = (row) => {
-      console.log("row", row);
+      console.log(row);
     };
     const selectAll = (selection) => {};
     // 下载
@@ -222,6 +224,7 @@ export default defineComponent({
         confirmButtonText: "确定",
         showClose: false,
         callback(actions, instace) {
+          console.log(actions);
           if (actions == "cancel") {
             console.log("取消");
           } else {
@@ -239,8 +242,9 @@ export default defineComponent({
     let uploadUrl = "";
 
     // 选择节点
-    const tree_data = ref([]);
+    let tree_data = ref([]);
     let treeLoad = ref(true);
+
     if (store.state.Node.frameworkNode.length == 0) {
       get_tree_data(20).then((res) => {
         tree_data.value = arrayToTree(res, "parentCode");
@@ -248,45 +252,34 @@ export default defineComponent({
         store.commit("SET_FRAMEWORK_NODE", tree_data.value);
       });
     } else {
-      tree_data.value = store.state.Node.frameworkNode;
+      tree_data.value = ref(store.state.Node.frameworkNode);
       treeLoad.value = false;
     }
     let currentHoverItem = reactive<any>({});
     let parentNode = reactive<any>({});
-    const contextMenus: Array<any> = [
+    const nodeSelect = (node) => {
+      console.log("节点选择", node);
+    };
+    // 查询是否是内部节点
+    let contextMenus = [
       {
-        label: "新增节点",
-        icon: "el-icon-plus",
-        onClick() {
-          currentHoverItem.leaf = false;
-          if (!currentHoverItem.children) {
-            let data = {
-              disable: currentHoverItem.disable,
-              nodeName: currentHoverItem.nodeName,
-              leaf: currentHoverItem.leaf,
-              nodeCode: currentHoverItem.nodeCode,
-              parentCode: currentHoverItem.nodeCode,
-              root: currentHoverItem.root,
-            };
-            currentHoverItem.children = [];
-            currentHoverItem.children.push(data);
-          }
-        },
-      },
-      {
-        label: "删除节点",
+        label: "迁移节点",
         icon: "el-icon-minus",
         onClick() {
-          let nodeIndex = parentNode.childNodes.findIndex(
-            (node) => node.label == currentHoverItem.nodeName
-          );
-          parentNode.childNodes.splice(nodeIndex, 1);
+          // let nodeIndex = parentNode.childNodes.findIndex(
+          //   (node) => node.label == currentHoverItem.nodeName
+          // )
+          // parentNode.childNodes.splice(nodeIndex, 1)
+          console.log("迁移");
+          store.commit("SET_FRAMEWORK_NODE", tree_data.value);
         },
       },
     ];
+    // 点解右键获取实例
     const nodeContext = (e, data) => {
-      console.log(e, data);
+      console.log("data", data);
     };
+
     return {
       tabs,
       activeName,
@@ -297,7 +290,6 @@ export default defineComponent({
       status,
       tableData_,
       loading,
-      tree_data,
       treeLoad,
       isExternal,
       tableCol_,
@@ -307,6 +299,7 @@ export default defineComponent({
       importShow,
       uploadUrl,
       contextMenus,
+      tree_data,
       tabChange,
       downloadTemp,
       importTemp,
@@ -320,7 +313,7 @@ export default defineComponent({
   methods: {
     nodeClick(data) {
       this.form.node = data.label;
-      console.log("data", data);
+      console.log(this.form);
     },
   },
 });
